@@ -1,0 +1,345 @@
+═══════════════════════════════════════════════════════════════════════
+                        WORLDLEARN
+              Plataforma Educativa de Historia Mundial
+                        Guía de Usuario
+═══════════════════════════════════════════════════════════════════════
+  Versión: 1.0  |  Framework: Django  |  Base de datos: SQLite
+═══════════════════════════════════════════════════════════════════════
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ PARTE 1 — USO DEL PROGRAMA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+───────────────────────────────────────────────────────────────────────
+ 1.1  ¿QUÉ ES WORLDLEARN?
+───────────────────────────────────────────────────────────────────────
+
+  WorldLearn es una plataforma web educativa que permite a estudiantes
+  explorar las grandes épocas de la historia mundial a través de una
+  interfaz visual tipo "viaje en el tiempo".
+
+  Épocas disponibles:
+  ┌──────────────────────────────────────────────┐
+  │  ⚔️  Primera Guerra Mundial   1914 – 1918    │
+  │  🌍  Segunda Guerra Mundial   1939 – 1945    │
+  │  ☢️  Guerra Fría              1947 – 1991    │
+  └──────────────────────────────────────────────┘
+
+  Cada época contiene eventos históricos, países involucrados
+  y materiales de apoyo subidos por el profesor.
+
+  Hay dos tipos de usuario:
+  • ESTUDIANTE  → navega y consulta el contenido
+  • PROFESOR    → además puede editar, crear y subir materiales
+
+
+───────────────────────────────────────────────────────────────────────
+ 1.2  CÓMO INICIAR EL PROGRAMA
+───────────────────────────────────────────────────────────────────────
+
+  1. Abrir la terminal (CMD) en la carpeta del proyecto
+  2. Ejecutar:
+        python manage.py runserver
+
+  3. Abrir el navegador en:
+        http://127.0.0.1:8000/
+
+  4. Para detener el servidor:
+        Ctrl + C
+
+
+───────────────────────────────────────────────────────────────────────
+ 1.3  GUÍA DEL ESTUDIANTE
+───────────────────────────────────────────────────────────────────────
+
+  REGISTRARSE:
+  ─────────────────────────────────────────────────────────────
+  1. Entrar a http://127.0.0.1:8000/
+  2. En la pantalla de login presionar "Registrarse"
+     (la tarjeta se voltea mostrando el formulario)
+  3. Llenar los campos:
+       Tipo de identificación · Nombre · Apellido
+       Correo electrónico · Contraseña
+  4. Presionar "Registrarse"
+  5. Serás redirigido al login para ingresar
+
+  INICIAR SESIÓN:
+  ─────────────────────────────────────────────────────────────
+  1. Ingresar Nombre y Contraseña
+  2. Presionar "Ingresar"
+  3. Llegarás al Home con los tres portales de épocas
+
+  NAVEGAR POR EL CONTENIDO:
+  ─────────────────────────────────────────────────────────────
+
+  HOME
+  └── Tres portales animados: WWI · WWII · Guerra Fría
+      └── Presionar "Viajar" para entrar a la época
+
+  PÁGINA DE ÉPOCA
+  ├── Sección superior: Eventos históricos en orden cronológico
+  │     └── Presionar cualquier tarjeta → ver historia completa
+  └── Sección inferior: Países involucrados
+        ├── Principales: protagonistas directos del conflicto
+        ├── Colaterales: países afectados (incluye Colombia)
+        └── Presionar cualquier tarjeta → ver rol del país
+
+  PÁGINA DE EVENTO
+  ├── Historia completa del evento
+  ├── Materiales de apoyo del profesor:
+  │     📄 PDF    → se abre en nueva pestaña
+  │     🎬 Video  → enlace al video
+  │     🔗 Link   → enlace a página web
+  │     📝 Word   → descarga el documento
+  └── Flechas de navegación: evento anterior / siguiente
+
+  PÁGINA DE PAÍS
+  ├── Descripción del rol del país en esa época
+  ├── Materiales de apoyo del profesor
+  └── Botón para volver a la época
+
+  CERRAR SESIÓN:
+  ─────────────────────────────────────────────────────────────
+  Presionar "Salir" en la esquina superior derecha
+
+
+───────────────────────────────────────────────────────────────────────
+ 1.4  GUÍA DEL PROFESOR / ADMIN
+───────────────────────────────────────────────────────────────────────
+
+  El profesor ingresa por el mismo login con sus credenciales
+  especiales. Al entrar verá el badge: ✏️ Modo profesor
+
+  ¿CÓMO SABER QUE ESTÁS EN MODO PROFESOR?
+  → En la esquina superior derecha aparece "✏️ Modo profesor"
+  → Verás botones extra que los estudiantes NO ven
+
+  ─────────────────────────────────────────────────────────────
+  EN LA PÁGINA DE ÉPOCA — control de países:
+  ─────────────────────────────────────────────────────────────
+
+  ➕ NUEVO PAÍS (botón arriba a la derecha de la sección)
+     → Se abre un panel con los campos:
+          Nombre del país
+          Bandera (pegar emoji, ver emojis_banderas.txt)
+          Tipo: Principal o Colateral
+          Bando (ej: Aliados, Potencias Centrales)
+          Orden (número para ordenar la tarjeta)
+          Descripción completa
+     → Presionar "Crear país"
+     → La tarjeta aparecerá inmediatamente en la página
+
+  ✏️ EDITAR (debajo de cada tarjeta de país)
+     → Navega a la página del país
+     → Presionar "✏️ Editar" para abrir el formulario
+     → Modificar los campos que necesites
+     → Presionar "Guardar"
+
+  🗑 ELIMINAR (debajo de cada tarjeta de país)
+     → Pide confirmación antes de eliminar
+     → ⚠️ CUIDADO: esta acción no se puede deshacer
+     → El país y todos sus materiales se eliminarán
+
+  ─────────────────────────────────────────────────────────────
+  EN LA PÁGINA DE EVENTO — editar contenido y materiales:
+  ─────────────────────────────────────────────────────────────
+
+  ✏️ EDITAR (dentro del bloque de historia)
+     → Abre panel para modificar:
+          Título · Año · Mes · Ícono (emoji) · Orden
+          Resumen (texto corto que aparece en la tarjeta)
+          Descripción completa (lo que lee el estudiante)
+     → Presionar "Guardar"
+
+  ➕ AGREGAR MATERIAL (en la sección Materiales de apoyo)
+     → Abre panel con los campos:
+          Tipo: PDF / Video (link) / Enlace web / Word
+          Título: nombre que verán los estudiantes
+          URL: para videos y links externos
+          Archivo: para subir PDF o Word desde el computador
+     → Presionar "Subir"
+     → El material aparece visible para todos los estudiantes
+
+  🗑 ELIMINAR MATERIAL (junto a cada material existente)
+     → Pide confirmación
+     → Se elimina inmediatamente
+
+  ─────────────────────────────────────────────────────────────
+  EN LA PÁGINA DE PAÍS — igual que en eventos:
+  ─────────────────────────────────────────────────────────────
+
+  ✏️ EDITAR    → modifica nombre, bandera, tipo, bando, descripción
+  ➕ AGREGAR   → sube PDF, Word, video o link al país
+  🗑 ELIMINAR  → elimina material con confirmación
+
+  ─────────────────────────────────────────────────────────────
+  TIPS IMPORTANTES PARA EL PROFESOR:
+  ─────────────────────────────────────────────────────────────
+
+  • Los cambios se ven inmediatamente después de recargar la página
+  • Los estudiantes ven los materiales en tiempo real
+  • Para banderas siempre usar emojis (ver emojis_banderas.txt)
+    Ejemplo: 🇨🇴 🇺🇸 🇩🇪 🇫🇷 🇬🇧 🇷🇺
+  • Los archivos PDF y Word quedan guardados en la carpeta media/
+  • Si un panel no se abre, recargar la página con Ctrl+Shift+R
+
+
+───────────────────────────────────────────────────────────────────────
+ 1.5  CREAR UN NUEVO PROFESOR DESDE LA TERMINAL
+───────────────────────────────────────────────────────────────────────
+
+  1. En la terminal correr:
+        python manage.py shell
+
+  2. Pegar este código (cambiar los datos):
+        from login.models import user, login as LoginModel
+        p = user.objects.create(
+            Ti=0,
+            nombre='NombreAquí',
+            apellido='ApellidoAquí',
+            correo='correo@aqui.com',
+            password='contraseñaAquí',
+            es_admin=True
+        )
+        LoginModel.objects.create(nombre=p, password=p)
+        print('Profesor creado')
+        exit()
+
+  CONVERTIR UN ESTUDIANTE EXISTENTE EN PROFESOR:
+        python manage.py shell
+
+        from login.models import user
+        u = user.objects.get(nombre='NombreDelEstudiante')
+        u.es_admin = True
+        u.save()
+        exit()
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ PARTE 2 — DETALLES TÉCNICOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+───────────────────────────────────────────────────────────────────────
+ 2.1  ESTRUCTURA DE CARPETAS
+───────────────────────────────────────────────────────────────────────
+
+  wordlearn/
+  ├── wordlearn/
+  │   ├── settings.py       configuración general de Django
+  │   ├── urls.py           todas las rutas del sistema
+  │   └── wsgi.py
+  │
+  ├── login/                app de autenticación
+  │   ├── models.py         modelos user y login
+  │   ├── views.py          login, registro, home, logout
+  │   ├── forms.py          formulario de registro
+  │   ├── templates/        todos los HTMLs del proyecto
+  │   │   ├── login.html
+  │   │   ├── home.html
+  │   │   ├── detalle_epoca.html
+  │   │   ├── detalle_evento.html
+  │   │   └── detalle_pais.html
+  │   └── static/login/css/
+  │       ├── login.css
+  │       └── home.css
+  │
+  ├── epocas/               app de contenido histórico
+  │   ├── models.py         Epoca, Pais, Evento, Material, MaterialPais
+  │   ├── views.py          vistas de épocas + acciones de admin
+  │   ├── forms.py          formularios de edición
+  │   ├── admin.py          panel admin de Django
+  │   ├── fixtures/
+  │   │   └── epocas_datos.json   datos históricos precargados
+  │   └── static/epocas/
+  │       ├── css/epocas.css
+  │       └── js/epocas.js
+  │
+  ├── media/materiales/     archivos subidos por el profesor
+  │   ├── eventos/
+  │   └── paises/
+  │
+  └── db.sqlite3            base de datos
+
+
+───────────────────────────────────────────────────────────────────────
+ 2.2  MODELOS DE BASE DE DATOS
+───────────────────────────────────────────────────────────────────────
+
+  user            nombre, apellido, correo, password, es_admin
+  login           nombre (FK→user), password (FK→user)
+  Epoca           slug, nombre, anio_inicio, anio_fin, descripcion
+  Pais            epoca(FK), nombre, bandera, tipo, bando, descripcion, orden
+  Evento          epoca(FK), titulo, anio, mes, resumen, descripcion, icono, orden
+  Material        evento(FK), tipo, titulo, url, archivo
+  MaterialPais    pais(FK), tipo, titulo, url, archivo
+
+
+───────────────────────────────────────────────────────────────────────
+ 2.3  URLS PRINCIPALES
+───────────────────────────────────────────────────────────────────────
+
+  /                              login
+  /home/                         portales de épocas
+  /epoca/<slug>/                 página de época  (ww1 · ww2 · cf)
+  /epoca/<slug>/evento/<id>/     página de evento
+  /epoca/<slug>/pais/<id>/       página de país
+
+  Solo profesor:
+  /epoca/<slug>/pais/crear/
+  /epoca/<slug>/pais/<id>/eliminar/
+  /epoca/<slug>/evento/<id>/editar/
+  /epoca/<slug>/evento/<id>/material/agregar/
+  /epoca/<slug>/pais/<id>/material/agregar/
+
+
+───────────────────────────────────────────────────────────────────────
+ 2.4  CONFIGURACIÓN REQUERIDA EN settings.py
+───────────────────────────────────────────────────────────────────────
+
+  INSTALLED_APPS:
+      'login',
+      'epocas',
+
+  Al final del archivo:
+      MEDIA_URL  = '/media/'
+      MEDIA_ROOT = BASE_DIR / 'media'
+
+
+───────────────────────────────────────────────────────────────────────
+ 2.5  SOLUCIÓN DE ERRORES COMUNES
+───────────────────────────────────────────────────────────────────────
+
+  "no such table"
+  → Correr: python manage.py makemigrations && python manage.py migrate
+
+  "unexpected keyword argument: es_admin"
+  → Correr: python manage.py makemigrations login
+            python manage.py migrate
+
+  "name 'static' is not defined" en urls.py
+  → Agregar en wordlearn/urls.py:
+      from django.conf import settings
+      from django.conf.urls.static import static
+
+  "Sin permiso" al editar como profesor
+  → Cerrar sesión y volver a entrar
+  → Verificar en login/views.py:
+      request.session['es_admin'] = usuario.es_admin
+      request.session.modified = True
+
+  Los campos del formulario admin no se ven
+  → Recargar con Ctrl+Shift+R (limpiar caché del navegador)
+
+  Los archivos media no se abren
+  → Verificar MEDIA_URL y MEDIA_ROOT en settings.py
+  → Verificar que en urls.py esté:
+      ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+═══════════════════════════════════════════════════════════════════════
+                      FIN DE LA GUÍA — WORLDLEARN
+═══════════════════════════════════════════════════════════════════════
+EOF

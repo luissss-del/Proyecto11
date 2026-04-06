@@ -1,0 +1,64 @@
+[
+
+
+  {"model":"epocas.puntomapa","pk":74,"fields":{"evento":11,"nombre":"Pearl Harbor – Base naval atacada","descripcion":"El 7 de diciembre de 1941 a las 7:55 AM la aviación japonesa atacó por sorpresa la base naval americana. 2.403 americanos murieron, 19 barcos hundidos o dañados incluyendo 8 acorazados.","tipo":"batalla","bando":"enemigos","latitud":21.3569,"longitud":-157.9787,"orden":1}},
+
+  {"model":"epocas.puntomapa","pk":75,"fields":{"evento":11,"nombre":"Honolulu – Ciudad civil afectada","descripcion":"La ciudad civil de Honolulu también sufrió daños durante el ataque. El pánico se extendió por Hawaii ante el temor de una invasión japonesa.","tipo":"ciudad","bando":"aliados","latitud":21.3069,"longitud":-157.8583,"orden":2}},
+
+  {"model":"epocas.puntomapa","pk":76,"fields":{"evento":11,"nombre":"Tokio – Decisión de atacar","descripcion":"El Almirante Yamamoto planeó el ataque desde Tokio. Japón buscaba destruir la flota del Pacífico para asegurar su expansión por Asia.","tipo":"ciudad","bando":"enemigos","latitud":35.6762,"longitud":139.6503,"orden":3}},
+
+  {"model":"epocas.puntomapa","pk":77,"fields":{"evento":11,"nombre":"Portaaviones Akagi – Base del ataque aéreo","descripcion":"El portaaviones Akagi lideró la flota japonesa. Desde aquí despegaron los 353 aviones de la primera y segunda oleada del ataque a Pearl Harbor.","tipo":"zona","bando":"enemigos","latitud":23.5000,"longitud":-158.0000,"orden":4}},
+
+  {"model":"epocas.puntomapa","pk":78,"fields":{"evento":11,"nombre":"Washington D.C. – Declaración de guerra","descripcion":"Al día siguiente del ataque, el 8 de diciembre de 1941, el Congreso americano declaró la guerra a Japón. Roosevelt lo llamó 'una fecha que vivirá en la infamia'.","tipo":"ciudad","bando":"aliados","latitud":38.9072,"longitud":-77.0369,"orden":5}},
+
+  {"model":"epocas.zonamapa","pk":15,"fields":{"evento":11,"nombre":"Zona del ataque aéreo japonés","descripcion":"El ataque se desarrolló en dos oleadas. La primera a las 7:55 AM y la segunda a las 8:55 AM. Los aviones japoneses atacaron los acorazados en 'Battleship Row' y los aeródromos militares.","bando":"enemigos","orden":1,"coordenadas":[[21.42,-157.98],[21.42,-157.93],[21.33,-157.93],[21.33,-157.98]]}},
+
+  {"model":"epocas.lineamapa","pk":23,"fields":{"evento":11,"nombre":"Ruta de la flota japonesa hacia Hawaii","descripcion":"La flota japonesa navegó en secreto desde las Islas Kuriles hasta Hawaii en 12 días. Mantuvieron silencio de radio total para no ser detectados.","tipo":"naval","bando":"enemigos","orden":1,"coordenadas":[[44.0,149.0],[38.0,155.0],[32.0,160.0],[26.0,162.0],[21.36,-157.98]]}},
+
+  {"model":"epocas.lineamapa","pk":24,"fields":{"evento":11,"nombre":"Expansión japonesa en el Pacífico","descripcion":"Tras Pearl Harbor Japón expandió rápidamente su dominio por el Pacífico: Filipinas, Malasia, Singapur, Burma e Indonesia cayeron en pocos meses.","tipo":"ruta","bando":"enemigos","orden":2,"coordenadas":[[35.68,139.65],[22.0,114.0],[14.0,121.0],[1.35,103.82],[-6.0,107.0]]}},
+
+
+  {"model":"epocas.puntomapa","pk":79,"fields":{"evento":12,"nombre":"Auschwitz-Birkenau – Campo de exterminio principal","descripcion":"El mayor campo de concentración y exterminio nazi, en Polonia. Entre 1,1 y 1,5 millones de personas fueron asesinadas aquí, el 90% judíos. Liberado por el Ejército Rojo el 27 de enero de 1945.","tipo":"batalla","bando":"enemigos","latitud":50.0274,"longitud":19.2023,"orden":1}},
+
+  {"model":"epocas.puntomapa","pk":80,"fields":{"evento":12,"nombre":"Treblinka – Campo de exterminio","descripcion":"En Treblinka fueron asesinados entre 700.000 y 900.000 judíos entre 1942 y 1943, principalmente del gueto de Varsovia. Era un campo de exterminio puro, sin trabajo forzado.","tipo":"batalla","bando":"enemigos","latitud":52.6333,"longitud":22.0500,"orden":2}},
+
+  {"model":"epocas.puntomapa","pk":81,"fields":{"evento":12,"nombre":"Sobibor – Campo de exterminio","descripcion":"Sobibor fue uno de los campos de la Operación Reinhard. Más de 170.000 judíos fueron asesinados aquí. En octubre de 1943 los prisioneros protagonizaron una rebelión histórica.","tipo":"batalla","bando":"enemigos","latitud":51.4461,"longitud":23.5917,"orden":3}},
+
+  {"model":"epocas.puntomapa","pk":82,"fields":{"evento":12,"nombre":"Gueto de Varsovia – Resistencia judía","descripcion":"El mayor gueto judío de Europa. En abril de 1943 los judíos se levantaron en armas contra los nazis en el famoso Levantamiento del Gueto de Varsovia. Fueron aplastados después de un mes de combate.","tipo":"batalla","bando":"aliados","latitud":52.2500,"longitud":20.9833,"orden":4}},
+
+  {"model":"epocas.puntomapa","pk":83,"fields":{"evento":12,"nombre":"Berlín – Conferencia de Wannsee","descripcion":"El 20 de enero de 1942 en una villa a orillas del lago Wannsee en Berlín, los líderes nazis coordinaron la 'Solución Final': el exterminio sistemático de todos los judíos de Europa.","tipo":"ciudad","bando":"enemigos","latitud":52.4333,"longitud":13.1667,"orden":5}},
+
+  {"model":"epocas.puntomapa","pk":84,"fields":{"evento":12,"nombre":"Dachau – Primer campo de concentración","descripcion":"Dachau fue el primer campo nazi, abierto en 1933 cerca de Múnich. Sirvió de modelo para todos los demás. Más de 200.000 prisioneros pasaron por él, 41.500 murieron.","tipo":"ciudad","bando":"enemigos","latitud":48.2683,"longitud":11.4683,"orden":6}},
+
+  {"model":"epocas.zonamapa","pk":16,"fields":{"evento":12,"nombre":"Territorio del Holocausto — Europa ocupada","descripcion":"El Holocausto se extendió por toda la Europa ocupada por Alemania. Los judíos fueron deportados desde Francia, Holanda, Bélgica, Grecia, Italia y todos los países ocupados hacia los campos del este.","bando":"enemigos","orden":1,"coordenadas":[[54.0,14.0],[54.0,24.0],[48.0,24.0],[48.0,14.0]]}},
+
+  {"model":"epocas.zonamapa","pk":17,"fields":{"evento":12,"nombre":"Zona de campos de exterminio — Polonia","descripcion":"La mayoría de campos de exterminio (Auschwitz, Treblinka, Sobibor, Belzec, Chelmno, Majdanek) fueron construidos en Polonia ocupada, lejos de los ojos de la población alemana.","bando":"enemigos","orden":2,"coordenadas":[[52.5,18.0],[52.5,23.5],[49.5,23.5],[49.5,18.0]]}},
+
+  {"model":"epocas.lineamapa","pk":25,"fields":{"evento":12,"nombre":"Rutas de deportación — trenes hacia los campos","descripcion":"Millones de judíos fueron transportados en trenes de carga desde toda Europa ocupada hacia los campos del este. Muchos morían durante el trayecto por las condiciones inhumanas.","tipo":"ruta","bando":"enemigos","orden":1,"coordenadas":[[48.85,2.35],[50.85,4.35],[51.5,7.0],[52.23,21.01],[50.03,19.20]]}},
+
+  {"model":"epocas.lineamapa","pk":26,"fields":{"evento":12,"nombre":"Deportaciones desde Europa occidental","descripcion":"Desde Francia, Holanda y Bélgica los judíos fueron deportados hacia los campos de Polonia. El campo de Drancy en Francia fue el principal centro de tránsito.","tipo":"ruta","bando":"enemigos","orden":2,"coordenadas":[[52.37,4.90],[50.85,4.35],[49.00,2.55],[48.92,2.47],[50.03,19.20]]}},
+
+
+
+  {"model":"epocas.puntomapa","pk":85,"fields":{"evento":13,"nombre":"Stalingrado – Centro de la batalla","descripcion":"La batalla más sangrienta de la historia (agosto 1942–febrero 1943). Más de 2 millones de bajas. Los alemanes lucharon casa por casa en una ciudad convertida en ruinas.","tipo":"batalla","bando":"aliados","latitud":48.7080,"longitud":44.5133,"orden":1}},
+
+  {"model":"epocas.puntomapa","pk":86,"fields":{"evento":13,"nombre":"Fábrica de Tractores Dzerzhinsky – Combate urbano","descripcion":"La fábrica de tractores fue uno de los escenarios más brutales. Los obreros seguían fabricando tanques mientras se combatía a metros de distancia. Los alemanes nunca lograron tomarla completamente.","tipo":"batalla","bando":"aliados","latitud":48.7833,"longitud":44.5500,"orden":2}},
+
+  {"model":"epocas.puntomapa","pk":87,"fields":{"evento":13,"nombre":"Mamáyev Kurgán – Colina estratégica","descripcion":"Esta colina dominaba toda la ciudad. Cambió de manos varias veces. Hoy alberga el monumento 'La Madre Patria llama', uno de los más grandes del mundo, en homenaje a los caídos.","tipo":"batalla","bando":"aliados","latitud":48.7417,"longitud":44.5417,"orden":3}},
+
+  {"model":"epocas.puntomapa","pk":88,"fields":{"evento":13,"nombre":"Kalach – Cierre del cerco soviético","descripcion":"El 23 de noviembre de 1942 los ejércitos soviéticos Norte y Sur se unieron en Kalach, completando el cerco de 330.000 soldados alemanes del Sexto Ejército en Stalingrado.","tipo":"batalla","bando":"aliados","latitud":48.7167,"longitud":43.5333,"orden":4}},
+
+  {"model":"epocas.puntomapa","pk":89,"fields":{"evento":13,"nombre":"Astracán – Base de suministros soviética","descripcion":"Desde Astracán llegaban suministros soviéticos cruzando el río Volga bajo fuego alemán. Los barcos cruzaban de noche para abastecer a los defensores de Stalingrado.","tipo":"zona","bando":"aliados","latitud":46.3497,"longitud":48.0408,"orden":5}},
+
+  {"model":"epocas.puntomapa","pk":90,"fields":{"evento":13,"nombre":"Paulus – Rendición alemana","descripcion":"El 2 de febrero de 1943 el Feldmariscal Paulus se rindió con 91.000 soldados supervivientes. Era la primera vez que un Feldmariscal alemán se rendía. Hitler lo consideró una traición.","tipo":"ciudad","bando":"enemigos","latitud":48.6833,"longitud":44.4833,"orden":6}},
+
+  {"model":"epocas.zonamapa","pk":18,"fields":{"evento":13,"nombre":"Cerco soviético — Operación Urano","descripcion":"El 19 de noviembre de 1942 los soviéticos lanzaron la Operación Urano. En 4 días cerraron el cerco sobre 330.000 soldados alemanes. Fue el golpe definitivo que cambió la guerra.","bando":"aliados","orden":1,"coordenadas":[[49.5,42.0],[49.5,45.5],[47.5,45.5],[47.5,42.0]]}},
+
+  {"model":"epocas.zonamapa","pk":19,"fields":{"evento":13,"nombre":"Zona urbana de combate — Stalingrado","descripcion":"La batalla urbana de Stalingrado se desarrolló en cada calle, edificio y sótano. Los soviéticos aprendieron a combatir tan cerca del enemigo que la artillería alemana no podía usarse sin riesgo propio.","bando":"neutral","orden":2,"coordenadas":[[48.82,44.40],[48.82,44.62],[48.63,44.62],[48.63,44.40]]}},
+
+  {"model":"epocas.lineamapa","pk":27,"fields":{"evento":13,"nombre":"Avance alemán hacia Stalingrado","descripcion":"El Grupo de Ejércitos Sur avanzó desde Járkov hacia el Don y luego hacia Stalingrado en el verano de 1942. Hitler ordenó tomar la ciudad que llevaba el nombre de Stalin.","tipo":"ruta","bando":"enemigos","orden":1,"coordenadas":[[49.99,36.23],[49.50,39.00],[48.90,41.00],[48.71,44.51]]}},
+
+  {"model":"epocas.lineamapa","pk":28,"fields":{"evento":13,"nombre":"Pinza norte del cerco soviético","descripcion":"El Frente del Suroeste soviético atacó desde el norte el 19 de noviembre cruzando el río Don y aplastando las débiles defensas rumanas que protegían el flanco alemán.","tipo":"ruta","bando":"aliados","orden":2,"coordenadas":[[50.00,44.00],[49.50,43.80],[49.00,43.60],[48.72,43.53]]}},
+
+  {"model":"epocas.lineamapa","pk":29,"fields":{"evento":13,"nombre":"Pinza sur del cerco soviético","descripcion":"El Frente de Stalingrado atacó desde el sur simultáneamente. Las dos pinzas soviéticas se unieron en Kalach el 23 de noviembre de 1942, cerrando la trampa sobre el Sexto Ejército alemán.","tipo":"ruta","bando":"aliados","orden":3,"coordenadas":[[47.50,44.50],[47.80,43.80],[48.20,43.60],[48.72,43.53]]}}
+]

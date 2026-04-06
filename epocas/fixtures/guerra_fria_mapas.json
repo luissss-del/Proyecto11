@@ -1,0 +1,121 @@
+[
+
+
+  {"model":"epocas.puntomapa","pk":91,"fields":{"evento":15,"nombre":"Yalta – Conferencia que dividió el mundo","descripcion":"En febrero de 1945 Roosevelt, Churchill y Stalin se reunieron en Yalta (Crimea) y acordaron la división de Europa en zonas de influencia. Esta decisión sentó las bases de la Guerra Fría.","tipo":"ciudad","bando":"neutral","latitud":44.4953,"longitud":34.1663,"orden":1}},
+
+  {"model":"epocas.puntomapa","pk":92,"fields":{"evento":15,"nombre":"Potsdam – Última conferencia aliada","descripcion":"En julio de 1945 Truman, Churchill y Stalin se reunieron en Potsdam. Las tensiones entre EE.UU. y la URSS ya eran evidentes. Truman informó a Stalin de la bomba atómica sin revelar todos los detalles.","tipo":"ciudad","bando":"neutral","latitud":52.3989,"longitud":13.0658,"orden":2}},
+
+  {"model":"epocas.puntomapa","pk":93,"fields":{"evento":15,"nombre":"Fulton – El discurso del Telón de Acero","descripcion":"El 5 de marzo de 1946 Churchill pronunció en Fulton (Missouri) su famoso discurso: 'Un telón de acero ha descendido sobre Europa'. Fue el primer gran anuncio público de la Guerra Fría.","tipo":"ciudad","bando":"aliados","latitud":38.8467,"longitud":-91.9482,"orden":3}},
+
+  {"model":"epocas.puntomapa","pk":94,"fields":{"evento":15,"nombre":"Berlín – Ciudad símbolo de la división","descripcion":"Berlín quedó dividida en cuatro sectores en 1945. La ciudad reflejaba perfectamente la división del mundo: capitalismo al oeste, comunismo al este, separados por una línea invisible que se convertiría en muro.","tipo":"zona","bando":"neutral","latitud":52.5200,"longitud":13.4050,"orden":4}},
+
+  {"model":"epocas.puntomapa","pk":95,"fields":{"evento":15,"nombre":"Praga – Golpe comunista 1948","descripcion":"En febrero de 1948 los comunistas tomaron el poder en Checoslovaquia con apoyo soviético. Este golpe alarmó a Occidente y aceleró la creación de la OTAN en 1949.","tipo":"ciudad","bando":"enemigos","latitud":50.0755,"longitud":14.4378,"orden":5}},
+
+  {"model":"epocas.zonamapa","pk":20,"fields":{"evento":15,"nombre":"Bloque Occidental — zona de influencia americana","descripcion":"Europa Occidental, América del Norte y aliados quedaron bajo la órbita de EE.UU. El Plan Marshall y la OTAN (1949) consolidaron este bloque capitalista y democrático.","bando":"aliados","orden":1,"coordenadas":[[71.0,-10.0],[71.0,15.0],[35.0,15.0],[35.0,-10.0]]}},
+
+  {"model":"epocas.zonamapa","pk":21,"fields":{"evento":15,"nombre":"Bloque Oriental — Telón de Acero soviético","descripcion":"Polonia, Checoslovaquia, Hungría, Rumania, Bulgaria y Alemania Oriental quedaron bajo control soviético. Las elecciones fueron manipuladas y los partidos comunistas tomaron el poder en todos estos países.","bando":"enemigos","orden":2,"coordenadas":[[55.0,15.0],[55.0,30.0],[44.0,30.0],[44.0,15.0]]}},
+
+  {"model":"epocas.lineamapa","pk":30,"fields":{"evento":15,"nombre":"Telón de Acero — frontera que dividió Europa","descripcion":"El Telón de Acero era la frontera ideológica, política y física que dividía Europa. Se extendía desde el Mar Báltico hasta el Adriático. En muchos puntos era una frontera minada y vigilada.","tipo":"frente","bando":"neutral","orden":1,"coordenadas":[[54.5,13.5],[52.5,14.5],[50.5,13.5],[48.5,16.5],[46.5,16.0],[45.5,14.0],[43.5,16.5]]}},
+
+
+
+  {"model":"epocas.puntomapa","pk":96,"fields":{"evento":16,"nombre":"Harvard – Discurso del Plan Marshall","descripcion":"El 5 de junio de 1947 el Secretario de Estado George Marshall anunció en Harvard el plan de ayuda económica a Europa. Propuso invertir 13.000 millones de dólares para reconstruir el continente.","tipo":"ciudad","bando":"aliados","latitud":42.3770,"longitud":-71.1167,"orden":4}},
+
+  {"model":"epocas.puntomapa","pk":97,"fields":{"evento":16,"nombre":"Grecia – Primera aplicación de la Doctrina Truman","descripcion":"En 1947 Grecia estaba en guerra civil entre comunistas y monárquicos. Truman convenció al Congreso de dar ayuda militar masiva. Fue el primer caso concreto de la Doctrina de Contención del comunismo.","tipo":"ciudad","bando":"aliados","latitud":37.9838,"longitud":23.7275,"orden":5}},
+
+  {"model":"epocas.puntomapa","pk":98,"fields":{"evento":16,"nombre":"Turquía – Refuerzo ante presión soviética","descripcion":"La URSS presionaba a Turquía para obtener acceso al estrecho del Bósforo. La Doctrina Truman incluyó ayuda militar a Turquía para mantenerla fuera de la órbita soviética.","tipo":"ciudad","bando":"aliados","latitud":39.9334,"longitud":32.8597,"orden":6}},
+
+  {"model":"epocas.zonamapa","pk":22,"fields":{"evento":16,"nombre":"Europa Occidental — receptora del Plan Marshall","descripcion":"16 países de Europa Occidental recibieron ayuda del Plan Marshall entre 1948 y 1952. Reino Unido, Francia y Alemania Occidental fueron los mayores beneficiarios. La recuperación fue extraordinaria.","bando":"aliados","orden":1,"coordenadas":[[55.0,-5.0],[55.0,15.0],[43.0,15.0],[43.0,-5.0]]}},
+
+  {"model":"epocas.zonamapa","pk":23,"fields":{"evento":16,"nombre":"Europa del Este — rechazó el Plan Marshall","descripcion":"Stalin obligó a Polonia, Checoslovaquia y los demás países del bloque soviético a rechazar el Plan Marshall. En respuesta creó el Cominform y luego el COMECON como alternativa económica soviética.","bando":"enemigos","orden":2,"coordenadas":[[55.0,15.0],[55.0,28.0],[45.0,28.0],[45.0,15.0]]}},
+
+  {"model":"epocas.lineamapa","pk":31,"fields":{"evento":16,"nombre":"Flujo de ayuda americana hacia Europa","descripcion":"Los fondos, materiales y bienes del Plan Marshall cruzaron el Atlántico en barcos hacia los puertos europeos. La ayuda fue coordinada desde Washington y distribuida por cada país receptor.","tipo":"naval","bando":"aliados","orden":1,"coordenadas":[[38.9,-77.0],[42.0,-65.0],[46.0,-40.0],[48.5,-5.0],[51.5,-0.1]]}},
+
+
+
+  {"model":"epocas.puntomapa","pk":99,"fields":{"evento":17,"nombre":"Checkpoint Charlie – Cruce entre los dos Berlín","descripcion":"El famoso puesto de control entre Berlín Este y Berlín Oeste. Escenario de espionaje, intentos de fuga y tensiones diplomáticas durante toda la Guerra Fría.","tipo":"ciudad","bando":"neutral","latitud":52.5075,"longitud":13.3904,"orden":4}},
+
+  {"model":"epocas.puntomapa","pk":100,"fields":{"evento":17,"nombre":"Aeropuerto Gatow – Base aérea británica","descripcion":"El aeropuerto Gatow era la base aérea de los británicos en Berlín. Junto con Tempelhof y Tegel formaban los tres aeropuertos del puente aéreo que abastecían la ciudad.","tipo":"zona","bando":"aliados","latitud":52.4750,"longitud":13.2000,"orden":5}},
+
+  {"model":"epocas.zonamapa","pk":24,"fields":{"evento":17,"nombre":"Berlín Occidental — ciudad sitiada","descripcion":"Berlín Occidental tenía 2 millones de habitantes y necesitaba 5.000 toneladas diarias de suministros. La URSS creyó que el bloqueo la rendiría en semanas. Se equivocó completamente.","bando":"aliados","orden":1,"coordenadas":[[52.57,13.20],[52.57,13.55],[52.43,13.55],[52.43,13.20]]}},
+
+  {"model":"epocas.zonamapa","pk":25,"fields":{"evento":17,"nombre":"Berlín Oriental — bajo control soviético","descripcion":"La zona soviética de Berlín rodeaba completamente a Berlín Occidental. La URSS cortó carreteras, ferrocarriles y canales, dejando solo los corredores aéreos como única vía de acceso.","bando":"enemigos","orden":2,"coordenadas":[[52.60,13.55],[52.60,13.85],[52.40,13.85],[52.40,13.55]]}},
+
+  {"model":"epocas.lineamapa","pk":32,"fields":{"evento":17,"nombre":"Corredor aéreo central — Hannover a Berlín","descripcion":"El tercer corredor aéreo central era el más directo. Los aviones aliados volaban en rutas estrictamente definidas para no invadir el espacio aéreo soviético durante el puente aéreo.","tipo":"naval","bando":"aliados","orden":3,"coordenadas":[[52.37,9.74],[52.40,11.00],[52.45,12.00],[52.52,13.40]]}},
+
+
+
+  {"model":"epocas.puntomapa","pk":101,"fields":{"evento":18,"nombre":"Pyongyang – Capital de Corea del Norte","descripcion":"Capital del régimen comunista de Kim Il-sung, apoyado por la URSS y China. Las fuerzas de la ONU tomaron Pyongyang en octubre de 1950 pero la intervención china las obligó a retroceder.","tipo":"ciudad","bando":"enemigos","latitud":39.0392,"longitud":125.7625,"orden":4}},
+
+  {"model":"epocas.puntomapa","pk":102,"fields":{"evento":18,"nombre":"Río Yalú – Entrada de China en la guerra","descripcion":"En octubre de 1950 cuando las fuerzas de la ONU se acercaron al río Yalú (frontera con China), 300.000 soldados chinos cruzaron en secreto y atacaron por sorpresa, cambiando completamente la guerra.","tipo":"batalla","bando":"enemigos","latitud":40.1167,"longitud":124.3833,"orden":5}},
+
+  {"model":"epocas.puntomapa","pk":103,"fields":{"evento":18,"nombre":"Busan – Perímetro de defensa final aliado","descripcion":"En agosto de 1950 las fuerzas norcoreanas habían empujado a los aliados hasta el pequeño perímetro de Busan al sureste. Fue el momento más crítico antes del contraataque de Inchon.","tipo":"batalla","bando":"aliados","latitud":35.1796,"longitud":129.0756,"orden":6}},
+
+  {"model":"epocas.zonamapa","pk":26,"fields":{"evento":18,"nombre":"Corea del Norte — zona comunista","descripcion":"Corea del Norte bajo el régimen comunista de Kim Il-sung, apoyado por la URSS y China. Invadió el sur el 25 de junio de 1950 con 135.000 soldados y 150 tanques soviéticos T-34.","bando":"enemigos","orden":1,"coordenadas":[[42.5,124.0],[42.5,130.0],[38.0,130.0],[38.0,124.0]]}},
+
+  {"model":"epocas.zonamapa","pk":27,"fields":{"evento":18,"nombre":"Corea del Sur — zona defendida por la ONU","descripcion":"Corea del Sur bajo la protección de las fuerzas de la ONU lideradas por EE.UU. Al mando del General MacArthur, 21 países enviaron tropas para defender la soberanía surcoreana.","bando":"aliados","orden":2,"coordenadas":[[38.0,126.0],[38.0,130.0],[34.0,130.0],[34.0,126.0]]}},
+
+  {"model":"epocas.lineamapa","pk":33,"fields":{"evento":18,"nombre":"Invasión norcoreana — avance hacia el sur","descripcion":"El ejército norcoreano avanzó rápidamente hacia el sur en junio-agosto de 1950, tomando Seúl en 3 días y empujando a las fuerzas surcoreanas y americanas hasta el pequeño perímetro de Busan.","tipo":"ruta","bando":"enemigos","orden":1,"coordenadas":[[38.0,127.0],[37.57,126.98],[36.5,127.5],[35.8,128.5],[35.18,129.08]]}},
+
+  {"model":"epocas.lineamapa","pk":34,"fields":{"evento":18,"nombre":"Contraataque aliado — avance hacia el norte","descripcion":"Tras el desembarco en Inchon (15 sept 1950), las fuerzas de la ONU liberaron Seúl, cruzaron el paralelo 38 y avanzaron hasta la frontera china. La intervención china los frenó en el río Yalú.","tipo":"ruta","bando":"aliados","orden":2,"coordenadas":[[37.46,126.71],[37.57,126.98],[38.5,127.5],[39.04,125.76],[40.12,124.38]]}},
+
+
+
+  {"model":"epocas.puntomapa","pk":104,"fields":{"evento":19,"nombre":"San Cristóbal – Silos de misiles soviéticos","descripcion":"Los aviones espía U-2 fotografiaron los silos de misiles en construcción cerca de San Cristóbal el 14 de octubre de 1962. Estos misiles podían alcanzar Washington en 13 minutos.","tipo":"zona","bando":"enemigos","latitud":22.7167,"longitud":-83.0500,"orden":6}},
+
+  {"model":"epocas.puntomapa","pk":105,"fields":{"evento":19,"nombre":"Guantánamo – Base naval americana en Cuba","descripcion":"La base naval americana en Guantánamo fue reforzada durante la crisis. Su presencia en territorio cubano era uno de los puntos de tensión entre EE.UU. y Cuba desde la revolución de 1959.","tipo":"zona","bando":"aliados","latitud":19.9060,"longitud":-75.1000,"orden":7}},
+
+  {"model":"epocas.zonamapa","pk":28,"fields":{"evento":19,"nombre":"Radio de alcance de los misiles soviéticos","descripcion":"Los misiles soviéticos SS-4 instalados en Cuba tenían un alcance de 2.000 km. Podían alcanzar Washington, Nueva York, Miami, Ciudad de México y la mayor parte de las ciudades americanas.","bando":"enemigos","orden":2,"coordenadas":[[32.0,-90.0],[32.0,-65.0],[18.0,-65.0],[18.0,-90.0]]}},
+
+  {"model":"epocas.lineamapa","pk":35,"fields":{"evento":19,"nombre":"Ruta de los barcos soviéticos hacia Cuba","descripcion":"Varios barcos soviéticos transportaban misiles y equipamiento militar hacia Cuba cuando fue decretada la cuarentena. Algunos se detuvieron y dieron la vuelta. Dos fueron inspeccionados y autorizados.","tipo":"naval","bando":"enemigos","orden":2,"coordenadas":[[55.76,37.62],[50.0,30.0],[40.0,20.0],[30.0,10.0],[22.0,-79.5]]}},
+
+
+
+  {"model":"epocas.puntomapa","pk":106,"fields":{"evento":20,"nombre":"Moscú – Centro de control espacial soviético","descripcion":"El Centro de Control de Misiones soviético coordinaba todos los vuelos espaciales tripulados desde Moscú. Desde aquí se siguió el vuelo de Gagarin el 12 de abril de 1961.","tipo":"ciudad","bando":"enemigos","latitud":55.7558,"longitud":37.6173,"orden":4}},
+
+  {"model":"epocas.puntomapa","pk":107,"fields":{"evento":20,"nombre":"Tyuratam – Sitio real del cohete Sputnik","descripcion":"El Sputnik fue lanzado desde Tyuratam el 4 de octubre de 1957. Su pitido de radio pudo ser escuchado desde cualquier receptor de onda corta del mundo. Fue el shock tecnológico más grande del siglo XX.","tipo":"ciudad","bando":"enemigos","latitud":45.9200,"longitud":63.3420,"orden":5}},
+
+  {"model":"epocas.puntomapa","pk":108,"fields":{"evento":20,"nombre":"Mar de la Tranquilidad – Alunizaje Apollo 11","descripcion":"El 20 de julio de 1969 a las 20:17 UTC el módulo lunar Eagle aterrizó en el Mar de la Tranquilidad. Neil Armstrong pronunció: 'Un pequeño paso para el hombre, un gran salto para la humanidad'.","tipo":"zona","bando":"aliados","latitud":0.6741,"longitud":23.4733,"orden":6}},
+
+  {"model":"epocas.zonamapa","pk":29,"fields":{"evento":20,"nombre":"Órbita del Sputnik — primera órbita artificial","descripcion":"El Sputnik orbitó la Tierra a 940 km de altura durante 92 días, completando una vuelta cada 96 minutos. Su lanzamiento demostró que la URSS tenía cohetes capaces de lanzar ojivas nucleares a cualquier punto del planeta.","bando":"enemigos","orden":1,"coordenadas":[[60.0,60.0],[60.0,65.0],[30.0,65.0],[30.0,60.0]]}},
+
+  {"model":"epocas.lineamapa","pk":36,"fields":{"evento":20,"nombre":"Trayectoria del Apollo 11 — Tierra a la Luna","descripcion":"El Apollo 11 despegó el 16 de julio de 1969 desde Cabo Cañaveral. Tardó 3 días en llegar a la Luna. El 24 de julio amerizó en el Pacífico completando la misión más ambiciosa de la historia.","tipo":"ruta","bando":"aliados","orden":1,"coordenadas":[[28.39,-80.61],[25.0,-75.0],[20.0,-60.0],[10.0,-30.0],[0.0,0.0]]}},
+
+  {"model":"epocas.lineamapa","pk":37,"fields":{"evento":20,"nombre":"Órbita del Gagarin — primera vuelta al mundo","descripcion":"El 12 de abril de 1961 Yuri Gagarin completó una órbita completa de la Tierra en 108 minutos a bordo del Vostok 1. Fue el primer humano en el espacio. Su frase fue: 'La Tierra es azul, qué maravillosa'.","tipo":"ruta","bando":"enemigos","orden":2,"coordenadas":[[45.92,63.34],[55.0,90.0],[50.0,140.0],[30.0,170.0],[0.0,-150.0],[-30.0,-100.0],[0.0,-30.0],[45.92,63.34]]}},
+
+
+
+  {"model":"epocas.puntomapa","pk":109,"fields":{"evento":21,"nombre":"Puerta de Brandeburgo – Símbolo de la reunificación","descripcion":"La Puerta de Brandeburgo quedó atrapada en tierra de nadie junto al Muro. Su apertura el 22 de diciembre de 1989 fue el símbolo más poderoso de la reunificación alemana.","tipo":"ciudad","bando":"neutral","latitud":52.5163,"longitud":13.3777,"orden":4}},
+
+  {"model":"epocas.puntomapa","pk":110,"fields":{"evento":21,"nombre":"Bernauer Strasse – Calle dividida por el Muro","descripcion":"Esta calle fue literalmente cortada por el Muro. Los residentes del lado este fueron evacuados a la fuerza. Algunos saltaron desde las ventanas hacia Berlín Occidental antes de que las tapiaran.","tipo":"zona","bando":"neutral","latitud":52.5350,"longitud":13.3830,"orden":5}},
+
+  {"model":"epocas.puntomapa","pk":111,"fields":{"evento":21,"nombre":"Varsovia – Movimiento Solidaridad","descripcion":"El sindicato polaco Solidaridad liderado por Lech Wałęsa fue el primer movimiento de masas que desafió al comunismo soviético. Su legalización en 1989 abrió la brecha que derrumbó el sistema.","tipo":"ciudad","bando":"neutral","latitud":52.2297,"longitud":21.0122,"orden":6}},
+
+  {"model":"epocas.puntomapa","pk":112,"fields":{"evento":21,"nombre":"Budapest – Apertura de la frontera húngara","descripcion":"El 23 de agosto de 1989 Hungría abrió su frontera con Austria. Miles de alemanes orientales huyeron a través de Hungría hacia Occidente. Este fue el primer gran agujero en el Telón de Acero.","tipo":"ciudad","bando":"neutral","latitud":47.4979,"longitud":19.0402,"orden":7}},
+
+  {"model":"epocas.zonamapa","pk":30,"fields":{"evento":21,"nombre":"Zona de muerte del Muro de Berlín","descripcion":"A lo largo de los 155 km del Muro existía una 'zona de muerte': doble muro, zona iluminada, trincheras anti-vehículos, torretas de vigilancia y órdenes de disparar a quienes intentaran cruzar. Murieron 140 personas intentando escapar.","bando":"enemigos","orden":1,"coordenadas":[[52.58,13.22],[52.58,13.58],[52.42,13.58],[52.42,13.22]]}},
+
+  {"model":"epocas.lineamapa","pk":38,"fields":{"evento":21,"nombre":"Recorrido del Muro de Berlín","descripcion":"El Muro tenía 155 km de longitud total: 43 km dividían Berlín Este de Berlín Oeste y 112 km rodeaban Berlín Occidental separándola de Alemania Oriental. Fue construido en una sola noche el 13 de agosto de 1961.","tipo":"frente","bando":"enemigos","orden":1,"coordenadas":[[52.57,13.22],[52.58,13.40],[52.55,13.58],[52.48,13.62],[52.42,13.55],[52.40,13.38],[52.43,13.22],[52.57,13.22]]}},
+
+  {"model":"epocas.lineamapa","pk":39,"fields":{"evento":21,"nombre":"Ola de liberación — caída de regímenes comunistas 1989","descripcion":"En 1989 los regímenes comunistas cayeron en cadena: Polonia (junio), Hungría (octubre), Alemania Oriental (noviembre), Bulgaria (noviembre), Checoslovaquia (diciembre) y Rumania (diciembre).","tipo":"ruta","bando":"neutral","orden":2,"coordenadas":[[52.23,21.01],[47.50,19.04],[52.52,13.40],[50.08,14.44],[42.70,23.32],[44.43,26.10]]}},
+
+
+
+  {"model":"epocas.puntomapa","pk":113,"fields":{"evento":22,"nombre":"Moscú – Kremlin, último acto soviético","descripcion":"El 25 de diciembre de 1991 Gorbachov firmó su renuncia y la bandera roja soviética fue arriada del Kremlin por última vez, siendo reemplazada por la bandera rusa tricolor.","tipo":"ciudad","bando":"enemigos","latitud":55.7517,"longitud":37.6178,"orden":1}},
+
+  {"model":"epocas.puntomapa","pk":114,"fields":{"evento":22,"nombre":"Belavezha – Firma de la disolución","descripcion":"El 8 de diciembre de 1991 los presidentes de Rusia, Ucrania y Bielorrusia se reunieron en Belavezha y firmaron el acuerdo que disolvía la URSS y creaba la Comunidad de Estados Independientes (CEI).","tipo":"ciudad","bando":"neutral","latitud":52.5700,"longitud":24.0200,"orden":2}},
+
+  {"model":"epocas.puntomapa","pk":115,"fields":{"evento":22,"nombre":"Vilna – Primera república en independizarse","descripcion":"Lituania declaró su independencia el 11 de marzo de 1990, siendo la primera república soviética en hacerlo. La URSS respondió con un bloqueo económico y luego con tanques en enero de 1991.","tipo":"ciudad","bando":"neutral","latitud":54.6872,"longitud":25.2797,"orden":3}},
+
+  {"model":"epocas.puntomapa","pk":116,"fields":{"evento":22,"nombre":"Kiev – Ucrania declara independencia","descripcion":"El 1 de diciembre de 1991 el 90% de los ucranianos votaron por la independencia. Esta decisión fue el golpe final para la URSS — sin Ucrania, la unión era imposible de mantener.","tipo":"ciudad","bando":"neutral","latitud":50.4501,"longitud":30.5234,"orden":4}},
+
+  {"model":"epocas.puntomapa","pk":117,"fields":{"evento":22,"nombre":"Alma-Ata – Declaración final de la CEI","descripcion":"El 21 de diciembre de 1991 los líderes de 11 repúblicas se reunieron en Alma-Ata (Kazajistán) y firmaron la declaración que formalizaba la CEI y certificaba la desaparición de la URSS.","tipo":"ciudad","bando":"neutral","latitud":43.2220,"longitud":76.8512,"orden":5}},
+
+  {"model":"epocas.zonamapa","pk":31,"fields":{"evento":22,"nombre":"Territorio de la URSS — 15 repúblicas independientes","descripcion":"La URSS se extendía por 22 millones de km², abarcando 15 repúblicas. Al disolverse surgieron 15 países independientes: Rusia, Ucrania, Bielorrusia, las tres repúblicas bálticas, las cinco de Asia Central, Armenia, Azerbaiyán, Georgia y Moldavia.","bando":"enemigos","orden":1,"coordenadas":[[71.0,30.0],[71.0,70.0],[50.0,70.0],[50.0,30.0]]}},
+
+  {"model":"epocas.zonamapa","pk":32,"fields":{"evento":22,"nombre":"Asia Central soviética — repúblicas liberadas","descripcion":"Las cinco repúblicas de Asia Central (Kazajistán, Uzbekistán, Turkmenistán, Tayikistán y Kirguistán) se independizaron en 1991. Eran ricas en petróleo y gas pero sin experiencia democrática.","bando":"neutral","orden":2,"coordenadas":[[55.0,55.0],[55.0,80.0],[37.0,80.0],[37.0,55.0]]}},
+
+  {"model":"epocas.lineamapa","pk":40,"fields":{"evento":22,"nombre":"Ola de independencias — repúblicas soviéticas","descripcion":"Entre 1990 y 1991 las 15 repúblicas soviéticas declararon su independencia en cadena. Las primeras fueron las bálticas (Estonia, Letonia, Lituania), seguidas por las del Cáucaso y finalmente las de Asia Central.","tipo":"ruta","bando":"neutral","orden":1,"coordenadas":[[59.44,24.75],[56.95,24.10],[54.69,25.28],[53.90,27.57],[50.45,30.52],[41.69,44.83],[40.18,44.51],[41.72,44.79],[47.00,28.86]]}},
+
+  {"model":"epocas.lineamapa","pk":41,"fields":{"evento":22,"nombre":"Retirada del ejército rojo de Europa del Este","descripcion":"Entre 1989 y 1994 Rusia retiró sus tropas de Polonia, Alemania, Hungría, Checoslovaquia y los países bálticos. La retirada de 500.000 soldados fue el fin físico del imperio soviético en Europa.","tipo":"retirada","bando":"enemigos","orden":2,"coordenadas":[[55.76,37.62],[54.0,30.0],[52.23,21.01],[50.08,14.44],[52.52,13.40]]}}
+]

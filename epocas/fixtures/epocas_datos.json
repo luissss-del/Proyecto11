@@ -1,0 +1,377 @@
+[
+
+  {
+    "model": "epocas.epoca",
+    "pk": 1,
+    "fields": {
+      "slug": "ww1",
+      "nombre": "Primera Guerra Mundial",
+      "anio_inicio": 1914,
+      "anio_fin": 1918,
+      "descripcion": "El conflicto armado más devastador hasta entonces visto, enfrentó a las grandes potencias europeas en dos bloques: los Aliados y las Potencias Centrales. Originado por el asesinato del archiduque Francisco Fernando, desencadenó cuatro años de guerra de trincheras, nuevas armas industriales y millones de muertos.",
+      "color_hex": "#c0392b"
+    }
+  },
+  {
+    "model": "epocas.epoca",
+    "pk": 2,
+    "fields": {
+      "slug": "ww2",
+      "nombre": "Segunda Guerra Mundial",
+      "anio_inicio": 1939,
+      "anio_fin": 1945,
+      "descripcion": "El conflicto más destructivo de la historia humana, con más de 70 millones de muertos. Enfrentó a los Aliados contra las Potencias del Eje lideradas por la Alemania nazi. Incluyó el Holocausto, el uso de bombas atómicas y redefinió el orden mundial.",
+      "color_hex": "#c9a84c"
+    }
+  },
+  {
+    "model": "epocas.epoca",
+    "pk": 3,
+    "fields": {
+      "slug": "cf",
+      "nombre": "Guerra Fría",
+      "anio_inicio": 1947,
+      "anio_fin": 1991,
+      "descripcion": "Tensión geopolítica entre Estados Unidos y la Unión Soviética tras la Segunda Guerra Mundial. Sin enfrentamiento directo, la rivalidad se expresó en la carrera armamentista, la carrera espacial, guerras proxy y la amenaza nuclear constante. Terminó con la disolución de la URSS.",
+      "color_hex": "#1abc9c"
+    }
+  },
+
+
+  {
+    "model": "epocas.evento",
+    "pk": 1,
+    "fields": {
+      "epoca": 1,
+      "titulo": "Asesinato de Francisco Fernando",
+      "anio": 1914, "mes": 6, "orden": 1,
+      "icono": "💥",
+      "resumen": "El chispazo que encendió Europa. El archiduque austro-húngaro es asesinado en Sarajevo.",
+      "descripcion": "El 28 de junio de 1914, el archiduque Francisco Fernando de Austria y su esposa Sofía fueron asesinados en Sarajevo por Gavrilo Princip, un nacionalista bosnio serbio miembro de la organización 'Mano Negra'. Este acto desencadenó una serie de ultimátums y movilizaciones entre las grandes potencias europeas, activando el sistema de alianzas que arrastraría a todo el continente a la guerra. Austria-Hungría culpó a Serbia, lo que provocó la intervención de Rusia, Alemania, Francia y finalmente Reino Unido."
+    }
+  },
+  {
+    "model": "epocas.evento",
+    "pk": 2,
+    "fields": {
+      "epoca": 1,
+      "titulo": "Declaraciones de guerra en cadena",
+      "anio": 1914, "mes": 7, "orden": 2,
+      "icono": "📜",
+      "resumen": "En semanas, el sistema de alianzas arrastra a toda Europa a la guerra.",
+      "descripcion": "Entre el 28 de julio y el 4 de agosto de 1914 se declararon la guerra mutuamente Austria-Hungría (contra Serbia), Alemania (contra Rusia y Francia) y el Reino Unido (contra Alemania por la invasión de la neutral Bélgica). El llamado 'Plan Schlieffen' alemán buscaba una victoria rápida en el oeste antes de girar al este. Las potencias se alinearon: Aliados (Reino Unido, Francia, Rusia, Serbia) contra Potencias Centrales (Alemania, Austria-Hungría, Imperio Otomano)."
+    }
+  },
+  {
+    "model": "epocas.evento",
+    "pk": 3,
+    "fields": {
+      "epoca": 1,
+      "titulo": "Guerra de trincheras en el frente occidental",
+      "anio": 1914, "mes": 11, "orden": 3,
+      "icono": "⚔️",
+      "resumen": "La guerra de movimiento se estanca. Cientos de kilómetros de trincheras definen el frente.",
+      "descripcion": "Hacia finales de 1914 el frente occidental se había estabilizado en una línea de trincheras que se extendía desde el Canal de la Mancha hasta Suiza. Las condiciones eran infrahumanas: barro, ratas, enfermedades y fuego constante. Los soldados vivían semanas enteras bajo tierra. Los ataques frontales producían miles de bajas por metros ganados. Esta forma de combate caracterizó la mayor parte de la guerra y simbolizó el horror industrial del conflicto."
+    }
+  },
+  {
+    "model": "epocas.evento",
+    "pk": 4,
+    "fields": {
+      "epoca": 1,
+      "titulo": "Batalla de Verdún",
+      "anio": 1916, "mes": 2, "orden": 4,
+      "icono": "🔥",
+      "resumen": "La batalla más larga de la guerra. Alemania intentó 'desangrar' a Francia durante 10 meses.",
+      "descripcion": "Librada entre febrero y diciembre de 1916 en el noreste de Francia, la Batalla de Verdún es símbolo del sufrimiento de la Gran Guerra. Alemania lanzó una ofensiva calculada para provocar tantas bajas francesas que Francia colapsara. El resultado fue casi 700.000 bajas entre ambos bandos. Francia resistió con el famoso lema 'Ils ne passeront pas' (No pasarán). Verdún quedó en el imaginario colectivo como sinónimo de sacrificio y resistencia nacional francesa."
+    }
+  },
+  {
+    "model": "epocas.evento",
+    "pk": 5,
+    "fields": {
+      "epoca": 1,
+      "titulo": "Uso masivo de armas químicas",
+      "anio": 1915, "mes": 4, "orden": 5,
+      "icono": "☠️",
+      "resumen": "Alemania usa gas cloro por primera vez en Ypres. Comienza la era de las armas químicas.",
+      "descripcion": "El 22 de abril de 1915, en la Segunda Batalla de Ypres (Bélgica), Alemania usó por primera vez gas cloro a gran escala contra tropas aliadas. Pronto ambos bandos utilizarían gas mostaza, fosgeno y otros agentes. Las máscaras de gas se volvieron equipo estándar. Se estima que los gases causaron más de 1 millón de bajas. El uso de armas químicas horrorizó al mundo y fue posteriormente prohibido por el Protocolo de Ginebra de 1925."
+    }
+  },
+  {
+    "model": "epocas.evento",
+    "pk": 6,
+    "fields": {
+      "epoca": 1,
+      "titulo": "Entrada de Estados Unidos",
+      "anio": 1917, "mes": 4, "orden": 6,
+      "icono": "🦅",
+      "resumen": "EE.UU. declara la guerra a Alemania. El equilibrio de fuerzas cambia definitivamente.",
+      "descripcion": "Tras años de neutralidad, el presidente Woodrow Wilson pidió al Congreso la declaración de guerra el 2 de abril de 1917. Dos factores clave lo precipitaron: la guerra submarina irrestricta alemana que hundía barcos estadounidenses, y el 'Telegrama Zimmermann', en el que Alemania proponía a México aliarse contra EE.UU. La llegada de tropas y recursos norteamericanos inclinó la balanza a favor de los Aliados y aceleró el fin del conflicto."
+    }
+  },
+  {
+    "model": "epocas.evento",
+    "pk": 7,
+    "fields": {
+      "epoca": 1,
+      "titulo": "Armisticio y Tratado de Versalles",
+      "anio": 1918, "mes": 11, "orden": 7,
+      "icono": "🕊️",
+      "resumen": "La guerra termina el 11/11/1918. El Tratado de Versalles impone condiciones humillantes a Alemania.",
+      "descripcion": "El armisticio entró en vigor el 11 de noviembre de 1918 a las 11:00 h. La guerra había dejado entre 15 y 20 millones de muertos y redibujado el mapa de Europa. El Tratado de Versalles (1919) obligó a Alemania a aceptar la culpa total por la guerra, pagar reparaciones millonarias, ceder territorios y reducir drásticamente su ejército. Estas condiciones generaron una profunda humillación nacional que, según muchos historiadores, sembraría las semillas de la Segunda Guerra Mundial."
+    }
+  },
+
+  {
+    "model": "epocas.evento",
+    "pk": 8,
+    "fields": {
+      "epoca": 2,
+      "titulo": "Invasión de Polonia",
+      "anio": 1939, "mes": 9, "orden": 1,
+      "icono": "⚡",
+      "resumen": "Alemania invade Polonia el 1 de septiembre. Francia y Reino Unido declaran la guerra.",
+      "descripcion": "El 1 de septiembre de 1939, la Alemania nazi invadió Polonia con una táctica de 'Blitzkrieg' (guerra relámpago): aviones, tanques e infantería coordinados para avanzar a gran velocidad. El 3 de septiembre, Francia y el Reino Unido declararon la guerra a Alemania. El 17 de septiembre, la URSS invadió Polonia por el este bajo el Pacto Molotov-Ribbentrop. Polonia cayó en pocas semanas. El mundo había entrado en la Segunda Guerra Mundial."
+    }
+  },
+  {
+    "model": "epocas.evento",
+    "pk": 9,
+    "fields": {
+      "epoca": 2,
+      "titulo": "Caída de Francia y el milagro de Dunkerque",
+      "anio": 1940, "mes": 5, "orden": 2,
+      "icono": "🚢",
+      "resumen": "Alemania conquista Francia en semanas. Más de 330.000 soldados aliados son evacuados desde Dunkerque.",
+      "descripcion": "En mayo de 1940, Alemania invadió Francia, Bélgica y los Países Bajos. La estrategia nazi de rodear a las fuerzas aliadas por las Ardenas —considerado terreno impenetrable— resultó devastadoramente efectiva. Más de 400.000 soldados aliados quedaron atrapados en la costa de Dunkerque. Entre el 26 de mayo y el 4 de junio, una armada improvisada de barcos militares y civiles evacuó a más de 330.000 hombres hacia Inglaterra. Francia firmó el armisticio el 22 de junio."
+    }
+  },
+  {
+    "model": "epocas.evento",
+    "pk": 10,
+    "fields": {
+      "epoca": 2,
+      "titulo": "Operación Barbarroja: invasión de la URSS",
+      "anio": 1941, "mes": 6, "orden": 3,
+      "icono": "❄️",
+      "resumen": "Hitler lanza la mayor invasión terrestre de la historia contra la Unión Soviética.",
+      "descripcion": "El 22 de junio de 1941, Alemania lanzó la Operación Barbarroja con más de 3 millones de soldados, la mayor invasión terrestre de la historia. Inicialmente los avances fueron fulminantes, pero la resistencia soviética, el invierno ruso y las enormes distancias frenaron el avance. El fracaso de tomar Moscú en 1941 fue el primer gran revés alemán. Este frente oriental se convirtió en el más mortífero de toda la guerra, con decenas de millones de muertos."
+    }
+  },
+  {
+    "model": "epocas.evento",
+    "pk": 11,
+    "fields": {
+      "epoca": 2,
+      "titulo": "Ataque a Pearl Harbor",
+      "anio": 1941, "mes": 12, "orden": 4,
+      "icono": "💣",
+      "resumen": "Japón ataca la base naval de EE.UU. en Hawaii. América entra a la guerra.",
+      "descripcion": "El 7 de diciembre de 1941, la aviación naval japonesa atacó por sorpresa la base militar estadounidense de Pearl Harbor en Hawaii, hundiendo o dañando 18 barcos y destruyendo 300 aviones. Murieron 2.403 estadounidenses. Al día siguiente, el presidente Roosevelt pidió la declaración de guerra contra Japón, calificando el 7 de diciembre como 'una fecha que vivirá en la infamia'. Alemania e Italia declararon la guerra a EE.UU. días después. La potencia industrial norteamericana cambiaría el curso del conflicto."
+    }
+  },
+  {
+    "model": "epocas.evento",
+    "pk": 12,
+    "fields": {
+      "epoca": 2,
+      "titulo": "El Holocausto",
+      "anio": 1942, "mes": 1, "orden": 5,
+      "icono": "✡️",
+      "resumen": "El régimen nazi implementa la 'Solución Final': el exterminio sistemático de 6 millones de judíos.",
+      "descripcion": "En la Conferencia de Wannsee (enero de 1942), los nazis formalizaron la 'Solución Final de la cuestión judía': el exterminio sistemático de todos los judíos de Europa. Campos de exterminio como Auschwitz-Birkenau, Treblinka y Sobibor operaron con el único propósito de asesinar a millones de personas. En total, el Holocausto cobró la vida de aproximadamente 6 millones de judíos —dos tercios de la población judía europea— además de millones de gitanos, discapacitados, homosexuales y opositores políticos."
+    }
+  },
+  {
+    "model": "epocas.evento",
+    "pk": 13,
+    "fields": {
+      "epoca": 2,
+      "titulo": "Batalla de Stalingrado",
+      "anio": 1942, "mes": 8, "orden": 6,
+      "icono": "🏚️",
+      "resumen": "El punto de inflexión. La URSS derrota a Alemania en la batalla más sangrienta de la historia.",
+      "descripcion": "Entre agosto de 1942 y febrero de 1943, alemanes y soviéticos se enfrentaron en Stalingrado (hoy Volgogrado) en la batalla más sangrienta de la historia, con cerca de 2 millones de bajas. Los soviéticos resistieron casa por casa y luego cercaron al Ejército alemán. El 2 de febrero de 1943, el Mariscal Paulus se rindió con 300.000 soldados. Stalingrado marcó el punto de inflexión definitivo: desde ese momento, Alemania retrocedería en el frente oriental hasta la derrota final."
+    }
+  },
+  {
+    "model": "epocas.evento",
+    "pk": 14,
+    "fields": {
+      "epoca": 2,
+      "titulo": "Desembarco de Normandía (Día D)",
+      "anio": 1944, "mes": 6, "orden": 7,
+      "icono": "🏖️",
+      "resumen": "La mayor operación anfibia de la historia abre un segundo frente en Europa occidental.",
+      "descripcion": "El 6 de junio de 1944 ('Día D'), las fuerzas aliadas bajo el mando del general Eisenhower lanzaron la Operación Overlord: 156.000 soldados desembarcaron en cinco playas de Normandía (Francia) bajo fuego intenso. Fue la mayor operación anfibia de la historia. Aunque las bajas fueron enormes —especialmente en Omaha Beach— los Aliados lograron establecer una cabeza de playa. París fue liberado en agosto. El frente occidental quedó abierto, atrapando a Alemania entre los Aliados por el oeste y los soviéticos por el este."
+    }
+  },
+  {
+    "model": "epocas.evento",
+    "pk": 15,
+    "fields": {
+      "epoca": 2,
+      "titulo": "Bombas atómicas sobre Japón",
+      "anio": 1945, "mes": 8, "orden": 8,
+      "icono": "☢️",
+      "resumen": "EE.UU. lanza bombas atómicas sobre Hiroshima y Nagasaki. Japón se rinde. Fin de la guerra.",
+      "descripcion": "El 6 de agosto de 1945, EE.UU. lanzó 'Little Boy' sobre Hiroshima, matando a unas 80.000 personas al instante. El 9 de agosto, 'Fat Man' destruyó Nagasaki con 40.000 muertos inmediatos. Decenas de miles más murieron por las secuelas de la radiación. El 15 de agosto, el emperador Hirohito anunció la rendición de Japón. La rendición formal se firmó el 2 de septiembre de 1945. La Segunda Guerra Mundial había terminado, pero el mundo entraba en la era atómica con sus terribles implicaciones."
+    }
+  },
+
+
+  {
+    "model": "epocas.evento",
+    "pk": 16,
+    "fields": {
+      "epoca": 3,
+      "titulo": "Doctrina Truman y Plan Marshall",
+      "anio": 1947, "mes": 3, "orden": 1,
+      "icono": "🤝",
+      "resumen": "EE.UU. anuncia su política de contención del comunismo y reconstruye Europa occidental.",
+      "descripcion": "En 1947, el presidente Harry Truman proclamó la 'Doctrina Truman': EE.UU. apoyaría a cualquier nación amenazada por el comunismo. Ese mismo año, el Plan Marshall destinó 13.000 millones de dólares para reconstruir Europa occidental devastada por la guerra, con el objetivo explícito de evitar que la pobreza empujara a los países hacia el comunismo. La URSS rechazó el plan y prohibió a sus países satélite aceptarlo. El mundo quedó dividido en dos bloques ideológicos enfrentados."
+    }
+  },
+  {
+    "model": "epocas.evento",
+    "pk": 17,
+    "fields": {
+      "epoca": 3,
+      "titulo": "Bloqueo de Berlín y el Puente Aéreo",
+      "anio": 1948, "mes": 6, "orden": 2,
+      "icono": "✈️",
+      "resumen": "La URSS bloquea Berlín Occidental. Occidente responde con el mayor puente aéreo de la historia.",
+      "descripcion": "En junio de 1948, la URSS bloqueó todos los accesos terrestres a Berlín Occidental, esperando que la ciudad cayera. La respuesta occidental fue un puente aéreo masivo: durante 11 meses, aviones aliados aterrizaron en Berlín cada pocos minutos transportando alimentos, carbón y suministros. En total se realizaron 278.000 vuelos. En mayo de 1949, la URSS levantó el bloqueo. Fue la primera gran crisis de la Guerra Fría y una victoria simbólica para Occidente."
+    }
+  },
+  {
+    "model": "epocas.evento",
+    "pk": 18,
+    "fields": {
+      "epoca": 3,
+      "titulo": "Guerra de Corea",
+      "anio": 1950, "mes": 6, "orden": 3,
+      "icono": "🇰🇷",
+      "resumen": "La primera guerra proxy de la Guerra Fría. Corea del Norte (URSS/China) vs. Corea del Sur (EE.UU.).",
+      "descripcion": "En junio de 1950, Corea del Norte invadió Corea del Sur. EE.UU. lideró una coalición de la ONU en defensa del sur, mientras China envió tropas en apoyo del norte. La guerra terminó en 1953 con un armisticio —no un tratado de paz— prácticamente en las mismas líneas del inicio. La Península de Corea quedó dividida en el paralelo 38 como hasta hoy. La guerra costó unos 3 millones de muertos y estableció el patrón de las 'guerras proxy' de la Guerra Fría."
+    }
+  },
+  {
+    "model": "epocas.evento",
+    "pk": 19,
+    "fields": {
+      "epoca": 3,
+      "titulo": "Carrera espacial: Sputnik y la Luna",
+      "anio": 1957, "mes": 10, "orden": 4,
+      "icono": "🚀",
+      "resumen": "La URSS lanza el primer satélite. EE.UU. responde. La conquista espacial se convierte en campo de batalla.",
+      "descripcion": "El 4 de octubre de 1957, la URSS lanzó el Sputnik 1, el primer satélite artificial de la historia. EE.UU. reaccionó con alarma y aceleró su programa espacial. La URSS añadió victorias: Laika (primer animal en órbita, 1957), Yuri Gagarin (primer humano en el espacio, 1961). EE.UU. respondió con el programa Apollo. El 20 de julio de 1969, Neil Armstrong pisó la Luna. La carrera espacial fue una demostración de superioridad tecnológica e ideológica y produjo avances científicos que benefician al mundo hasta hoy."
+    }
+  },
+  {
+    "model": "epocas.evento",
+    "pk": 20,
+    "fields": {
+      "epoca": 3,
+      "titulo": "Crisis de los Misiles de Cuba",
+      "anio": 1962, "mes": 10, "orden": 5,
+      "icono": "🎯",
+      "resumen": "El mundo al borde de la guerra nuclear. 13 días que pusieron en jaque a la humanidad.",
+      "descripcion": "En octubre de 1962, aviones espía estadounidenses descubrieron que la URSS estaba instalando misiles nucleares en Cuba, a 150 km de Florida. El presidente Kennedy ordenó un bloqueo naval y exigió el retiro de los misiles. Durante 13 días el mundo estuvo al borde de la guerra nuclear. La crisis se resolvió negociando: la URSS retiró sus misiles de Cuba y EE.UU. prometió no invadir la isla y retirar misiles de Turquía. Es considerado el momento más peligroso de la Guerra Fría."
+    }
+  },
+  {
+    "model": "epocas.evento",
+    "pk": 21,
+    "fields": {
+      "epoca": 3,
+      "titulo": "Muro de Berlín: construcción y caída",
+      "anio": 1961, "mes": 8, "orden": 6,
+      "icono": "🧱",
+      "resumen": "El símbolo más visible de la Guerra Fría: construido en 1961, cayó el 9 de noviembre de 1989.",
+      "descripcion": "En agosto de 1961, la RDA (Alemania Oriental) construyó el Muro de Berlín de la noche a la mañana para detener la fuga masiva de ciudadanos hacia Occidente. El muro dividió familias, barrios y la ciudad por 28 años. Se convirtió en el símbolo más poderoso de la Cortina de Hierro. El 9 de noviembre de 1989, bajo la presión de manifestaciones masivas en toda Alemania Oriental, el régimen anunció la apertura de fronteras. Multitudes derribaron el muro a manos. Alemania se reunificó al año siguiente."
+    }
+  },
+  {
+    "model": "epocas.evento",
+    "pk": 22,
+    "fields": {
+      "epoca": 3,
+      "titulo": "Disolución de la Unión Soviética",
+      "anio": 1991, "mes": 12, "orden": 7,
+      "icono": "🏳️",
+      "resumen": "El 25 de diciembre de 1991, Gorbachov renuncia. La URSS desaparece. Fin de la Guerra Fría.",
+      "descripcion": "Las reformas de glasnost (transparencia) y perestroika (reestructuración) impulsadas por Mijaíl Gorbachov desde 1985 desencadenaron fuerzas que el sistema soviético no pudo controlar. Tras el fallido golpe de Estado de agosto de 1991, las repúblicas soviéticas declararon su independencia en cascada. El 25 de diciembre de 1991, Gorbachov renunció y la bandera soviética fue arriada del Kremlin. 15 repúblicas independientes surgieron de las ruinas de la URSS. La Guerra Fría había terminado y con ella, el mundo bipolar."
+    }
+  },
+
+  {
+    "model": "epocas.pais", "pk": 1,
+    "fields": { "epoca": 1, "nombre": "Francia", "bandera": "🇫🇷", "tipo": "principal", "bando": "Aliados", "orden": 1,
+      "descripcion": "Francia fue uno de los países más afectados de la guerra. Su territorio norte y noreste fue escenario de los combates más intensos durante cuatro años. Perdió aproximadamente 1,4 millones de soldados y sufrió enormes daños materiales. La Batalla de Verdún se convirtió en símbolo de la resistencia francesa." }
+  },
+  {
+    "model": "epocas.pais", "pk": 2,
+    "fields": { "epoca": 1, "nombre": "Alemania", "bandera": "🇩🇪", "tipo": "principal", "bando": "Potencias Centrales", "orden": 2,
+      "descripcion": "Alemania lideró las Potencias Centrales y libró guerra en dos frentes simultáneamente. Su industria bélica fue la más avanzada del mundo. La derrota y el humillante Tratado de Versalles generaron la crisis política y económica que décadas después facilitaría el ascenso del nazismo." }
+  },
+  {
+    "model": "epocas.pais", "pk": 3,
+    "fields": { "epoca": 1, "nombre": "Reino Unido", "bandera": "🇬🇧", "tipo": "principal", "bando": "Aliados", "orden": 3,
+      "descripcion": "El Imperio Británico aportó tropas de Australia, Canadá, India, Nueva Zelanda y Sudáfrica además de las propias. Perdió casi 900.000 soldados. El bloqueo naval británico a Alemania fue determinante para su derrota al cortar el suministro de alimentos y materias primas." }
+  },
+  {
+    "model": "epocas.pais", "pk": 4,
+    "fields": { "epoca": 1, "nombre": "Rusia / URSS", "bandera": "🇷🇺", "tipo": "principal", "bando": "Aliados", "orden": 4,
+      "descripcion": "Rusia sufrió las mayores bajas militares aliadas con cerca de 1,7 millones de muertos. La presión de la guerra aceleró la Revolución Rusa de 1917, que derrocó al zar y llevó a los bolcheviques al poder. En 1918 firmó el Tratado de Brest-Litovsk saliendo de la guerra." }
+  },
+  {
+    "model": "epocas.pais", "pk": 5,
+    "fields": { "epoca": 1, "nombre": "Colombia", "bandera": "🇨🇴", "tipo": "colateral", "bando": "Neutral", "orden": 1,
+      "descripcion": "Colombia no participó directamente en la Primera Guerra Mundial y se mantuvo neutral. Sin embargo, la guerra tuvo impacto económico: el comercio exterior se vio afectado por el bloqueo naval y la interrupción de las rutas marítimas. La exportación de café, principal producto colombiano, sufrió fluctuaciones. La guerra también aceleró la influencia estadounidense en América Latina, contexto en el que Colombia negociaba la indemnización por Panamá (Tratado Thomson-Urrutia, 1914)." }
+  },
+
+  {
+    "model": "epocas.pais", "pk": 6,
+    "fields": { "epoca": 2, "nombre": "Alemania Nazi", "bandera": "🇩🇪", "tipo": "principal", "bando": "Eje", "orden": 1,
+      "descripcion": "Bajo Adolf Hitler y el Partido Nazi, Alemania desencadenó la guerra con la invasión de Polonia en 1939. Conquistó casi toda Europa continental antes de ser detenida en la URSS y el norte de África. El régimen nazi fue responsable del Holocausto y crímenes contra la humanidad. Alemania se rindió incondicionalmente el 8 de mayo de 1945." }
+  },
+  {
+    "model": "epocas.pais", "pk": 7,
+    "fields": { "epoca": 2, "nombre": "Estados Unidos", "bandera": "🇺🇸", "tipo": "principal", "bando": "Aliados", "orden": 2,
+      "descripcion": "Inicialmente neutral, EE.UU. entró a la guerra tras Pearl Harbor en diciembre de 1941. Su enorme capacidad industrial ('arsenal de la democracia') fue decisiva. Lideró el Desembarco de Normandía, la campaña del Pacífico y finalizó la guerra con el uso de bombas atómicas. Emergió de la guerra como la principal potencia mundial." }
+  },
+  {
+    "model": "epocas.pais", "pk": 8,
+    "fields": { "epoca": 2, "nombre": "URSS", "bandera": "🇷🇺", "tipo": "principal", "bando": "Aliados", "orden": 3,
+      "descripcion": "La Unión Soviética soportó el peso principal de la guerra contra Alemania en el frente oriental. Sufrió entre 25 y 27 millones de muertos, la mayor pérdida de cualquier nación. La resistencia soviética en Stalingrado marcó el punto de quiebre. El Ejército Rojo liberó Europa del este y llegó a Berlín en 1945." }
+  },
+  {
+    "model": "epocas.pais", "pk": 9,
+    "fields": { "epoca": 2, "nombre": "Colombia", "bandera": "🇨🇴", "tipo": "colateral", "bando": "Aliados (declaró guerra tardíamente)", "orden": 1,
+      "descripcion": "Colombia declaró la guerra a Alemania y Japón en noviembre de 1943, aunque no envió tropas al frente. La participación fue principalmente simbólica y diplomática. El impacto económico fue significativo: los submarinos alemanes (U-boots) operando en el Caribe hundieron barcos colombianos, incluyendo el ARC Resolute. La guerra afectó el comercio de café y petróleo. Colombia también internó a ciudadanos alemanes, japoneses e italianos residentes en el país." }
+  },
+
+
+  {
+    "model": "epocas.pais", "pk": 10,
+    "fields": { "epoca": 3, "nombre": "Estados Unidos", "bandera": "🇺🇸", "tipo": "principal", "bando": "Bloque Occidental", "orden": 1,
+      "descripcion": "EE.UU. lideró el bloque occidental capitalista con la OTAN, el Plan Marshall y la Doctrina Truman. Intervino en guerras proxy en Corea, Vietnam, América Central y otras regiones. Desarrolló el arsenal nuclear más poderoso del mundo y ganó la carrera espacial con el alunizaje de 1969. Su sistema económico y cultural ('American way of life') se extendió globalmente." }
+  },
+  {
+    "model": "epocas.pais", "pk": 11,
+    "fields": { "epoca": 3, "nombre": "URSS", "bandera": "🇷🇺", "tipo": "principal", "bando": "Bloque Oriental", "orden": 2,
+      "descripcion": "La Unión Soviética lideró el bloque comunista con el Pacto de Varsovia. Fue la primera en lanzar un satélite al espacio (Sputnik, 1957) y en enviar un humano (Gagarin, 1961). Apoyó movimientos revolucionarios en África, Asia y América Latina. Su economía planificada no pudo sostener la competencia con EE.UU. La glasnost y la perestroika de Gorbachov precipitaron su disolución en 1991." }
+  },
+  {
+    "model": "epocas.pais", "pk": 12,
+    "fields": { "epoca": 3, "nombre": "Cuba", "bandera": "🇨🇺", "tipo": "principal", "bando": "Bloque Oriental", "orden": 3,
+      "descripcion": "Cuba se convirtió en el único país del hemisferio occidental alineado con la URSS tras la revolución castrista de 1959. La Crisis de los Misiles de 1962 la convirtió en epicentro del momento más peligroso de la Guerra Fría. Cuba exportó su revolución a otros países latinoamericanos y africanos. El bloqueo económico estadounidense continúa hasta hoy." }
+  },
+  {
+    "model": "epocas.pais", "pk": 13,
+    "fields": { "epoca": 3, "nombre": "Colombia", "bandera": "🇨🇴", "tipo": "colateral", "bando": "Bloque Occidental", "orden": 1,
+      "descripcion": "Colombia fue uno de los países latinoamericanos más afectados por la dinámica de la Guerra Fría. El período de 'La Violencia' (1948-1958) fue en parte alimentado por tensiones ideológicas. El surgimiento de las FARC (1964) y el ELN (1964) estuvo influenciado por la Revolución Cubana y el pensamiento marxista. EE.UU. apoyó al gobierno colombiano con programas como la Alianza para el Progreso de Kennedy para evitar que Colombia 'cayera' al comunismo." }
+  }
+]

@@ -1,0 +1,53 @@
+[
+  {"model":"epocas.zonamapa","pk":1,"fields":{"evento":3,"nombre":"Zona de combate — Río Marne","descripcion":"Área donde se libró la batalla decisiva del Marne en septiembre de 1914, deteniendo el avance alemán hacia París.","bando":"aliados","orden":1,"coordenadas":[[49.2,2.5],[49.2,4.5],[48.6,4.5],[48.6,2.5]]}},
+
+  {"model":"epocas.zonamapa","pk":2,"fields":{"evento":3,"nombre":"Territorio ocupado por Alemania — Norte de Francia","descripcion":"Zona del norte de Francia y Bélgica ocupada por el ejército alemán durante toda la guerra.","bando":"enemigos","orden":2,"coordenadas":[[51.5,2.5],[51.5,6.5],[49.5,6.5],[49.5,2.5]]}},
+
+  {"model":"epocas.zonamapa","pk":3,"fields":{"evento":8,"nombre":"Polonia invadida por Alemania","descripcion":"Territorio polaco occidental invadido por el ejército alemán desde el 1 de septiembre de 1939.","bando":"enemigos","orden":1,"coordenadas":[[54.5,14.0],[54.5,20.0],[51.0,20.0],[51.0,14.0]]}},
+
+  {"model":"epocas.zonamapa","pk":4,"fields":{"evento":8,"nombre":"Polonia invadida por la URSS","descripcion":"Territorio polaco oriental invadido por el ejército soviético el 17 de septiembre de 1939, según el Pacto Molotov-Ribbentrop.","bando":"neutral","orden":2,"coordenadas":[[54.5,20.0],[54.5,24.5],[50.0,24.5],[50.0,20.0]]}},
+
+  {"model":"epocas.zonamapa","pk":5,"fields":{"evento":9,"nombre":"Francia ocupada por Alemania","descripcion":"Zona norte de Francia bajo ocupación alemana desde junio de 1940 tras el armisticio.","bando":"enemigos","orden":1,"coordenadas":[[51.0,-2.0],[51.0,8.0],[47.0,8.0],[47.0,-2.0]]}},
+
+  {"model":"epocas.zonamapa","pk":6,"fields":{"evento":9,"nombre":"Francia de Vichy — zona colaboracionista","descripcion":"Zona sur de Francia bajo el gobierno títere de Vichy, colaboracionista con la Alemania nazi.","bando":"neutral","orden":2,"coordenadas":[[47.0,-2.0],[47.0,8.0],[43.0,8.0],[43.0,-2.0]]}},
+
+  {"model":"epocas.zonamapa","pk":7,"fields":{"evento":10,"nombre":"Territorio soviético ocupado por Alemania","descripcion":"Enormes territorios de la URSS ocupados por el avance alemán en 1941-1942, incluyendo Ucrania y Bielorrusia.","bando":"enemigos","orden":1,"coordenadas":[[55.0,23.0],[55.0,38.0],[47.0,38.0],[47.0,23.0]]}},
+
+  {"model":"epocas.zonamapa","pk":8,"fields":{"evento":14,"nombre":"Cabeza de playa aliada en Normandía","descripcion":"Zona de playas donde desembarcaron los aliados el 6 de junio de 1944. Punto de partida de la liberación de Francia.","bando":"aliados","orden":1,"coordenadas":[[49.5,-1.8],[49.5,0.3],[49.2,0.3],[49.2,-1.8]]}},
+
+  {"model":"epocas.zonamapa","pk":9,"fields":{"evento":20,"nombre":"Cuba — zona de misiles soviéticos","descripcion":"Territorio cubano donde la URSS instaló misiles balísticos de alcance medio capaces de alcanzar ciudades americanas.","bando":"enemigos","orden":1,"coordenadas":[[23.5,-85.0],[23.5,-74.0],[19.5,-74.0],[19.5,-85.0]]}},
+
+  {"model":"epocas.lineamapa","pk":1,"fields":{"evento":3,"nombre":"Avance alemán hacia París — Plan Schlieffen","descripcion":"Ruta de avance del ejército alemán atravesando Bélgica y el norte de Francia según el Plan Schlieffen.","tipo":"ruta","bando":"enemigos","orden":1,"coordenadas":[[50.8,4.3],[50.3,3.5],[49.8,3.0],[49.2,2.8],[48.97,3.82]]}},
+
+  {"model":"epocas.lineamapa","pk":2,"fields":{"evento":3,"nombre":"Contraataque francés en el Marne","descripcion":"El ejército francés y las fuerzas británicas lanzaron el contraataque decisivo que detuvo el avance alemán.","tipo":"ruta","bando":"aliados","orden":2,"coordenadas":[[48.85,2.35],[48.97,3.0],[49.0,3.5],[48.97,3.82]]}},
+
+  {"model":"epocas.lineamapa","pk":3,"fields":{"evento":3,"nombre":"Frente Occidental — 700 km de trincheras","descripcion":"Línea de trincheras que se extendía desde el Mar del Norte hasta la frontera con Suiza. Apenas se movió durante 4 años.","tipo":"frente","bando":"neutral","orden":3,"coordenadas":[[51.1,2.5],[50.5,3.0],[50.0,3.5],[49.5,4.5],[49.0,5.0],[48.5,5.5],[47.7,7.0],[47.5,7.5]]}},
+
+  {"model":"epocas.lineamapa","pk":4,"fields":{"evento":5,"nombre":"Frente Oriental antes del colapso ruso","descripcion":"Línea del frente oriental antes de que Rusia se retirara de la guerra tras la Revolución Bolchevique.","tipo":"frente","bando":"neutral","orden":1,"coordenadas":[[56.5,24.0],[54.0,26.0],[52.0,24.5],[50.0,25.5],[48.0,27.0],[46.5,30.0]]}},
+
+  {"model":"epocas.lineamapa","pk":5,"fields":{"evento":5,"nombre":"Ruta de retirada rusa","descripcion":"Las tropas rusas se retiraron masivamente tras la Revolución. El nuevo gobierno bolchevique firmó la paz en Brest-Litovsk.","tipo":"retirada","bando":"aliados","orden":2,"coordenadas":[[52.1,23.7],[53.0,28.0],[55.0,30.0],[55.75,37.6]]}},
+
+  {"model":"epocas.lineamapa","pk":6,"fields":{"evento":6,"nombre":"Ruta naval de tropas americanas a Europa","descripcion":"Las fuerzas expedicionarias americanas cruzaron el Atlántico Norte bajo amenaza de submarinos alemanes para llegar a Francia.","tipo":"naval","bando":"aliados","orden":1,"coordenadas":[[38.9,-77.0],[40.7,-74.0],[43.0,-55.0],[46.0,-30.0],[48.4,-4.5],[48.8,-2.0]]}},
+
+  {"model":"epocas.lineamapa","pk":7,"fields":{"evento":8,"nombre":"Avance alemán desde el norte — Grupo Norte","descripcion":"El Grupo de Ejércitos Norte avanzó desde Prusia Oriental hacia Varsovia.","tipo":"ruta","bando":"enemigos","orden":1,"coordenadas":[[54.4,18.7],[53.5,19.5],[52.7,20.5],[52.2,21.0]]}},
+
+  {"model":"epocas.lineamapa","pk":8,"fields":{"evento":8,"nombre":"Avance alemán desde el oeste y sur","descripcion":"El Grupo de Ejércitos Sur avanzó desde Silesia y Eslovaquia en una maniobra de pinza sobre Polonia.","tipo":"ruta","bando":"enemigos","orden":2,"coordenadas":[[50.0,18.0],[51.0,19.5],[51.5,20.5],[52.2,21.0]]}},
+
+  {"model":"epocas.lineamapa","pk":9,"fields":{"evento":9,"nombre":"Avance alemán por los Ardenas","descripcion":"El grueso del ataque alemán pasó por las Ardenas, consideradas infranqueables, rodeando la Línea Maginot y atrapando a los aliados.","tipo":"ruta","bando":"enemigos","orden":1,"coordenadas":[[50.5,6.0],[49.5,5.0],[48.5,4.5],[47.5,4.0],[47.0,3.5]]}},
+
+  {"model":"epocas.lineamapa","pk":10,"fields":{"evento":9,"nombre":"Retirada aliada a Dunkerque","descripcion":"Las fuerzas aliadas atrapadas se retiraron hacia el norte hasta la costa en Dunkerque para ser evacuadas.","tipo":"retirada","bando":"aliados","orden":2,"coordenadas":[[50.0,4.0],[50.5,3.0],[51.0,2.5],[51.03,2.38]]}},
+
+  {"model":"epocas.lineamapa","pk":11,"fields":{"evento":10,"nombre":"Grupo Norte — hacia Leningrado","descripcion":"El Grupo de Ejércitos Norte avanzó desde Prusia Oriental hacia Leningrado a través de los países bálticos.","tipo":"ruta","bando":"enemigos","orden":1,"coordenadas":[[54.7,20.5],[56.0,24.0],[57.5,27.0],[58.5,29.0],[59.9,30.3]]}},
+
+  {"model":"epocas.lineamapa","pk":12,"fields":{"evento":10,"nombre":"Grupo Centro — hacia Moscú","descripcion":"El Grupo de Ejércitos Centro avanzó hacia Moscú siendo el más poderoso. Llegó a 30 km de la capital antes de ser detenido.","tipo":"ruta","bando":"enemigos","orden":2,"coordenadas":[[52.1,23.7],[53.0,27.0],[54.0,31.0],[54.5,34.0],[55.0,36.0],[55.75,37.6]]}},
+
+  {"model":"epocas.lineamapa","pk":13,"fields":{"evento":10,"nombre":"Grupo Sur — hacia Stalingrado","descripcion":"El Grupo de Ejércitos Sur avanzó hacia Ucrania, el Cáucaso y Stalingrado buscando el petróleo soviético.","tipo":"ruta","bando":"enemigos","orden":3,"coordenadas":[[50.5,24.0],[49.0,28.0],[48.5,33.0],[48.7,44.5]]}},
+
+  {"model":"epocas.lineamapa","pk":14,"fields":{"evento":14,"nombre":"Avance aliado desde Normandía hacia París","descripcion":"Tras consolidar la cabeza de playa, los aliados avanzaron liberando Normandía, el norte de Francia y finalmente París el 25 agosto 1944.","tipo":"ruta","bando":"aliados","orden":1,"coordenadas":[[49.3,-0.86],[48.8,0.1],[48.5,1.5],[48.85,2.35]]}},
+
+  {"model":"epocas.lineamapa","pk":15,"fields":{"evento":17,"nombre":"Corredor aéreo norte — Hamburgo a Berlín","descripcion":"Uno de los tres corredores aéreos oficiales usados por los aliados para abastecer Berlín durante el bloqueo soviético.","tipo":"naval","bando":"aliados","orden":1,"coordenadas":[[53.55,9.99],[52.52,13.40]]}},
+
+  {"model":"epocas.lineamapa","pk":16,"fields":{"evento":17,"nombre":"Corredor aéreo sur — Fráncfort a Berlín","descripcion":"El corredor aéreo sur conectaba la zona americana con Berlín Occidental y era el más utilizado durante el puente aéreo.","tipo":"naval","bando":"aliados","orden":2,"coordenadas":[[50.11,8.68],[51.5,11.0],[52.52,13.40]]}},
+
+  {"model":"epocas.lineamapa","pk":17,"fields":{"evento":20,"nombre":"Línea de cuarentena naval americana","descripcion":"La Marina de EE.UU. estableció una línea de bloqueo a 500 millas náuticas de Cuba para interceptar los barcos soviéticos.","tipo":"frente","bando":"aliados","orden":1,"coordenadas":[[30.0,-80.0],[27.0,-75.0],[24.0,-72.0],[21.0,-72.0],[18.0,-75.0],[17.0,-80.0],[20.0,-85.0],[25.0,-85.0],[30.0,-80.0]]}}
+]

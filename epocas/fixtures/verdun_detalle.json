@@ -1,0 +1,33 @@
+[
+  {"model":"epocas.puntomapa","pk":68,"fields":{"evento":4,"nombre":"Spincourt – Concentración de artillería alemana","descripcion":"Desde Spincourt Alemania concentró más de 1.200 cañones antes del ataque del 21 de febrero de 1916. El bombardeo duró 9 horas seguidas y destruyó las primeras líneas francesas.","tipo":"batalla","bando":"enemigos","latitud":49.3317,"longitud":5.6667,"orden":4}},
+
+  {"model":"epocas.puntomapa","pk":69,"fields":{"evento":4,"nombre":"Stenay – Cuartel General alemán","descripcion":"El Príncipe heredero Guillermo dirigió la Quinta Armada alemana desde Stenay. Aquí se planificó la operación 'Gericht' (Juicio), diseñada para desangrar al ejército francés.","tipo":"ciudad","bando":"enemigos","latitud":49.4833,"longitud":5.1833,"orden":5}},
+
+  {"model":"epocas.puntomapa","pk":70,"fields":{"evento":4,"nombre":"Fuerte Douaumont – Caído en manos alemanas","descripcion":"El fuerte más poderoso de Verdún cayó el 25 de febrero de 1916 casi sin resistencia. Su pérdida fue un golpe moral devastador para Francia. Fue recuperado el 24 de octubre de 1916.","tipo":"batalla","bando":"enemigos","latitud":49.2167,"longitud":5.4333,"orden":6}},
+
+  {"model":"epocas.puntomapa","pk":71,"fields":{"evento":4,"nombre":"Fuerte Vaux – Última resistencia","descripcion":"El Comandante Raynal resistió en Vaux hasta el 7 de junio de 1916, cuando se rindió por falta de agua. Envió su última paloma mensajera pidiendo socorro antes de capitular.","tipo":"batalla","bando":"aliados","latitud":49.2000,"longitud":5.4667,"orden":7}},
+
+  {"model":"epocas.puntomapa","pk":72,"fields":{"evento":4,"nombre":"La Voie Sacrée – Única ruta de suministros","descripcion":"La 'Vía Sagrada' era la única carretera que conectaba Verdún con Bar-le-Duc. Más de 6.000 camiones transitaban por ella cada día para abastecer a los defensores.","tipo":"ruta","bando":"aliados","latitud":48.9500,"longitud":5.1600,"orden":8}},
+
+  {"model":"epocas.puntomapa","pk":73,"fields":{"evento":4,"nombre":"Consenvoye – Cruce del Mosa alemán","descripcion":"Posición alemana desde donde cruzaron el río Mosa para atacar la orilla oeste. El General Falkenhayn amplió el ataque a ambas orillas para maximizar las bajas francesas.","tipo":"batalla","bando":"enemigos","latitud":49.2833,"longitud":5.3000,"orden":9}},
+
+  {"model":"epocas.zonamapa","pk":10,"fields":{"evento":4,"nombre":"Zona de ataque alemán — Frente norte","descripcion":"Territorio desde donde la Quinta Armada alemana lanzó su ofensiva el 21 de febrero de 1916. La densidad de tropas y artillería era la mayor vista hasta entonces en la historia.","bando":"enemigos","orden":1,"coordenadas":[[49.35,5.18],[49.35,5.65],[49.25,5.65],[49.25,5.18]]}},
+
+  {"model":"epocas.zonamapa","pk":11,"fields":{"evento":4,"nombre":"Anillo de fuertes franceses","descripcion":"Sistema de 19 fuertes que rodeaban Verdún: Douaumont, Vaux, Souville, Tavannes, Belleville y otros. Esta red de fuertes fue la columna vertebral de la defensa francesa.","bando":"aliados","orden":2,"coordenadas":[[49.23,5.28],[49.23,5.55],[49.13,5.55],[49.13,5.28]]}},
+
+  {"model":"epocas.zonamapa","pk":12,"fields":{"evento":4,"nombre":"Tierra de Nadie — zona devastada","descripcion":"Franja completamente destruida entre las líneas. Después de 10 meses de bombardeo continuo quedó convertida en un paisaje lunar. Hoy sigue siendo 'zona roja' prohibida por la contaminación de municiones sin explotar.","bando":"neutral","orden":3,"coordenadas":[[49.26,5.30],[49.26,5.52],[49.19,5.52],[49.19,5.30]]}},
+
+  {"model":"epocas.zonamapa","pk":13,"fields":{"evento":4,"nombre":"Bosque de Caures — primera línea destruida","descripcion":"El Bosque de Caures fue el primero en caer el 21 de febrero. El Comandante Driant y sus cazadores resistieron heroicamente dos días antes de ser aniquilados. Driant murió aquí.","bando":"aliados","orden":4,"coordenadas":[[49.3000,5.3800],[49.3000,5.4500],[49.2600,5.4500],[49.2600,5.3800]]}},
+
+  {"model":"epocas.zonamapa","pk":14,"fields":{"evento":4,"nombre":"Zona de batalla — Somme julio 1916","descripcion":"Los aliados lanzaron la ofensiva del Somme el 1 de julio de 1916 para aliviar la presión sobre Verdún. El primer día fue el más sangriento de la historia del ejército británico: 57.000 bajas.","bando":"aliados","orden":5,"coordenadas":[[50.08,2.50],[50.08,2.90],[49.93,2.90],[49.93,2.50]]}},
+
+  {"model":"epocas.lineamapa","pk":18,"fields":{"evento":4,"nombre":"Frente Occidental — 700 km de trincheras","descripcion":"La línea del Frente Occidental en 1916 iba del Mar del Norte a Suiza. Apenas se movió durante cuatro años. Millones murieron por ganar unos pocos kilómetros.","tipo":"frente","bando":"neutral","orden":1,"coordenadas":[[51.10,2.50],[50.85,2.88],[50.50,3.00],[50.15,3.50],[49.90,4.00],[49.50,4.50],[49.20,5.10],[49.00,5.40],[48.50,5.80],[47.70,7.00],[47.48,7.58]]}},
+
+  {"model":"epocas.lineamapa","pk":19,"fields":{"evento":4,"nombre":"Eje principal del ataque alemán","descripcion":"Dirección del avance alemán desde el norte el 21 de febrero de 1916. Tras el bombardeo de 9 horas, la infantería avanzó en oleadas hacia los fuertes franceses.","tipo":"ruta","bando":"enemigos","orden":2,"coordenadas":[[49.4800,5.5000],[49.3800,5.5200],[49.3200,5.5000],[49.2800,5.4800],[49.2167,5.4333]]}},
+
+  {"model":"epocas.lineamapa","pk":20,"fields":{"evento":4,"nombre":"Ataque alemán por la orilla oeste del Mosa","descripcion":"En marzo de 1916 Alemania amplió el ataque a la orilla oeste del río Mosa para neutralizar la artillería francesa que batía el flanco alemán desde allí.","tipo":"ruta","bando":"enemigos","orden":3,"coordenadas":[[49.3800,5.2000],[49.3000,5.2200],[49.2500,5.2500],[49.2000,5.2800]]}},
+
+  {"model":"epocas.lineamapa","pk":21,"fields":{"evento":4,"nombre":"La Voie Sacrée — ruta de suministros francesa","descripcion":"La Vía Sagrada conectaba Bar-le-Duc con Verdún. Era la única arteria de suministros. Más de 6.000 camiones al día la recorrían para mantener viva la defensa francesa.","tipo":"ruta","bando":"aliados","orden":4,"coordenadas":[[48.7700,5.1600],[48.9500,5.1600],[49.0800,5.2000],[49.1600,5.3200]]}},
+
+  {"model":"epocas.lineamapa","pk":22,"fields":{"evento":4,"nombre":"Contraataque francés — recuperación de Douaumont","descripcion":"El 24 de octubre de 1916 el General Mangin lanzó el contraataque definitivo. Francia recuperó el Fuerte Douaumont y el Fuerte Vaux, empujando a los alemanes casi hasta su posición inicial.","tipo":"ruta","bando":"aliados","orden":5,"coordenadas":[[49.1583,5.3833],[49.1800,5.4000],[49.2000,5.4200],[49.2167,5.4333]]}}
+]

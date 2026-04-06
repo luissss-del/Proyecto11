@@ -1,0 +1,329 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WorldLearn – Acceso</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'login/css/login.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <!-- ── Panel decorativo izquierdo ── -->
+  <div class="deco-panel" id="decoPanel">
+    <!--
+      IMAGEN DE FONDO: descomenta y pon la ruta aquí:
+      <img src="{% static 'login/img/fondo.jpg' %}" alt="fondo" class="deco-bg-img">
+    -->
+    <div class="wl-watermark">
+      <span>WorldLearn</span><span>WorldLearn</span><span>WorldLearn</span>
+      <span>WorldLearn</span><span>WorldLearn</span><span>WorldLearn</span>
+      <span>WorldLearn</span><span>WorldLearn</span><span>WorldLearn</span>
+      <span>WorldLearn</span><span>WorldLearn</span><span>WorldLearn</span>
+    </div>
+    <div class="deco-tagline">
+      <h2 id="decoTitle">¡Bienvenido de vuelta!</h2>
+      <p id="decoSub">Continúa tu camino de aprendizaje.</p>
+    </div>
+  </div>
+
+  <!-- ── Panel de formularios ── -->
+  <div class="form-panel">
+    <div class="card-scene">
+      <div class="card" id="card">
+
+        <!-- ════════════════════
+             CARA FRONTAL: LOGIN
+        ════════════════════ -->
+        <div class="card-face card-front">
+          <div class="form-inner">
+
+            <!--
+              LOGO: descomenta cuando tengas la imagen:
+              <img src="{% static 'login/img/logo.png' %}" alt="WorldLearn" class="logo">
+            -->
+            <div class="logo-placeholder">🦉</div>
+
+            <h1 class="form-title">Hola, bienvenido<br>a WorldLearn</h1>
+            <p class="form-sub">
+              ¿Aún no tienes cuenta?
+              <a href="#" class="link-action" id="goToRegister">Crea una nueva ahora.</a>
+            </p>
+
+            <!-- Mensajes Django (errores de login, éxito de registro, etc.) -->
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+              {% endfor %}
+            {% endif %}
+
+            <!--
+              Formulario LOGIN
+              Compara nombre + password con la tabla `login`
+              que tiene ForeignKey a `user`
+            -->
+            <form method="POST" action="{% url 'login' %}" novalidate>
+              {% csrf_token %}
+              <input type="hidden" name="form_type" value="login">
+
+              <div class="field-group">
+                <input
+                  type="text"
+                  name="nombre"
+                  id="id_login_nombre"
+                  class="field-input"
+                  placeholder=" "
+                  autocomplete="username"
+                  required
+                >
+                <label class="field-label" for="id_login_nombre">Nombre de usuario</label>
+              </div>
+
+              <div class="field-group">
+                <input
+                  type="password"
+                  name="password"
+                  id="id_login_password"
+                  class="field-input"
+                  placeholder=" "
+                  autocomplete="current-password"
+                  required
+                >
+                <label class="field-label" for="id_login_password">Contraseña</label>
+                <button type="button" class="toggle-pw" data-target="id_login_password" tabindex="-1">👁</button>
+              </div>
+
+              <button type="submit" class="btn-main">Iniciar sesión</button>
+            </form>
+
+            <p class="forgot-link">
+              ¿Olvidaste tu contraseña?
+              <a href="{% url 'recuperar_password' %}" class="link-action">Haz clic aquí</a>
+            </p>
+
+          </div>
+        </div><!-- /card-front -->
+
+
+        <!-- ════════════════════
+             CARA TRASERA: REGISTRO
+             Campos del modelo `user`:
+             Ti, nombre, apellido, correo, password
+        ════════════════════ -->
+        <div class="card-face card-back">
+          <div class="form-inner">
+
+            <div class="logo-placeholder">🦉</div>
+
+            <h1 class="form-title">Crea tu cuenta</h1>
+            <p class="form-sub">
+              ¿Ya tienes cuenta?
+              <a href="#" class="link-action" id="goToLogin">Inicia sesión aquí.</a>
+            </p>
+
+            {% if form.errors %}
+              <div class="alert alert-error">Revisa los campos e intenta de nuevo.</div>
+            {% endif %}
+
+            <!--
+              Formulario REGISTRO
+              Usa `userForm` → modelo `user`
+              Nota: form es el contexto que envías desde views.py
+            -->
+            <form method="POST" action="{% url 'register' %}" novalidate>
+              {% csrf_token %}
+              <input type="hidden" name="form_type" value="register">
+
+              <!-- Ti: número de identificación -->
+              <div class="field-group">
+                <input
+                  type="number"
+                  name="{{ form.Ti.html_name }}"
+                  id="id_Ti"
+                  class="field-input {% if form.Ti.errors %}field-error{% endif %}"
+                  placeholder=" "
+                  value="{{ form.Ti.value|default:'' }}"
+                  required
+                >
+                <label class="field-label" for="id_Ti">Número de identificación</label>
+                {% if form.Ti.errors %}
+                  <span class="field-msg">{{ form.Ti.errors.0 }}</span>
+                {% endif %}
+              </div>
+
+              <!-- Nombre y Apellido en fila -->
+              <div class="fields-row">
+                <div class="field-group">
+                  <input
+                    type="text"
+                    name="{{ form.nombre.html_name }}"
+                    id="id_nombre"
+                    class="field-input {% if form.nombre.errors %}field-error{% endif %}"
+                    placeholder=" "
+                    value="{{ form.nombre.value|default:'' }}"
+                    required
+                  >
+                  <label class="field-label" for="id_nombre">Nombre</label>
+                  {% if form.nombre.errors %}
+                    <span class="field-msg">{{ form.nombre.errors.0 }}</span>
+                  {% endif %}
+                </div>
+
+                <div class="field-group">
+                  <input
+                    type="text"
+                    name="{{ form.apellido.html_name }}"
+                    id="id_apellido"
+                    class="field-input {% if form.apellido.errors %}field-error{% endif %}"
+                    placeholder=" "
+                    value="{{ form.apellido.value|default:'' }}"
+                    required
+                  >
+                  <label class="field-label" for="id_apellido">Apellido</label>
+                  {% if form.apellido.errors %}
+                    <span class="field-msg">{{ form.apellido.errors.0 }}</span>
+                  {% endif %}
+                </div>
+              </div>
+
+              <!-- Correo y Grado en fila -->
+              <div class="fields-row">
+                <div class="field-group">
+                  <input
+                    type="email"
+                    name="{{ form.correo.html_name }}"
+                    id="id_correo"
+                    class="field-input {% if form.correo.errors %}field-error{% endif %}"
+                    placeholder=" "
+                    value="{{ form.correo.value|default:'' }}"
+                    autocomplete="email"
+                    required
+                  >
+                  <label class="field-label" for="id_correo">Correo electrónico</label>
+                  {% if form.correo.errors %}
+                    <span class="field-msg">{{ form.correo.errors.0 }}</span>
+                  {% endif %}
+                </div>
+
+                <div class="field-group">
+                  <select
+                    name="{{ form.grado.html_name }}"
+                    id="id_grado"
+                    class="field-input field-select {% if form.grado.errors %}field-error{% endif %}"
+                    required
+                  >
+                    <option value="" disabled {% if not form.grado.value %}selected{% endif %}> </option>
+                    {% for grado in form.grado.field.queryset %}
+                      <option value="{{ grado.pk }}"
+                        {% if form.grado.value|stringformat:"s" == grado.pk|stringformat:"s" %}selected{% endif %}>
+                        {{ grado.nombre }}
+                      </option>
+                    {% endfor %}
+                  </select>
+                  <label class="field-label" for="id_grado">Grado</label>
+                  {% if form.grado.errors %}
+                    <span class="field-msg">{{ form.grado.errors.0 }}</span>
+                  {% endif %}
+                </div>
+              </div>
+
+              <!-- Password -->
+              <div class="field-group">
+                <input
+                  type="password"
+                  name="{{ form.password.html_name }}"
+                  id="id_reg_password"
+                  class="field-input {% if form.password.errors %}field-error{% endif %}"
+                  placeholder=" "
+                  autocomplete="new-password"
+                  required
+                >
+                <label class="field-label" for="id_reg_password">Contraseña</label>
+                <button type="button" class="toggle-pw" data-target="id_reg_password" tabindex="-1">👁</button>
+                {% if form.password.errors %}
+                  <span class="field-msg">{{ form.password.errors.0 }}</span>
+                {% endif %}
+              </div>
+
+              <button type="submit" class="btn-main">Guardar y Registrarme</button>
+            </form>
+
+          </div>
+        </div><!-- /card-back -->
+
+      </div><!-- /card -->
+    </div><!-- /card-scene -->
+  </div><!-- /form-panel -->
+
+</div><!-- /page-wrap -->
+
+
+<script>
+  // ── Flip entre login y registro ───────────────────────────────────
+  const card      = document.getElementById('card');
+  const decoPanel = document.getElementById('decoPanel');
+  const decoTitle = document.getElementById('decoTitle');
+  const decoSub   = document.getElementById('decoSub');
+
+  function flipToRegister() {
+    card.classList.add('is-flipped');
+    decoPanel.classList.add('flipped');
+    decoTitle.textContent = '¡Únete a nosotros!';
+    decoSub.textContent   = 'Crea tu cuenta y empieza a aprender.';
+  }
+
+  function flipToLogin() {
+    card.classList.remove('is-flipped');
+    decoPanel.classList.remove('flipped');
+    decoTitle.textContent = '¡Bienvenido de vuelta!';
+    decoSub.textContent   = 'Continúa tu camino de aprendizaje.';
+  }
+
+  document.getElementById('goToRegister').addEventListener('click', e => {
+    e.preventDefault(); flipToRegister();
+  });
+  document.getElementById('goToLogin').addEventListener('click', e => {
+    e.preventDefault(); flipToLogin();
+  });
+
+  // Si Django devolvió errores del formulario de registro → mostrar cara registro
+  
+
+  // ── Toggle mostrar/ocultar contraseña ─────────────────────────────
+  document.querySelectorAll('.toggle-pw').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const input = document.getElementById(btn.dataset.target);
+      input.type  = input.type === 'password' ? 'text' : 'password';
+      btn.textContent = input.type === 'password' ? '👁' : '🙈';
+    });
+  });
+
+  // ── Float label activo cuando el input tiene valor ─────────────────
+  document.querySelectorAll('.field-input').forEach(input => {
+    const sync = () => {
+      input.classList.toggle('has-value', input.value.trim() !== '');
+    };
+    input.addEventListener('input', sync);
+    input.addEventListener('change', sync);
+    sync();
+  });
+</script>
+
+<script>
+document.querySelectorAll('.alert').forEach(alert => {
+  setTimeout(() => {
+    alert.style.transition = 'opacity .5s, transform .5s';
+    alert.style.opacity = '0';
+    alert.style.transform = 'translateY(-10px)';
+    setTimeout(() => alert.remove(), 500);
+  }, 3000);
+});
+</script>
+
+</body>
+</html>

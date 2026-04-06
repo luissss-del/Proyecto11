@@ -1,0 +1,467 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WorldLearn – {{ evento.titulo }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'epocas/css/epocas.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
+</head>
+<body class="epoca-{{ epoca.slug }}">
+
+<canvas id="particles"></canvas>
+<div class="noise"></div>
+
+<header class="site-header">
+  <a href="{% url 'detalle_epoca' epoca.slug %}" class="btn-back">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    {{ epoca.nombre }}
+  </a>
+  <div class="header-center">
+    <span class="logo-owl">🦉</span>
+    <span class="site-name">WorldLearn</span>
+  </div>
+  <div class="header-right">
+    {% if es_admin %}<span class="admin-badge">✏️ Modo profesor</span>{% endif %}
+    <a href="{% url 'editar_perfil' %}" class="welcome-text" style="text-decoration:none;cursor:pointer"><strong>{{ nombre }}</strong> ✏️</a>
+    <a href="{% url 'logout' %}" class="btn-logout">Salir</a>
+  </div>
+</header>
+
+<section class="epoch-hero epoch-hero--evento">
+  <div class="epoch-hero__glow"></div>
+  <div class="epoch-hero__content">
+    <p class="epoch-years">
+      <a href="{% url 'detalle_epoca' epoca.slug %}" class="breadcrumb-link">{{ epoca.nombre }}</a>
+      &nbsp;/&nbsp; {{ evento.anio }}
+    </p>
+    <div class="ev-hero-icon">{{ evento.icono }}</div>
+    <h1 class="epoch-title">{{ evento.titulo }}</h1>
+    <p class="epoch-desc">{{ evento.resumen }}</p>
+  </div>
+</section>
+
+{% if messages %}
+  <div class="messages-wrap">
+    {% for message in messages %}
+      <div class="msg msg--{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<main class="main-content main-content--evento">
+  <div class="evento-body">
+
+    <!-- ── Historia completa ─────────────────────────── -->
+    <div class="evento-desc-block">
+      <div class="evento-desc-label">
+        <span class="evento-desc-icon">📖</span> Historia completa
+        <div style="display:flex;gap:.6rem;margin-left:auto;align-items:center">
+          {% if evento.puntos_mapa.exists or evento.zonas_mapa.exists or evento.lineas_mapa.exists %}
+            <button class="btn-mapa-toggle" id="btn-abrir-mapa">🗺️ Ver mapa</button>
+          {% endif %}
+          {% if es_admin %}
+            <button class="btn-edit-toggle" data-panel="panel-edit-evento">✏️ Editar</button>
+          {% endif %}
+        </div>
+      </div>
+      <p class="evento-desc-text">{{ evento.descripcion }}</p>
+    </div>
+
+    <!-- ── Panel edición evento (admin) ─────────────── -->
+    {% if es_admin %}
+    <div class="admin-panel" id="panel-edit-evento">
+      <div class="admin-panel__header">
+        <span>✏️ Editar evento</span>
+        <button class="btn-panel-close" data-panel="panel-edit-evento">✕</button>
+      </div>
+      <form method="POST" action="{% url 'editar_evento' epoca.slug evento.pk %}">
+        {% csrf_token %}
+        <div class="edit-grid">
+          <div class="edit-field edit-field--full">
+            <label>Título</label>{{ form_evento.titulo }}
+          </div>
+          <div class="edit-field">
+            <label>Año</label>{{ form_evento.anio }}
+          </div>
+          <div class="edit-field">
+            <label>Mes</label>{{ form_evento.mes }}
+          </div>
+          <div class="edit-field">
+            <label>Ícono</label>{{ form_evento.icono }}
+          </div>
+          <div class="edit-field">
+            <label>Orden</label>{{ form_evento.orden }}
+          </div>
+          <div class="edit-field edit-field--full">
+            <label>Resumen (tarjeta)</label>{{ form_evento.resumen }}
+          </div>
+          <div class="edit-field edit-field--full">
+            <label>Descripción completa</label>{{ form_evento.descripcion }}
+          </div>
+        </div>
+        <div class="edit-actions">
+          <button type="submit" class="btn-save">💾 Guardar</button>
+          <button type="button" class="btn-cancel" data-panel="panel-edit-evento">Cancelar</button>
+        </div>
+      </form>
+    </div>
+    {% endif %}
+
+    <!-- ── Materiales ────────────────────────────────── -->
+    <div class="materiales-block">
+      <div class="materiales-header">
+        <h3 class="mat-title">📎 Materiales de apoyo</h3>
+        {% if es_admin %}
+          <button class="btn-edit-toggle" data-panel="panel-add-material">➕ Agregar</button>
+        {% endif %}
+      </div>
+      {% if materiales %}
+        <div class="mat-grid">
+          {% for mat in materiales %}
+          <div class="mat-card-wrap">
+            <a href="{% if mat.archivo %}{{ mat.archivo.url }}{% else %}{{ mat.url }}{% endif %}"
+               target="_blank" class="mat-card mat-card--{{ mat.tipo }}">
+              <span class="mat-icon">
+                {% if mat.tipo == 'pdf' %}📄{% elif mat.tipo == 'video' %}🎬{% else %}🔗{% endif %}
+              </span>
+              <div>
+                <p class="mat-tipo">{{ mat.get_tipo_display }}</p>
+                <p class="mat-nombre">{{ mat.titulo }}</p>
+                {% if es_admin %}
+                  <p class="mat-grados-info">
+                    {% if mat.todos_los_grados %}🌐 Todos los grados{% else %}🎓 {{ mat.grados.all|join:", " }}{% endif %}
+                  </p>
+                {% endif %}
+              </div>
+            </a>
+            {% if es_admin %}
+              <form method="POST" action="{% url 'eliminar_material' epoca.slug evento.pk mat.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-mat-delete"
+                        onclick="return confirm('¿Eliminar este material?')">🗑</button>
+              </form>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="mat-empty">
+          {% if es_admin %}Sin materiales aún. Usa "Agregar" para subir el primero.
+          {% elif not grado_usuario %}No tienes un grado asignado. Pide a tu profesor que te asigne uno.
+          {% else %}El profesor aún no ha subido materiales para este evento.{% endif %}
+        </p>
+      {% endif %}
+    </div>
+
+    <!-- ── Panel agregar material (admin) ───────────── -->
+    {% if es_admin %}
+    <div class="admin-panel" id="panel-add-material">
+      <div class="admin-panel__header">
+        <span>➕ Agregar material</span>
+        <button class="btn-panel-close" data-panel="panel-add-material">✕</button>
+      </div>
+      <form method="POST" action="{% url 'agregar_material' epoca.slug evento.pk %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="edit-grid">
+          <div class="edit-field">
+            <label>Tipo</label>{{ form_material.tipo }}
+          </div>
+          <div class="edit-field edit-field--full">
+            <label>Título</label>{{ form_material.titulo }}
+          </div>
+          <div class="edit-field edit-field--full">
+            <label>URL (video / link)</label>{{ form_material.url }}
+          </div>
+          <div class="edit-field edit-field--full">
+            <label>Archivo PDF</label>{{ form_material.archivo }}
+          </div>
+          <div class="edit-field edit-field--full">
+            <div class="grados-selector">
+              <label class="grados-toggle-label">
+                {{ form_material.todos_los_grados }}
+                <span>📢 Mostrar a <strong>todos los grados</strong></span>
+              </label>
+              <div class="grados-lista" id="grados-lista-material">
+                <p class="grados-lista__titulo">O selecciona grados específicos:</p>
+                {{ form_material.grados }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="edit-actions">
+          <button type="submit" class="btn-save">📤 Subir</button>
+          <button type="button" class="btn-cancel" data-panel="panel-add-material">Cancelar</button>
+        </div>
+      </form>
+    </div>
+    {% endif %}
+
+    <!-- ── Navegación prev/next ──────────────────────── -->
+    <div class="ev-nav">
+      {% if evento_anterior %}
+      <a href="{% url 'detalle_evento' epoca.slug evento_anterior.pk %}" class="ev-nav__btn ev-nav__btn--prev">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        <div>
+          <span class="ev-nav__label">Anterior</span>
+          <span class="ev-nav__name">{{ evento_anterior.titulo }}</span>
+        </div>
+      </a>
+      {% else %}<div></div>{% endif %}
+      {% if evento_siguiente %}
+      <a href="{% url 'detalle_evento' epoca.slug evento_siguiente.pk %}" class="ev-nav__btn ev-nav__btn--next">
+        <div>
+          <span class="ev-nav__label">Siguiente</span>
+          <span class="ev-nav__name">{{ evento_siguiente.titulo }}</span>
+        </div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      {% endif %}
+    </div>
+
+  </div>
+</main>
+
+<!-- ══════════════════════════════════════════════════════
+     MODAL MAPA INTERACTIVO
+══════════════════════════════════════════════════════ -->
+{% if evento.puntos_mapa.exists or evento.zonas_mapa.exists or evento.lineas_mapa.exists %}
+<div class="mapa-overlay" id="mapa-overlay">
+  <div class="mapa-modal">
+
+    <div class="mapa-modal__header">
+      <div class="mapa-modal__title">
+        <span>🗺️</span>
+        <span>{{ evento.icono }} {{ evento.titulo }} — {{ evento.anio }}</span>
+      </div>
+      <div style="display:flex;gap:.6rem;align-items:center">
+        <button class="mapa-btn-centrar" id="btn-centrar-mapa">⊙ Centrar</button>
+        <button class="mapa-modal__close" id="btn-cerrar-mapa">✕</button>
+      </div>
+    </div>
+
+    <div class="mapa-modal__leyenda">
+      <span class="leyenda-item leyenda-aliados">● Aliados</span>
+      <span class="leyenda-item leyenda-enemigos">● Potencias Enemigas</span>
+      <span class="leyenda-item leyenda-neutral">● Neutral</span>
+      <span class="leyenda-item" style="color:#ce93d8">▬ Frente / Ruta</span>
+      <span class="leyenda-item" style="color:rgba(201,168,76,.7)">▨ Zona</span>
+    </div>
+
+    <div id="mapa-leaflet"></div>
+
+  </div>
+</div>
+{% endif %}
+
+<script src="{% static 'epocas/js/epocas.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+{% if evento.puntos_mapa.exists or evento.zonas_mapa.exists or evento.lineas_mapa.exists %}
+<script>
+(function () {
+
+  // ── Datos del servidor ────────────────────────────
+  const puntos = [
+    {% for p in evento.puntos_mapa.all %}
+    { nombre:"{{ p.nombre|escapejs }}", descripcion:"{{ p.descripcion|escapejs }}", tipo:"{{ p.tipo }}", bando:"{{ p.bando }}", lat:{{ p.latitud }}, lng:{{ p.longitud }} },
+    {% endfor %}
+  ];
+
+  const zonas = [
+    {% for z in evento.zonas_mapa.all %}
+    { nombre:"{{ z.nombre|escapejs }}", descripcion:"{{ z.descripcion|escapejs }}", bando:"{{ z.bando }}", coords:{{ z.coordenadas }} },
+    {% endfor %}
+  ];
+
+  const lineas = [
+    {% for l in evento.lineas_mapa.all %}
+    { nombre:"{{ l.nombre|escapejs }}", descripcion:"{{ l.descripcion|escapejs }}", tipo:"{{ l.tipo }}", bando:"{{ l.bando }}", coords:{{ l.coordenadas }} },
+    {% endfor %}
+  ];
+
+  // ── Paleta de colores ─────────────────────────────
+  const colores = {
+    aliados:  { fill:'#4fc3f7', border:'#0288d1' },
+    enemigos: { fill:'#ef9a9a', border:'#c62828' },
+    neutral:  { fill:'#a5d6a7', border:'#2e7d32' },
+    otro:     { fill:'#ce93d8', border:'#6a1b9a' },
+  };
+
+  const tipoLinea = {
+    frente:   { color:'#e53935', dash:'8,6',  width:3 },
+    ruta:     { color:'#42a5f5', dash:'1,1',  width:2.5 },
+    retirada: { color:'#ffa726', dash:'6,4',  width:2.5 },
+    naval:    { color:'#26c6da', dash:'4,4',  width:2 },
+    otro:     { color:'#ce93d8', dash:'4,4',  width:2 },
+  };
+
+  const iconos = {
+    batalla:'⚔️', ciudad:'🏙️', frente:'🪖', ruta:'➡️', zona:'📍', otro:'📌',
+  };
+
+  let mapa = null;
+  let boundsIniciales = null;
+
+  function iniciarMapa() {
+    if (mapa) return;
+
+    mapa = L.map('mapa-leaflet', { zoomControl:true, preferCanvas:true });
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      attribution:'© <a href="https://carto.com">CARTO</a> © <a href="https://openstreetmap.org">OpenStreetMap</a>',
+      subdomains:'abcd',
+      maxZoom:19,
+    }).addTo(mapa);
+
+    const allCoords = [];
+
+    // ── Zonas (polígonos) ──────────────────────────
+    zonas.forEach(z => {
+      const c = colores[z.bando] || colores.neutral;
+      const poly = L.polygon(z.coords, {
+        color:       c.border,
+        fillColor:   c.fill,
+        weight:      1.5,
+        opacity:     0.8,
+        fillOpacity: 0.22,
+      }).addTo(mapa);
+
+      poly.bindPopup(`
+        <div style="font-family:'Crimson Text',serif;min-width:200px;max-width:260px;padding:.2rem">
+          <strong style="font-size:1rem;color:#1a237e;display:block;margin-bottom:.3rem">▨ ${z.nombre}</strong>
+          <div style="font-size:.72rem;color:#777;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem">Zona · ${z.bando}</div>
+          <p style="font-size:.92rem;line-height:1.55;margin:0;color:#333">${z.descripcion}</p>
+        </div>
+      `, { maxWidth:280 });
+
+      poly.bindTooltip(`<strong>▨ ${z.nombre}</strong>`, {
+        sticky:true, className:'mapa-tooltip',
+      });
+
+      z.coords.forEach(c => allCoords.push(c));
+    });
+
+    // ── Líneas ─────────────────────────────────────
+    lineas.forEach(l => {
+      const estilo = tipoLinea[l.tipo] || tipoLinea.otro;
+      const line = L.polyline(l.coords, {
+        color:     estilo.color,
+        weight:    estilo.width,
+        opacity:   0.85,
+        dashArray: estilo.dash,
+      }).addTo(mapa);
+
+      // Flecha al final de la línea
+      const ultimo = l.coords[l.coords.length - 1];
+      const penultimo = l.coords[l.coords.length - 2] || l.coords[0];
+      const angulo = Math.atan2(
+        ultimo[1] - penultimo[1],
+        ultimo[0] - penultimo[0]
+      ) * 180 / Math.PI;
+
+      L.circleMarker(ultimo, {
+        radius:5, fillColor:estilo.color, color:estilo.color,
+        weight:1, fillOpacity:1,
+      }).addTo(mapa);
+
+      line.bindPopup(`
+        <div style="font-family:'Crimson Text',serif;min-width:200px;max-width:260px;padding:.2rem">
+          <strong style="font-size:1rem;color:#1a237e;display:block;margin-bottom:.3rem">▬ ${l.nombre}</strong>
+          <div style="font-size:.72rem;color:#777;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem">${l.tipo} · ${l.bando}</div>
+          <p style="font-size:.92rem;line-height:1.55;margin:0;color:#333">${l.descripcion}</p>
+        </div>
+      `, { maxWidth:280 });
+
+      line.bindTooltip(`<strong>▬ ${l.nombre}</strong>`, {
+        sticky:true, className:'mapa-tooltip',
+      });
+
+      l.coords.forEach(c => allCoords.push(c));
+    });
+
+    // ── Puntos (marcadores) ────────────────────────
+    puntos.forEach(p => {
+      const c = colores[p.bando] || colores.neutral;
+      const icono = iconos[p.tipo] || '📌';
+
+      const marker = L.circleMarker([p.lat, p.lng], {
+        radius:11, fillColor:c.fill, color:c.border,
+        weight:2.5, opacity:1, fillOpacity:0.88,
+      }).addTo(mapa);
+
+      marker.bindPopup(`
+        <div style="font-family:'Crimson Text',serif;min-width:210px;max-width:270px;padding:.2rem">
+          <div style="font-size:1.4rem;margin-bottom:.3rem">${icono}</div>
+          <strong style="font-size:1rem;color:#1a237e;display:block;margin-bottom:.25rem">${p.nombre}</strong>
+          <div style="font-size:.72rem;color:#777;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem">${p.tipo} · ${p.bando}</div>
+          <p style="font-size:.92rem;line-height:1.55;margin:0;color:#333">${p.descripcion}</p>
+        </div>
+      `, { maxWidth:290 });
+
+      marker.bindTooltip(`<strong>${icono} ${p.nombre}</strong>`, {
+        permanent:false, direction:'top', className:'mapa-tooltip',
+      });
+
+      allCoords.push([p.lat, p.lng]);
+    });
+
+    // ── Ajustar vista ──────────────────────────────
+    if (allCoords.length > 0) {
+      boundsIniciales = L.latLngBounds(allCoords);
+      mapa.fitBounds(boundsIniciales, { padding:[50,50] });
+    }
+  }
+
+  // ── Abrir modal ───────────────────────────────────
+  document.getElementById('btn-abrir-mapa').addEventListener('click', () => {
+    document.getElementById('mapa-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => {
+      iniciarMapa();
+      if (mapa) mapa.invalidateSize();
+    }, 150);
+  });
+
+  // ── Centrar ───────────────────────────────────────
+  document.getElementById('btn-centrar-mapa').addEventListener('click', () => {
+    if (mapa && boundsIniciales) {
+      mapa.fitBounds(boundsIniciales, { padding:[50,50], animate:true });
+    }
+  });
+
+  // ── Cerrar modal ──────────────────────────────────
+  function cerrarMapa() {
+    document.getElementById('mapa-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('btn-cerrar-mapa').addEventListener('click', cerrarMapa);
+  document.getElementById('mapa-overlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('mapa-overlay')) cerrarMapa();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') cerrarMapa();
+  });
+
+})();
+</script>
+{% endif %}
+
+<script>
+// ── Toggle selector de grados ────────────────────────────────────
+document.querySelectorAll('.grados-toggle-check').forEach(function(chk) {
+  var lista = chk.closest('.grados-selector').querySelector('.grados-lista');
+  function sync() {
+    lista.style.display = chk.checked ? 'none' : 'block';
+  }
+  chk.addEventListener('change', sync);
+  sync();
+});
+</script>
+
+</body>
+</html>

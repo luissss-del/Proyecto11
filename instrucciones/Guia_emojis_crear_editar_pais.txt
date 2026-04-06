@@ -1,0 +1,277 @@
+═══════════════════════════════════════════════════════════════
+         WORLDLEARN – GUÍA DE EMOJIS DE BANDERAS
+         Para usar en el campo "Bandera" al crear/editar países
+═══════════════════════════════════════════════════════════════
+
+Copia el emoji de la columna derecha y pégalo en el campo Bandera.
+
+──────────────────────────────────────────────────────────────
+ AMÉRICA DEL NORTE
+──────────────────────────────────────────────────────────────
+ Canadá                  🇨🇦
+ Estados Unidos          🇺🇸
+ México                  🇲🇽
+
+──────────────────────────────────────────────────────────────
+ AMÉRICA CENTRAL Y CARIBE
+──────────────────────────────────────────────────────────────
+ Belice                  🇧🇿
+ Costa Rica              🇨🇷
+ Cuba                    🇨🇺
+ El Salvador             🇸🇻
+ Guatemala               🇬🇹
+ Haití                   🇭🇹
+ Honduras                🇭🇳
+ Jamaica                 🇯🇲
+ Nicaragua               🇳🇮
+ Panamá                  🇵🇦
+ Puerto Rico             🇵🇷
+ República Dominicana    🇩🇴
+ Trinidad y Tobago       🇹🇹
+
+──────────────────────────────────────────────────────────────
+ AMÉRICA DEL SUR
+──────────────────────────────────────────────────────────────
+ Argentina               🇦🇷
+ Bolivia                 🇧🇴
+ Brasil                  🇧🇷
+ Chile                   🇨🇱
+ Colombia                🇨🇴
+ Ecuador                 🇪🇨
+ Guyana                  🇬🇾
+ Paraguay                🇵🇾
+ Perú                    🇵🇪
+ Surinam                 🇸🇷
+ Uruguay                 🇺🇾
+ Venezuela               🇻🇪
+
+──────────────────────────────────────────────────────────────
+ EUROPA OCCIDENTAL
+──────────────────────────────────────────────────────────────
+ Alemania                🇩🇪
+ Andorra                 🇦🇩
+ Austria                 🇦🇹
+ Bélgica                 🇧🇪
+ Dinamarca               🇩🇰
+ España                  🇪🇸
+ Finlandia               🇫🇮
+ Francia                 🇫🇷
+ Grecia                  🇬🇷
+ Irlanda                 🇮🇪
+ Islandia                🇮🇸
+ Italia                  🇮🇹
+ Liechtenstein           🇱🇮
+ Luxemburgo              🇱🇺
+ Malta                   🇲🇹
+ Mónaco                  🇲🇨
+ Noruega                 🇳🇴
+ Países Bajos            🇳🇱
+ Portugal                🇵🇹
+ Reino Unido             🇬🇧
+ San Marino              🇸🇲
+ Suecia                  🇸🇪
+ Suiza                   🇨🇭
+ Vatican                 🇻🇦
+
+──────────────────────────────────────────────────────────────
+ EUROPA ORIENTAL Y BALCANES
+──────────────────────────────────────────────────────────────
+ Albania                 🇦🇱
+ Bosnia Herzegovina      🇧🇦
+ Bulgaria                🇧🇬
+ Croacia                 🇭🇷
+ Eslovaquia              🇸🇰
+ Eslovenia               🇸🇮
+ Estonia                 🇪🇪
+ Hungría                 🇭🇺
+ Kosovo                  🇽🇰
+ Latvia (Letonia)        🇱🇻
+ Lituania                🇱🇹
+ Macedonia del Norte     🇲🇰
+ Moldavia                🇲🇩
+ Montenegro              🇲🇪
+ Polonia                 🇵🇱
+ República Checa         🇨🇿
+ Rumania                 🇷🇴
+ Rusia / URSS            🇷🇺
+ Serbia                  🇷🇸
+ Ucrania                 🇺🇦
+
+──────────────────────────────────────────────────────────────
+ ASIA OCCIDENTAL (ORIENTE MEDIO)
+──────────────────────────────────────────────────────────────
+ Arabia Saudita          🇸🇦
+ Armenia                 🇦🇲
+ Azerbaiyán              🇦🇿
+ Bahrein                 🇧🇭
+ Chipre                  🇨🇾
+ Emiratos Árabes         🇦🇪
+ Georgia                 🇬🇪
+ Irak                    🇮🇶
+ Irán                    🇮🇷
+ Israel                  🇮🇱
+ Jordania                🇯🇴
+ Kuwait                  🇰🇼
+ Líbano                  🇱🇧
+ Omán                    🇴🇲
+ Palestina               🇵🇸
+ Qatar                   🇶🇦
+ Siria                   🇸🇾
+ Turquía                 🇹🇷
+ Yemen                   🇾🇪
+
+──────────────────────────────────────────────────────────────
+ ASIA CENTRAL
+──────────────────────────────────────────────────────────────
+ Afganistán              🇦🇫
+ Kazajistán              🇰🇿
+ Kirguistán              🇰🇬
+ Tayikistán              🇹🇯
+ Turkmenistán            🇹🇲
+ Uzbekistán              🇺🇿
+
+──────────────────────────────────────────────────────────────
+ ASIA ORIENTAL
+──────────────────────────────────────────────────────────────
+ China                   🇨🇳
+ Corea del Norte         🇰🇵
+ Corea del Sur           🇰🇷
+ Japón                   🇯🇵
+ Mongolia                🇲🇳
+ Taiwan                  🇹🇼
+
+──────────────────────────────────────────────────────────────
+ ASIA DEL SUR
+──────────────────────────────────────────────────────────────
+ Bangladesh              🇧🇩
+ Bután                   🇧🇹
+ India                   🇮🇳
+ Maldivas                🇲🇻
+ Nepal                   🇳🇵
+ Pakistán                🇵🇰
+ Sri Lanka               🇱🇰
+
+──────────────────────────────────────────────────────────────
+ ASIA DEL SUDESTE
+──────────────────────────────────────────────────────────────
+ Birmania (Myanmar)      🇲🇲
+ Brunéi                  🇧🇳
+ Camboya                 🇰🇭
+ Filipinas               🇵🇭
+ Indonesia               🇮🇩
+ Laos                    🇱🇦
+ Malasia                 🇲🇾
+ Singapur                🇸🇬
+ Tailandia               🇹🇭
+ Timor Oriental          🇹🇱
+ Vietnam                 🇻🇳
+
+──────────────────────────────────────────────────────────────
+ OCEANÍA
+──────────────────────────────────────────────────────────────
+ Australia               🇦🇺
+ Fiji                    🇫🇯
+ Nueva Zelanda           🇳🇿
+ Papúa Nueva Guinea      🇵🇬
+ Samoa                   🇼🇸
+ Tonga                   🇹🇴
+ Vanuatu                 🇻🇺
+
+──────────────────────────────────────────────────────────────
+ ÁFRICA DEL NORTE
+──────────────────────────────────────────────────────────────
+ Algeria                 🇩🇿
+ Egipto                  🇪🇬
+ Libia                   🇱🇾
+ Marruecos               🇲🇦
+ Sudán                   🇸🇩
+ Túnez                   🇹🇳
+
+──────────────────────────────────────────────────────────────
+ ÁFRICA OCCIDENTAL
+──────────────────────────────────────────────────────────────
+ Benín                   🇧🇯
+ Burkina Faso            🇧🇫
+ Cabo Verde              🇨🇻
+ Costa de Marfil         🇨🇮
+ Gambia                  🇬🇲
+ Ghana                   🇬🇭
+ Guinea                  🇬🇳
+ Guinea-Bisáu            🇬🇼
+ Guinea Ecuatorial       🇬🇶
+ Liberia                 🇱🇷
+ Mali                    🇲🇱
+ Mauritania              🇲🇷
+ Níger                   🇳🇪
+ Nigeria                 🇳🇬
+ Senegal                 🇸🇳
+ Sierra Leona            🇸🇱
+ Togo                    🇹🇬
+
+──────────────────────────────────────────────────────────────
+ ÁFRICA CENTRAL
+──────────────────────────────────────────────────────────────
+ Angola                  🇦🇴
+ Camerún                 🇨🇲
+ Chad                    🇹🇩
+ Congo (Rep.)            🇨🇬
+ Congo (Rep. Dem.)       🇨🇩
+ Gabón                   🇬🇦
+ República Centroafricana 🇨🇫
+ Santo Tomé y Príncipe   🇸🇹
+
+──────────────────────────────────────────────────────────────
+ ÁFRICA ORIENTAL
+──────────────────────────────────────────────────────────────
+ Burundi                 🇧🇮
+ Comoras                 🇰🇲
+ Eritrea                 🇪🇷
+ Etiopía                 🇪🇹
+ Kenia                   🇰🇪
+ Madagascar              🇲🇬
+ Malaui                  🇲🇼
+ Mauricio                🇲🇺
+ Mozambique              🇲🇿
+ Ruanda                  🇷🇼
+ Seychelles              🇸🇨
+ Somalia                 🇸🇴
+ Sudán del Sur           🇸🇸
+ Tanzania                🇹🇿
+ Uganda                  🇺🇬
+ Yibuti                  🇩🇯
+ Zambia                  🇿🇲
+ Zimbabue                🇿🇼
+
+──────────────────────────────────────────────────────────────
+ ÁFRICA AUSTRAL
+──────────────────────────────────────────────────────────────
+ Botsuana                🇧🇼
+ Esuatini (Suazilandia)  🇸🇿
+ Lesoto                  🇱🇸
+ Namibia                 🇳🇦
+ Sudáfrica               🇿🇦
+
+──────────────────────────────────────────────────────────────
+ PAÍSES HISTÓRICOS / IMPERIOS (para contexto histórico)
+──────────────────────────────────────────────────────────────
+ Imperio Otomano         🇹🇷  (usar bandera de Turquía)
+ Austria-Hungría         🇦🇹  (usar bandera de Austria)
+ Unión Soviética (URSS)  🇷🇺  (usar bandera de Rusia)
+ Yugoslavia              🇷🇸  (usar bandera de Serbia)
+ Checoslovaquia          🇨🇿  (usar bandera de Rep. Checa)
+ Prusia                  🇩🇪  (usar bandera de Alemania)
+
+═══════════════════════════════════════════════════════════════
+ INSTRUCCIONES DE USO
+═══════════════════════════════════════════════════════════════
+ 1. Abre este archivo
+ 2. Copia el emoji de la columna derecha del país deseado
+ 3. En WorldLearn, entra como profesora (Liliana)
+ 4. Ve a la época correspondiente
+ 5. Presiona "Nuevo país" o "Editar" en un país existente
+ 6. Pega el emoji en el campo "Bandera"
+ 7. Guarda los cambios
+
+ NOTA: Los emojis de bandera se ven diferente según el sistema
+ operativo (Windows, Mac, Android, iOS) pero funcionan en todos.
+═══════════════════════════════════════════════════════════════

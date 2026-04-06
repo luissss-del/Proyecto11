@@ -1,0 +1,235 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WorldLearn – {{ pais.nombre }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'epocas/css/epocas.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
+</head>
+<body class="epoca-{{ epoca.slug }}">
+
+<canvas id="particles"></canvas>
+<div class="noise"></div>
+
+<header class="site-header">
+  <a href="{% url 'detalle_epoca' epoca.slug %}" class="btn-back">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M19 12H5M12 5l-7 7 7 7"/>
+    </svg>
+    {{ epoca.nombre }}
+  </a>
+  <div class="header-center">
+    <span class="logo-owl">🦉</span>
+    <span class="site-name">WorldLearn</span>
+  </div>
+  <div class="header-right">
+    {% if es_admin %}<span class="admin-badge">✏️ Modo profesor</span>{% endif %}
+    <span class="welcome-text">{{ nombre }}</span>
+    <a href="{% url 'logout' %}" class="btn-logout">Salir</a>
+  </div>
+</header>
+
+<section class="epoch-hero epoch-hero--pais">
+  <div class="epoch-hero__glow"></div>
+  <div class="epoch-hero__content">
+    <p class="epoch-years">
+      <a href="{% url 'detalle_epoca' epoca.slug %}" class="breadcrumb-link">{{ epoca.nombre }}</a>
+      &nbsp;/&nbsp; Países
+    </p>
+    <div class="ev-hero-icon">{{ pais.bandera }}</div>
+    <div class="pais-badge pais-badge--{{ pais.tipo }}">{{ pais.get_tipo_display }}</div>
+    <h1 class="epoch-title">{{ pais.nombre }}</h1>
+    <p class="epoch-years" style="margin-top:.5rem">{{ pais.bando }}</p>
+  </div>
+</section>
+
+{% if messages %}
+  <div class="messages-wrap">
+    {% for message in messages %}
+      <div class="msg msg--{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<main class="main-content main-content--evento">
+  <div class="evento-body">
+
+    <!-- ── Descripción del país ────────────────────── -->
+    <div class="evento-desc-block">
+      <div class="evento-desc-label">
+        <span class="evento-desc-icon">🗺️</span> Rol en {{ epoca.nombre }}
+        {% if es_admin %}
+          <button class="btn-edit-toggle" data-panel="panel-edit-pais">✏️ Editar</button>
+        {% endif %}
+      </div>
+      <p class="evento-desc-text">{{ pais.descripcion }}</p>
+    </div>
+
+    <!-- ── Panel edición país (admin) ─────────────── -->
+    {% if es_admin %}
+    <div class="admin-panel" id="panel-edit-pais">
+      <div class="admin-panel__header">
+        <span>✏️ Editar país</span>
+        <button class="btn-panel-close" data-panel="panel-edit-pais">✕</button>
+      </div>
+      <form method="POST" action="{% url 'editar_pais' epoca.slug pais.pk %}">
+        {% csrf_token %}
+        <div class="edit-grid">
+          <div class="edit-field">
+            <label>Nombre</label>{{ form_pais.nombre }}
+          </div>
+          <div class="edit-field">
+            <label>Bandera (emoji)</label>{{ form_pais.bandera }}
+          </div>
+          <div class="edit-field">
+            <label>Tipo</label>{{ form_pais.tipo }}
+          </div>
+          <div class="edit-field">
+            <label>Bando</label>{{ form_pais.bando }}
+          </div>
+          <div class="edit-field">
+            <label>Orden</label>{{ form_pais.orden }}
+          </div>
+          <div class="edit-field edit-field--full">
+            <label>Descripción</label>{{ form_pais.descripcion }}
+          </div>
+        </div>
+        <div class="edit-actions">
+          <button type="submit" class="btn-save">💾 Guardar</button>
+          <button type="button" class="btn-cancel" data-panel="panel-edit-pais">Cancelar</button>
+        </div>
+      </form>
+    </div>
+    {% endif %}
+
+    <!-- ── Materiales de apoyo ─────────────────────── -->
+    <div class="materiales-block">
+      <div class="materiales-header">
+        <h3 class="mat-title">📎 Materiales de apoyo</h3>
+        {% if es_admin %}
+          <button class="btn-edit-toggle" data-panel="panel-add-mat-pais">➕ Agregar</button>
+        {% endif %}
+      </div>
+
+      {% if materiales %}
+        <div class="mat-grid">
+          {% for mat in materiales %}
+          <div class="mat-card-wrap">
+            <a href="{% if mat.archivo %}{{ mat.archivo.url }}{% else %}{{ mat.url }}{% endif %}"
+               target="_blank" class="mat-card mat-card--{{ mat.tipo }}">
+              <span class="mat-icon">
+                {% if mat.tipo == 'pdf' %}📄
+                {% elif mat.tipo == 'video' %}🎬
+                {% elif mat.tipo == 'word' %}📝
+                {% else %}🔗{% endif %}
+              </span>
+              <div>
+                <p class="mat-tipo">{{ mat.get_tipo_display }}</p>
+                <p class="mat-nombre">{{ mat.titulo }}</p>
+                {% if es_admin %}
+                  <p class="mat-grados-info">
+                    {% if mat.todos_los_grados %}🌐 Todos los grados{% else %}🎓 {{ mat.grados.all|join:", " }}{% endif %}
+                  </p>
+                {% endif %}
+              </div>
+            </a>
+            {% if es_admin %}
+              <form method="POST"
+                    action="{% url 'eliminar_material_pais' epoca.slug pais.pk mat.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-mat-delete"
+                        onclick="return confirm('¿Eliminar este material?')">🗑</button>
+              </form>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="mat-empty">
+          {% if es_admin %}
+            Sin materiales aún. Usa "Agregar" para subir el primero.
+          {% elif not grado_usuario %}
+            No tienes un grado asignado. Pide a tu profesor que te asigne uno.
+          {% else %}
+            El profesor aún no ha subido materiales para este país.
+          {% endif %}
+        </p>
+      {% endif %}
+    </div>
+
+    <!-- ── Panel agregar material (admin) ─────────── -->
+    {% if es_admin %}
+    <div class="admin-panel" id="panel-add-mat-pais">
+      <div class="admin-panel__header">
+        <span>➕ Agregar material al país</span>
+        <button class="btn-panel-close" data-panel="panel-add-mat-pais">✕</button>
+      </div>
+      <form method="POST"
+            action="{% url 'agregar_material_pais' epoca.slug pais.pk %}"
+            enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="edit-grid">
+          <div class="edit-field">
+            <label>Tipo</label>{{ form_material_pais.tipo }}
+          </div>
+          <div class="edit-field edit-field--full">
+            <label>Título del material</label>{{ form_material_pais.titulo }}
+          </div>
+          <div class="edit-field edit-field--full">
+            <label>URL (video / link)</label>{{ form_material_pais.url }}
+          </div>
+          <div class="edit-field edit-field--full">
+            <label>Archivo (PDF / Word)</label>{{ form_material_pais.archivo }}
+          </div>
+          <div class="edit-field edit-field--full">
+            <div class="grados-selector">
+              <label class="grados-toggle-label">
+                {{ form_material_pais.todos_los_grados }}
+                <span>📢 Mostrar a <strong>todos los grados</strong></span>
+              </label>
+              <div class="grados-lista">
+                <p class="grados-lista__titulo">O selecciona grados específicos:</p>
+                {{ form_material_pais.grados }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="edit-actions">
+          <button type="submit" class="btn-save">📤 Subir</button>
+          <button type="button" class="btn-cancel" data-panel="panel-add-mat-pais">Cancelar</button>
+        </div>
+      </form>
+    </div>
+    {% endif %}
+
+    <!-- ── Volver ──────────────────────────────────── -->
+    <div class="ev-nav" style="justify-content:center">
+      <a href="{% url 'detalle_epoca' epoca.slug %}" class="ev-nav__btn ev-nav__btn--prev">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 5l-7 7 7 7"/>
+        </svg>
+        <div>
+          <span class="ev-nav__label">Volver a</span>
+          <span class="ev-nav__name">{{ epoca.nombre }}</span>
+        </div>
+      </a>
+    </div>
+
+  </div>
+</main>
+
+<script src="{% static 'epocas/js/epocas.js' %}"></script>
+<script>
+document.querySelectorAll('.grados-toggle-check').forEach(function(chk) {
+  var lista = chk.closest('.grados-selector').querySelector('.grados-lista');
+  function sync() { lista.style.display = chk.checked ? 'none' : 'block'; }
+  chk.addEventListener('change', sync);
+  sync();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,407 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WorldLearn – {{ pais.nombre }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'epocas/css/epocas.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
+  <style>
+    .pais-nav {
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+      padding: 1.5rem 2rem;
+      position: relative;
+      z-index: 10;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .pais-nav__btn {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-family: 'Cinzel', serif;
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: .55rem 1.1rem;
+      border-radius: 10px;
+      transition: all .22s;
+      cursor: pointer;
+      border: none;
+    }
+    .pais-nav__btn svg {
+      width: 13px;
+      height: 13px;
+      flex-shrink: 0;
+    }
+    /* Botón volver a la lista de países del continente */
+    .pais-nav__btn--paises {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.12);
+      color: rgba(232,234,246,.7);
+    }
+    .pais-nav__btn--paises:hover {
+      background: rgba(255,255,255,.1);
+      border-color: rgba(255,255,255,.25);
+      color: #e8eaf6;
+      transform: translateX(-2px);
+    }
+    /* Botón volver a continentes */
+    .pais-nav__btn--continentes {
+      background: rgba(201,168,76,.08);
+      border: 1px solid rgba(201,168,76,.25);
+      color: #c9a84c;
+    }
+    .pais-nav__btn--continentes:hover {
+      background: rgba(201,168,76,.16);
+      border-color: rgba(201,168,76,.5);
+      color: #e8c84a;
+      transform: translateX(-2px);
+      box-shadow: 0 0 14px rgba(201,168,76,.15);
+    }
+    .pais-nav__sep {
+      width: 1px;
+      height: 20px;
+      background: rgba(255,255,255,.1);
+    }
+    .pais-nav__actual {
+      font-family: 'Cinzel', serif;
+      font-size: .65rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: rgba(232,234,246,.35);
+      margin-left: auto;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+<div class="noise"></div>
+
+<header class="site-header">
+  <div style="display:flex;align-items:center;gap:.5rem">
+    <a href="{% url 'lista_continentes' %}" class="btn-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      {{ continente.icono }} Continentes
+    </a>
+    <a href="{% url 'lista_paises' continente.slug %}" class="btn-back" style="opacity:.65">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      {{ continente.nombre }}
+    </a>
+  </div>
+  <div class="header-center">
+    <span class="logo-owl">🦉</span>
+    <span class="site-name">WorldLearn</span>
+  </div>
+  <div class="header-right">
+    {% if es_admin %}<span class="admin-badge">✏️ Modo profesor</span>{% endif %}
+    <span class="welcome-text">{{ nombre }}</span>
+    <a href="{% url 'logout' %}" class="btn-logout">Salir</a>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="epoch-hero">
+  <div class="epoch-hero__glow"></div>
+  <div class="epoch-hero__content">
+    <div class="ev-hero-icon">{{ pais.bandera }}</div>
+    <h1 class="epoch-title">{{ pais.nombre }}</h1>
+    <p class="epoch-desc">{{ pais.capital }} · {{ pais.idioma_oficial }}</p>
+  </div>
+</section>
+
+{% if messages %}
+<div class="messages-wrap">
+  {% for message in messages %}
+    <div class="msg msg--{{ message.tags }}">{{ message }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<main class="main-content main-content--evento">
+  <div class="evento-body">
+
+    <!-- ── Datos básicos ── -->
+    <div class="pais-datos-grid">
+      <div class="pais-dato">
+        <span class="pais-dato__label">Capital</span>
+        <span class="pais-dato__valor">{{ pais.capital|default:"—" }}</span>
+      </div>
+      <div class="pais-dato">
+        <span class="pais-dato__label">Idioma oficial</span>
+        <span class="pais-dato__valor">{{ pais.idioma_oficial|default:"—" }}</span>
+      </div>
+      <div class="pais-dato">
+        <span class="pais-dato__label">Población</span>
+        <span class="pais-dato__valor">{{ pais.poblacion|default:"—" }}</span>
+      </div>
+      <div class="pais-dato">
+        <span class="pais-dato__label">Superficie</span>
+        <span class="pais-dato__valor">{{ pais.superficie|default:"—" }}</span>
+      </div>
+    </div>
+
+    <!-- ── Descripción general ── -->
+    <div class="evento-desc-block">
+      <div class="evento-desc-label">
+        <span class="evento-desc-icon">🌐</span> Descripción general
+        <div style="display:flex;gap:.6rem;margin-left:auto;align-items:center">
+          <button class="btn-mapa-toggle" id="btn-abrir-mapa">🗺️ Ver mapa</button>
+          {% if es_admin %}
+            <button class="btn-edit-toggle" data-panel="panel-edit-pais">✏️ Editar</button>
+          {% endif %}
+        </div>
+      </div>
+      <p class="evento-desc-text">{{ pais.descripcion|default:"Sin descripción aún." }}</p>
+    </div>
+
+    <!-- ── Historia ── -->
+    <div class="evento-desc-block">
+      <div class="evento-desc-label">
+        <span class="evento-desc-icon">📜</span> Historia
+      </div>
+      <p class="evento-desc-text" style="white-space:pre-line">{{ pais.historia|default:"Sin información histórica aún." }}</p>
+    </div>
+
+    <!-- ── Conflictos ── -->
+    <div class="evento-desc-block">
+      <div class="evento-desc-label">
+        <span class="evento-desc-icon">⚔️</span> Conflictos y guerras
+      </div>
+      <p class="evento-desc-text" style="white-space:pre-line">{{ pais.conflictos|default:"Sin información de conflictos aún." }}</p>
+    </div>
+
+    <!-- ── Panel edición (admin) ── -->
+    {% if es_admin %}
+    <div class="admin-panel" id="panel-edit-pais">
+      <div class="admin-panel__header">
+        <span>✏️ Editar {{ pais.nombre }}</span>
+        <button class="btn-panel-close" data-panel="panel-edit-pais">✕</button>
+      </div>
+      <form method="POST" action="{% url 'editar_pais_seccion' continente.slug pais.slug %}">
+        {% csrf_token %}
+        <div class="edit-grid">
+          <div class="edit-field">
+            <label>Capital</label>{{ form_pais.capital }}
+          </div>
+          <div class="edit-field">
+            <label>Idioma oficial</label>{{ form_pais.idioma_oficial }}
+          </div>
+          <div class="edit-field">
+            <label>Población</label>{{ form_pais.poblacion }}
+          </div>
+          <div class="edit-field">
+            <label>Superficie</label>{{ form_pais.superficie }}
+          </div>
+          <div class="edit-field">
+            <label>Color bandera 1</label>{{ form_pais.color_bandera1 }}
+          </div>
+          <div class="edit-field">
+            <label>Color bandera 2</label>{{ form_pais.color_bandera2 }}
+          </div>
+          <div class="edit-field edit-field--full">
+            <label>Descripción general</label>{{ form_pais.descripcion }}
+          </div>
+          <div class="edit-field edit-field--full">
+            <label>Historia</label>{{ form_pais.historia }}
+          </div>
+          <div class="edit-field edit-field--full">
+            <label>Conflictos y guerras</label>{{ form_pais.conflictos }}
+          </div>
+        </div>
+        <div class="edit-actions">
+          <button type="submit" class="btn-save">💾 Guardar</button>
+          <button type="button" class="btn-cancel" data-panel="panel-edit-pais">Cancelar</button>
+        </div>
+      </form>
+    </div>
+    {% endif %}
+
+    <!-- ── Materiales ── -->
+    <div class="materiales-block">
+      <div class="materiales-header">
+        <h3 class="mat-title">📎 Materiales de apoyo</h3>
+        {% if es_admin %}
+          <button class="btn-edit-toggle" data-panel="panel-add-material">➕ Agregar</button>
+        {% endif %}
+      </div>
+      {% if materiales %}
+        <div class="mat-grid">
+          {% for mat in materiales %}
+          <div class="mat-card-wrap">
+            <a href="{% if mat.archivo %}{{ mat.archivo.url }}{% else %}{{ mat.url }}{% endif %}"
+               target="_blank" class="mat-card mat-card--{{ mat.tipo }}">
+              <span class="mat-icon">
+                {% if mat.tipo == 'pdf' %}📄{% elif mat.tipo == 'video' %}🎬{% else %}🔗{% endif %}
+              </span>
+              <div>
+                <p class="mat-tipo">{{ mat.get_tipo_display }}</p>
+                <p class="mat-nombre">{{ mat.titulo }}</p>
+              </div>
+            </a>
+            {% if es_admin %}
+              <form method="POST" action="{% url 'eliminar_material_pais_seccion' continente.slug pais.slug mat.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-mat-delete"
+                        onclick="return confirm('¿Eliminar este material?')">🗑</button>
+              </form>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="mat-empty">
+          {% if es_admin %}Sin materiales. Usa "Agregar" para subir el primero.
+          {% else %}El profesor aún no ha subido materiales para este país.{% endif %}
+        </p>
+      {% endif %}
+    </div>
+
+    <!-- ── Panel agregar material (admin) ── -->
+    {% if es_admin %}
+    <div class="admin-panel" id="panel-add-material">
+      <div class="admin-panel__header">
+        <span>➕ Agregar material</span>
+        <button class="btn-panel-close" data-panel="panel-add-material">✕</button>
+      </div>
+      <form method="POST" action="{% url 'agregar_material_pais_seccion' continente.slug pais.slug %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="edit-grid">
+          <div class="edit-field">
+            <label>Tipo</label>{{ form_material.tipo }}
+          </div>
+          <div class="edit-field edit-field--full">
+            <label>Título</label>{{ form_material.titulo }}
+          </div>
+          <div class="edit-field edit-field--full">
+            <label>URL</label>{{ form_material.url }}
+          </div>
+          <div class="edit-field edit-field--full">
+            <label>Archivo</label>{{ form_material.archivo }}
+          </div>
+        </div>
+        <div class="edit-actions">
+          <button type="submit" class="btn-save">📤 Subir</button>
+          <button type="button" class="btn-cancel" data-panel="panel-add-material">Cancelar</button>
+        </div>
+      </form>
+    </div>
+    {% endif %}
+
+  </div>
+</main>
+
+<!-- Modal mapa -->
+<div class="mapa-overlay" id="mapa-overlay">
+  <div class="mapa-modal">
+    <div class="mapa-modal__header">
+      <div class="mapa-modal__title">
+        <span>{{ pais.bandera }}</span>
+        <span>{{ pais.nombre }}</span>
+      </div>
+      <div style="display:flex;gap:.6rem;align-items:center">
+        <button class="mapa-btn-centrar" id="btn-centrar-mapa">⊙ Centrar</button>
+        <button class="mapa-modal__close" id="btn-cerrar-mapa">✕</button>
+      </div>
+    </div>
+    <div id="mapa-leaflet"></div>
+  </div>
+</div>
+
+<script src="{% static 'epocas/js/epocas.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function () {
+  const codigoISO   = "{{ pais.codigo_iso }}";
+  const latCentro   = {{ pais.lat_centro }};
+  const lngCentro   = {{ pais.lng_centro }};
+  const zoomInicial = {{ pais.zoom_inicial }};
+  const color1      = "{{ pais.color_bandera1 }}";
+  const color2      = "{{ pais.color_bandera2 }}";
+  const ciudades    = [
+    {% for c in ciudades %}
+    { nombre:"{{ c.nombre|escapejs }}", descripcion:"{{ c.descripcion|escapejs }}", tipo:"{{ c.tipo }}", lat:{{ c.latitud }}, lng:{{ c.longitud }} },
+    {% endfor %}
+  ];
+
+  const tipoIcono = { capital:'🏛️', principal:'🏙️', historica:'🏰', conflicto:'⚔️' };
+  let mapa = null;
+
+  function iniciarMapa() {
+    if (mapa) return;
+    mapa = L.map('mapa-leaflet', { zoomControl: true });
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      attribution: '© <a href="https://carto.com">CARTO</a> © <a href="https://openstreetmap.org">OpenStreetMap</a>',
+      subdomains: 'abcd', maxZoom: 19,
+    }).addTo(mapa);
+
+    fetch('https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson')
+      .then(r => r.json())
+      .then(data => {
+        const feature = data.features.find(f =>
+          f.properties.ISO_A3 === codigoISO || f.properties.ADM0_A3 === codigoISO
+        );
+        if (feature) {
+          const layer = L.geoJSON(feature, {
+            style: { color: color2, fillColor: color1, weight: 2.5, opacity: 1, fillOpacity: 0.35 }
+          }).addTo(mapa);
+          mapa.fitBounds(layer.getBounds(), { padding: [30, 30] });
+        } else {
+          mapa.setView([latCentro, lngCentro], zoomInicial);
+        }
+      })
+      .catch(() => mapa.setView([latCentro, lngCentro], zoomInicial));
+
+    ciudades.forEach(c => {
+      const icono = tipoIcono[c.tipo] || '📍';
+      const marker = L.circleMarker([c.lat, c.lng], {
+        radius: c.tipo === 'capital' ? 10 : 7,
+        fillColor: c.tipo === 'capital' ? color2 : color1,
+        color: color2, weight: 2, fillOpacity: 0.9,
+      }).addTo(mapa);
+      marker.bindPopup(`
+        <div style="font-family:'Crimson Text',serif;min-width:180px;max-width:240px">
+          <div style="font-size:1.3rem;margin-bottom:.3rem">${icono}</div>
+          <strong style="font-size:1rem;color:#1a237e;display:block;margin-bottom:.25rem">${c.nombre}</strong>
+          <div style="font-size:.72rem;color:#777;text-transform:uppercase;margin-bottom:.4rem">${c.tipo}</div>
+          <p style="font-size:.9rem;line-height:1.5;margin:0;color:#333">${c.descripcion}</p>
+        </div>`, { maxWidth: 260 });
+      marker.bindTooltip(`<strong>${icono} ${c.nombre}</strong>`, {
+        permanent: false, direction: 'top', className: 'mapa-tooltip',
+      });
+    });
+  }
+
+  document.getElementById('btn-abrir-mapa').addEventListener('click', () => {
+    document.getElementById('mapa-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => { iniciarMapa(); if (mapa) mapa.invalidateSize(); }, 150);
+  });
+
+  document.getElementById('btn-centrar-mapa').addEventListener('click', () => {
+    if (mapa) mapa.setView([latCentro, lngCentro], zoomInicial, { animate: true });
+  });
+
+  function cerrarMapa() {
+    document.getElementById('mapa-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('btn-cerrar-mapa').addEventListener('click', cerrarMapa);
+  document.getElementById('mapa-overlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('mapa-overlay')) cerrarMapa();
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarMapa(); });
+})();
+</script>
+
+</body>
+</html>

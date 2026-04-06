@@ -1,0 +1,358 @@
+/* ══════════════════════════════════════════════════════
+   WorldLearn – login.css
+   Ruta: login/static/login/css/login.css
+   Paleta: Beige/Verde naturaleza
+══════════════════════════════════════════════════════ */
+
+:root {
+  --green-dark:  #005a4d;
+  --green-mid:   #007E6E;
+  --green-light: #73AF6F;
+  --beige-warm:  #F5ECD7;
+  --beige-mid:   #EDE0C4;
+  --beige-card:  #FDFAF4;
+  --text-dark:   #1a2a1a;
+  --text-mid:    #4a5e4a;
+  --text-light:  #6b7a6b;
+  --error:       #c0392b;
+  --radius:      14px;
+  --flip-time:   0.65s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+
+body {
+  font-family: 'Crimson Text', 'Noto Color Emoji', serif;
+  background: var(--beige-warm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* ── Layout ─────────────────────────────────────────── */
+.page-wrap {
+  display: flex;
+  width: 100%;
+  max-width: 980px;
+  height: 92vh;
+  max-height: 760px;
+  min-height: 560px;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0, 90, 77, 0.15);
+}
+
+/* ── Panel decorativo ───────────────────────────────── */
+.deco-panel {
+  position: relative;
+  width: 42%;
+  flex-shrink: 0;
+  background: linear-gradient(145deg, #007E6E 0%, #005a4d 55%, #003d34 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 2.5rem;
+  overflow: hidden;
+  transition: var(--flip-time);
+}
+
+.deco-bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.15;
+}
+
+.wl-watermark {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 20px;
+  transform: rotate(-30deg) scale(1.45);
+  opacity: 0.08;
+  pointer-events: none;
+  align-content: center;
+}
+.wl-watermark span {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 1.35rem;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.deco-tagline {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: #fff;
+  margin-bottom: 1.8rem;
+}
+.deco-tagline h2 {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 1.55rem;
+  line-height: 1.25;
+  margin-bottom: 0.4rem;
+}
+.deco-tagline p {
+  font-size: 0.86rem;
+  opacity: 0.75;
+}
+
+/* ── Panel de formularios ───────────────────────────── */
+.form-panel {
+  flex: 1;
+  background: var(--beige-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 1.5rem;
+}
+
+/* ── Flip card ──────────────────────────────────────── */
+.card-scene {
+  width: 100%;
+  max-width: 420px;
+  perspective: 1200px;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  transform-style: preserve-3d;
+  transition: transform var(--flip-time);
+}
+.card.is-flipped { transform: rotateY(180deg); }
+
+.card-face {
+  width: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.card-back {
+  position: absolute;
+  top: 0; left: 0;
+  transform: rotateY(180deg);
+}
+
+/* ── Contenido del formulario ───────────────────────── */
+.form-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.logo-placeholder {
+  font-size: 3rem;
+  text-align: center;
+  line-height: 1;
+}
+.logo {
+  width: 68px;
+  height: 68px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
+.form-title {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 1.7rem;
+  color: var(--text-dark);
+  line-height: 1.2;
+  text-align: center;
+}
+
+.form-sub {
+  font-size: 0.81rem;
+  color: var(--text-light);
+  text-align: center;
+}
+
+.link-action {
+  color: var(--green-mid);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.link-action:hover { color: var(--green-dark); text-decoration: underline; }
+
+/* ── Campos ─────────────────────────────────────────── */
+.fields-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.7rem;
+}
+
+.field-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.field-input {
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid #C8D9C8;
+  background: transparent;
+  padding: 1rem 2.2rem 0.3rem 0;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.88rem;
+  color: var(--text-dark);
+  outline: none;
+  transition: border-color 0.25s;
+  border-radius: 0;
+  appearance: textfield;
+}
+.field-input::-webkit-outer-spin-button,
+.field-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+.field-input:focus,
+.field-input.has-value { border-color: var(--green-mid); }
+.field-input.field-error { border-color: var(--error); }
+
+.field-label {
+  position: absolute;
+  top: 1rem;
+  left: 0;
+  font-size: 0.82rem;
+  color: var(--text-light);
+  pointer-events: none;
+  transition: all 0.22s ease;
+}
+.field-input:focus ~ .field-label,
+.field-input.has-value ~ .field-label {
+  top: 0rem;
+  font-size: 0.68rem;
+  color: var(--green-mid);
+  font-weight: 600;
+}
+.field-input.field-error ~ .field-label { color: var(--error); }
+
+/* Select de grado */
+.field-select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  padding-top: 1rem;
+  padding-bottom: 0.3rem;
+  padding-left: 0;
+  padding-right: 1.5rem;
+  background-color: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.2rem center;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.88rem;
+  color: var(--text-dark);
+  border: none;
+  border-bottom: 2px solid #C8D9C8;
+  border-radius: 0;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.25s;
+}
+.field-select:focus {
+  border-color: var(--green-mid);
+}
+.field-select option[value=""] { color: transparent; }
+.field-select:focus ~ .field-label,
+.field-select.has-value ~ .field-label,
+.field-label--select {
+  top: 0rem;
+  font-size: 0.68rem;
+  color: var(--green-mid);
+  font-weight: 600;
+}
+
+.field-msg {
+  font-size: 0.68rem;
+  color: var(--error);
+  margin-top: 2px;
+}
+
+.toggle-pw {
+  position: absolute;
+  right: 0;
+  top: 0.75rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0;
+  color: var(--text-light);
+  transition: color 0.2s;
+}
+.toggle-pw:hover { color: var(--green-mid); }
+
+/* ── Botón principal ────────────────────────────────── */
+.btn-main {
+  width: 100%;
+  padding: 0.82rem;
+  background: linear-gradient(135deg, #007E6E 0%, #005a4d 100%);
+  color: #FDFAF4;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.97rem;
+  letter-spacing: 0.04em;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: transform 0.18s, box-shadow 0.18s;
+  box-shadow: 0 6px 20px rgba(0,126,110,0.3);
+  margin-top: 0.4rem;
+}
+.btn-main:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(0,126,110,0.4);
+}
+.btn-main:active { transform: translateY(0); }
+
+/* ── Olvidé contraseña ──────────────────────────────── */
+.forgot-link {
+  font-size: 0.77rem;
+  color: var(--text-light);
+  text-align: center;
+}
+
+/* ── Alertas / mensajes Django ──────────────────────── */
+.alert {
+  font-size: 0.78rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: 8px;
+  text-align: center;
+}
+.alert-error, .alert-danger   { background: #fdecea; color: var(--error); border: 1px solid rgba(192,57,43,0.2); }
+.alert-success, .alert-info   { background: #e8f5e9; color: var(--green-dark); border: 1px solid rgba(0,126,110,0.2); }
+.alert-warning                { background: #fff7e6; color: #7a5200; border: 1px solid rgba(122,82,0,0.2); }
+
+/* ── Responsive ─────────────────────────────────────── */
+@media (max-width: 700px) {
+  .page-wrap {
+    flex-direction: column;
+    height: auto;
+    max-height: none;
+    border-radius: 0;
+    min-height: 100vh;
+  }
+  .deco-panel {
+    width: 100%;
+    min-height: 160px;
+    justify-content: center;
+    padding: 1.2rem;
+  }
+  .deco-tagline { margin-bottom: 0; }
+  .form-panel { padding: 2rem 1.2rem; }
+  .fields-row { grid-template-columns: 1fr; }
+}

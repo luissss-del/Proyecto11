@@ -1,0 +1,303 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WorldLearn – Elige tu época</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'login/css/home.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
+  <style>
+    #particles { pointer-events: none !important; }
+    .noise      { pointer-events: none !important; }
+    .transition-overlay { pointer-events: none !important; }
+    .transition-overlay.active { pointer-events: all !important; }
+
+    /* ── Fila de países ── */
+    .paises-wrap {
+      display: flex;
+      justify-content: center;
+      margin-top: 2.5rem;
+      padding: 0 1rem;
+    }
+    .portal--paises {
+      --color-paises: #2ecc71;
+      max-width: 380px;
+      width: 100%;
+    }
+    .portal--paises .portal-glow {
+      background: radial-gradient(ellipse at center,
+        rgba(46,204,113,.35) 0%,
+        rgba(46,204,113,.08) 60%,
+        transparent 80%);
+    }
+    .portal--paises .portal-ring {
+      border-color: rgba(46,204,113,.25);
+    }
+    .portal--paises .portal-btn {
+      background: linear-gradient(135deg, rgba(46,204,113,.15), rgba(46,204,113,.05));
+      border-color: rgba(46,204,113,.4);
+      color: #2ecc71;
+    }
+    .portal--paises .portal-btn:hover {
+      background: rgba(46,204,113,.25);
+      border-color: #2ecc71;
+      box-shadow: 0 0 20px rgba(46,204,113,.3);
+    }
+    .portal--paises .portal-era {
+      color: rgba(46,204,113,.8);
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+<div class="noise"></div>
+
+<header class="site-header">
+  <div class="header-left">
+    <span class="logo-owl">🦉</span>
+    <span class="site-name">WorldLearn</span>
+  </div>
+  <div class="header-right">
+    {% if es_admin %}<span class="admin-badge">✏️ Modo profesor</span>{% endif %}
+    <a href="{% url 'editar_perfil' %}" class="welcome-text" style="text-decoration:none;cursor:pointer">Bienvenido, <strong>{{ nombre }}</strong> ✏️</a>
+    <a href="{% url 'logout' %}" class="btn-logout">Cerrar sesión</a>
+  </div>
+</header>
+
+<main class="main-content">
+
+  <div class="hero-text">
+    <p class="hero-sub">MÁQUINA DEL TIEMPO</p>
+    <h1 class="hero-title">¿A dónde viajas<br><em>hoy</em>?</h1>
+    <p class="hero-desc">Selecciona una época y sumérgete en los eventos<br>que marcaron la historia de la humanidad.</p>
+  </div>
+
+  <!-- ── Panel de gestión de estudiantes (solo admin) ── -->
+  {% if es_admin %}
+  <div class="admin-students-wrap">
+    <div class="admin-students-header" id="toggleEstudiantes">
+      <span>👥 Gestión de estudiantes</span>
+      <span class="toggle-arrow">▼</span>
+    </div>
+    <div class="admin-students-body" id="estudiantesBody">
+      {% if estudiantes %}
+      <table class="students-table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Correo</th>
+            <th>Grado</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for est in estudiantes %}
+          <tr>
+            <td>{{ est.nombre }}</td>
+            <td>{{ est.apellido }}</td>
+            <td>{{ est.correo }}</td>
+            <td>{% if est.grado %}{{ est.grado.nombre }}{% else %}<span class="no-grado">Sin asignar</span>{% endif %}</td>
+            <td>
+              <form method="POST" action="{% url 'eliminar_estudiante' est.pk %}"
+                    onsubmit="return confirm('¿Eliminar a {{ est.nombre }} {{ est.apellido }}? Esta acción es permanente.')">
+                {% csrf_token %}
+                <button type="submit" class="btn-delete-student">🗑 Eliminar</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+        <p class="no-students">No hay estudiantes registrados.</p>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- ── Portales de épocas ── -->
+  <div class="portals-wrap">
+
+    <div class="portal" id="portal-ww1" style="--delay:0.1s">
+      <div class="portal-glow"></div>
+      <div class="portal-ring portal-ring--1"></div>
+      <div class="portal-ring portal-ring--2"></div>
+      <div class="portal-ring portal-ring--3"></div>
+      <div class="portal-inner">
+        <div class="portal-era">1914 – 1918</div>
+        <div class="portal-icon">⚔️</div>
+        <h2 class="portal-title">Primera Guerra<br>Mundial</h2>
+        <p class="portal-desc">La Gran Guerra. El mundo cambia para siempre en los campos de Europa.</p>
+        <a href="{% url 'detalle_epoca' 'ww1' %}" class="portal-btn">
+          <span>Viajar</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+      <div class="portal-particles">
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <div class="portal portal--center" id="portal-ww2" style="--delay:0.25s">
+      <div class="portal-glow"></div>
+      <div class="portal-ring portal-ring--1"></div>
+      <div class="portal-ring portal-ring--2"></div>
+      <div class="portal-ring portal-ring--3"></div>
+      <div class="portal-inner">
+        <div class="portal-era">1939 – 1945</div>
+        <div class="portal-icon">🌍</div>
+        <h2 class="portal-title">Segunda Guerra<br>Mundial</h2>
+        <p class="portal-desc">El conflicto más devastador de la historia. Naciones enteras en llamas.</p>
+        <a href="{% url 'detalle_epoca' 'ww2' %}" class="portal-btn">
+          <span>Viajar</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+      <div class="portal-particles">
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <div class="portal" id="portal-cf" style="--delay:0.4s">
+      <div class="portal-glow"></div>
+      <div class="portal-ring portal-ring--1"></div>
+      <div class="portal-ring portal-ring--2"></div>
+      <div class="portal-ring portal-ring--3"></div>
+      <div class="portal-inner">
+        <div class="portal-era">1947 – 1991</div>
+        <div class="portal-icon">☢️</div>
+        <h2 class="portal-title">Guerra<br>Fría</h2>
+        <p class="portal-desc">La tensión nuclear entre dos superpotencias al borde del abismo.</p>
+        <a href="{% url 'detalle_epoca' 'cf' %}" class="portal-btn">
+          <span>Viajar</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+      <div class="portal-particles">
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Portal de Países ── -->
+  <div class="paises-wrap">
+    <div class="portal portal--paises" id="portal-paises" style="--delay:0.55s">
+      <div class="portal-glow"></div>
+      <div class="portal-ring portal-ring--1"></div>
+      <div class="portal-ring portal-ring--2"></div>
+      <div class="portal-ring portal-ring--3"></div>
+      <div class="portal-inner">
+        <div class="portal-era">195 PAÍSES</div>
+        <div class="portal-icon">🗺️</div>
+        <h2 class="portal-title">Explorador<br>de Países</h2>
+        <p class="portal-desc">Explora todos los países del mundo, su historia, conflictos y geografía.</p>
+        <a href="{% url 'lista_continentes' %}" class="portal-btn">
+          <span>Explorar</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+      <div class="portal-particles">
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Línea de tiempo decorativa -->
+  <div class="timeline-bar">
+    <div class="tl-line"></div>
+    <div class="tl-dot" style="left:18%"><span>1914</span></div>
+    <div class="tl-dot" style="left:46%"><span>1939</span></div>
+    <div class="tl-dot" style="left:74%"><span>1947</span></div>
+    <div class="tl-dot tl-dot--end" style="left:92%"><span>1991</span></div>
+  </div>
+
+</main>
+
+<div class="transition-overlay" id="transitionOverlay">
+  <div class="transition-ring"></div>
+  <div class="transition-ring"></div>
+  <div class="transition-ring"></div>
+  <p class="transition-text">Viajando en el tiempo...</p>
+</div>
+
+<script>
+const canvas = document.getElementById('particles');
+const ctx    = canvas.getContext('2d');
+let W, H, particles = [];
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+class Particle {
+  constructor() { this.reset(true); }
+  reset(init = false) {
+    this.x  = Math.random() * W;
+    this.y  = init ? Math.random() * H : H + 10;
+    this.r  = Math.random() * 1.5 + 0.3;
+    this.vy = -(Math.random() * 0.4 + 0.15);
+    this.vx = (Math.random() - 0.5) * 0.2;
+    this.a  = Math.random() * 0.5 + 0.1;
+  }
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    if (this.y < -10) this.reset();
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(200,210,255,${this.a})`;
+    ctx.fill();
+  }
+}
+
+for (let i = 0; i < 120; i++) particles.push(new Particle());
+
+function animParticles() {
+  ctx.clearRect(0, 0, W, H);
+  particles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(animParticles);
+}
+animParticles();
+
+// ── Toggle panel estudiantes ──────────────────────────
+const toggleBtn   = document.getElementById('toggleEstudiantes');
+const estudBody   = document.getElementById('estudiantesBody');
+if (toggleBtn) {
+  toggleBtn.addEventListener('click', () => {
+    const open = estudBody.classList.toggle('open');
+    toggleBtn.querySelector('.toggle-arrow').textContent = open ? '▲' : '▼';
+  });
+}
+
+document.querySelectorAll('.portal').forEach(portal => {
+  portal.addEventListener('mousemove', e => {
+    const rect = portal.getBoundingClientRect();
+    const cx   = rect.left + rect.width  / 2;
+    const cy   = rect.top  + rect.height / 2;
+    const dx   = (e.clientX - cx) / (rect.width  / 2);
+    const dy   = (e.clientY - cy) / (rect.height / 2);
+    portal.style.transform = `perspective(800px) rotateY(${dx * 8}deg) rotateX(${-dy * 8}deg) translateY(-8px)`;
+  });
+  portal.addEventListener('mouseleave', () => {
+    portal.style.transform = '';
+  });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,329 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WorldLearn – {{ epoca.nombre }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'epocas/css/epocas.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
+</head>
+<body class="epoca-{{ epoca.slug }}">
+
+<canvas id="particles"></canvas>
+<div class="noise"></div>
+
+<header class="site-header">
+  <a href="{% url 'home' %}" class="btn-back">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M19 12H5M12 5l-7 7 7 7"/>
+    </svg>
+    Épocas
+  </a>
+  <div class="header-center">
+    <span class="logo-owl">🦉</span>
+    <span class="site-name">WorldLearn</span>
+  </div>
+  <div class="header-right">
+    {% if es_admin %}<span class="admin-badge">✏️ Modo profesor</span>{% endif %}
+    <a href="{% url 'editar_perfil' %}" class="welcome-text" style="text-decoration:none;cursor:pointer"><strong>{{ nombre }}</strong> ✏️</a>
+    <a href="{% url 'logout' %}" class="btn-logout">Salir</a>
+  </div>
+</header>
+
+<section class="epoch-hero">
+  <div class="epoch-hero__glow"></div>
+  <div class="epoch-hero__content">
+    <p class="epoch-years">{{ epoca.anio_inicio }} — {{ epoca.anio_fin }}</p>
+    <h1 class="epoch-title">{{ epoca.nombre }}</h1>
+    <p class="epoch-desc">{{ epoca.descripcion }}</p>
+  </div>
+</section>
+
+{% if messages %}
+  <div class="messages-wrap">
+    {% for message in messages %}
+      <div class="msg msg--{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<main class="main-content">
+
+  <!-- ══════════════════════════════════════
+       SECCIÓN 0: MATERIAL DE APOYO DE LA ÉPOCA
+  ══════════════════════════════════════ -->
+  <section class="content-section" id="sec-materiales-epoca">
+    <div class="section-header">
+      <div class="section-header__line"></div>
+      <div class="section-header__top">
+        <div>
+          <h2 class="section-title">📚 Material de apoyo</h2>
+          <p class="section-sub">Recursos generales sobre esta época subidos por el profesor.</p>
+        </div>
+        {% if es_admin %}
+          <button class="btn-edit-toggle" data-panel="panel-add-mat-epoca">
+            ➕ Agregar
+          </button>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if materiales_epoca %}
+      <div class="mat-grid">
+        {% for mat in materiales_epoca %}
+        <div class="mat-card-wrap">
+          <a href="{% if mat.archivo %}{{ mat.archivo.url }}{% else %}{{ mat.url }}{% endif %}"
+             target="_blank" class="mat-card mat-card--{{ mat.tipo }}">
+            <span class="mat-icon">
+              {% if mat.tipo == 'video' %}🎬
+              {% elif mat.tipo == 'pdf' %}📄
+              {% elif mat.tipo == 'word' %}📝
+              {% else %}🔗{% endif %}
+            </span>
+            <div>
+              <p class="mat-tipo">{{ mat.get_tipo_display }}</p>
+              <p class="mat-nombre">{{ mat.titulo }}</p>
+              {% if es_admin %}
+                <p class="mat-grados-info">
+                  {% if mat.todos_los_grados %}🌐 Todos los grados{% else %}🎓 {{ mat.grados.all|join:", " }}{% endif %}
+                </p>
+              {% endif %}
+            </div>
+          </a>
+          {% if es_admin %}
+            <form method="POST" action="{% url 'eliminar_material_epoca' epoca.slug mat.pk %}">
+              {% csrf_token %}
+              <button type="submit" class="btn-mat-delete"
+                      onclick="return confirm('¿Eliminar este material?')">🗑</button>
+            </form>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="mat-empty">
+        {% if es_admin %}
+          Sin materiales aún. Usa "Agregar" para subir el primero.
+        {% elif not grado_usuario %}
+          No tienes un grado asignado. Pide a tu profesor que te asigne uno en tu perfil.
+        {% else %}
+          El profesor aún no ha subido materiales para esta época.
+        {% endif %}
+      </p>
+    {% endif %}
+
+    <!-- Panel agregar material época (admin) -->
+    {% if es_admin %}
+    <div class="admin-panel" id="panel-add-mat-epoca">
+      <div class="admin-panel__header">
+        <span>➕ Agregar material de la época</span>
+        <button class="btn-panel-close" data-panel="panel-add-mat-epoca">✕</button>
+      </div>
+      <form method="POST" action="{% url 'agregar_material_epoca' epoca.slug %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="edit-grid">
+          <div class="edit-field">
+            <label>Tipo</label>{{ form_material_epoca.tipo }}
+          </div>
+          <div class="edit-field edit-field--full">
+            <label>Título</label>{{ form_material_epoca.titulo }}
+          </div>
+          <div class="edit-field edit-field--full">
+            <label>URL (video / link)</label>{{ form_material_epoca.url }}
+          </div>
+          <div class="edit-field edit-field--full">
+            <label>Archivo (PDF / Word)</label>{{ form_material_epoca.archivo }}
+          </div>
+          <div class="edit-field edit-field--full">
+            <div class="grados-selector">
+              <label class="grados-toggle-label">
+                {{ form_material_epoca.todos_los_grados }}
+                <span>📢 Mostrar a <strong>todos los grados</strong></span>
+              </label>
+              <div class="grados-lista">
+                <p class="grados-lista__titulo">O selecciona grados específicos:</p>
+                {{ form_material_epoca.grados }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="edit-actions">
+          <button type="submit" class="btn-save">📤 Subir</button>
+          <button type="button" class="btn-cancel" data-panel="panel-add-mat-epoca">Cancelar</button>
+        </div>
+      </form>
+    </div>
+    {% endif %}
+  </section>
+
+  <!-- ══════════════════════════════════════
+       SECCIÓN 1: EVENTOS
+  ══════════════════════════════════════ -->
+  <section class="content-section" id="sec-eventos">
+    <div class="section-header">
+      <div class="section-header__line"></div>
+      <h2 class="section-title">⚔️ Eventos históricos</h2>
+      <p class="section-sub">De inicio a fin — presiona un evento para explorar su historia completa.</p>
+    </div>
+
+    <div class="events-timeline">
+      {% for evento in eventos %}
+      <div class="event-card">
+        <div class="etl-col">
+          <div class="etl-dot"></div>
+          {% if not forloop.last %}<div class="etl-line"></div>{% endif %}
+        </div>
+        <a href="{% url 'detalle_evento' epoca.slug evento.pk %}" class="event-card__body">
+          <div class="event-card__year">{{ evento.anio }}</div>
+          <div class="event-card__top">
+            <span class="event-card__icon">{{ evento.icono }}</span>
+            <h3 class="event-card__title">{{ evento.titulo }}</h3>
+          </div>
+          <p class="event-card__summary">{{ evento.resumen }}</p>
+          <span class="event-card__cta">
+            Explorar evento
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       SECCIÓN 2: PAÍSES
+  ══════════════════════════════════════ -->
+  <section class="content-section" id="sec-paises">
+    <div class="section-header">
+      <div class="section-header__line"></div>
+      <div class="section-header__top">
+        <div>
+          <h2 class="section-title">🌍 Países involucrados</h2>
+          <p class="section-sub">Protagonistas directos del conflicto.</p>
+        </div>
+        {% if es_admin %}
+          <button class="btn-edit-toggle" data-panel="panel-crear-pais">
+            ➕ Nuevo país
+          </button>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if es_admin %}
+    <div class="admin-panel" id="panel-crear-pais">
+      <div class="admin-panel__header">
+        <span>➕ Crear nuevo país</span>
+        <button class="btn-panel-close" data-panel="panel-crear-pais">✕</button>
+      </div>
+      <form method="POST" action="{% url 'crear_pais' epoca.slug %}">
+        {% csrf_token %}
+        <div class="edit-grid">
+          <div class="edit-field">
+            <label>Nombre del país</label>{{ form_nuevo_pais.nombre }}
+          </div>
+          <div class="edit-field">
+            <label>Bandera (emoji 🇨🇴)</label>{{ form_nuevo_pais.bandera }}
+          </div>
+          <div class="edit-field">
+            <label>Tipo</label>{{ form_nuevo_pais.tipo }}
+          </div>
+          <div class="edit-field">
+            <label>Bando (ej: Aliados)</label>{{ form_nuevo_pais.bando }}
+          </div>
+          <div class="edit-field">
+            <label>Orden (número)</label>{{ form_nuevo_pais.orden }}
+          </div>
+          <div class="edit-field edit-field--full">
+            <label>Descripción completa</label>{{ form_nuevo_pais.descripcion }}
+          </div>
+        </div>
+        <div class="edit-actions">
+          <button type="submit" class="btn-save">💾 Crear país</button>
+          <button type="button" class="btn-cancel" data-panel="panel-crear-pais">Cancelar</button>
+        </div>
+      </form>
+    </div>
+    {% endif %}
+
+    <div class="countries-grid">
+      {% for pais in principales %}
+      <div class="country-card-wrap">
+        <a href="{% url 'detalle_pais' epoca.slug pais.pk %}" class="country-card country-card--main">
+          <div class="cc-top">
+            <span class="cc-flag">{{ pais.bandera }}</span>
+            <span class="cc-bando">{{ pais.bando }}</span>
+          </div>
+          <h3 class="cc-name">{{ pais.nombre }}</h3>
+          <p class="cc-desc">{{ pais.descripcion|truncatechars:110 }}</p>
+          <span class="cc-cta">Ver más →</span>
+        </a>
+        {% if es_admin %}
+        <div class="cc-admin-actions">
+          <a href="{% url 'detalle_pais' epoca.slug pais.pk %}" class="btn-cc-edit">✏️ Editar</a>
+          <form method="POST" action="{% url 'eliminar_pais' epoca.slug pais.pk %}" style="display:inline">
+            {% csrf_token %}
+            <button type="submit" class="btn-cc-delete"
+                    onclick="return confirm('¿Eliminar a {{ pais.nombre }}?')">
+              🗑 Eliminar
+            </button>
+          </form>
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="divider-label" style="margin-top:3rem">
+      <span>Países colaterales</span>
+    </div>
+    <p class="section-sub" style="margin-bottom:1.5rem">
+      Afectados por el conflicto sin ser protagonistas directos
+    </p>
+
+    <div class="countries-grid">
+      {% for pais in colaterales %}
+      <div class="country-card-wrap">
+        <a href="{% url 'detalle_pais' epoca.slug pais.pk %}" class="country-card country-card--colateral">
+          <div class="cc-top">
+            <span class="cc-flag">{{ pais.bandera }}</span>
+            <span class="cc-bando cc-bando--col">{{ pais.bando }}</span>
+          </div>
+          <h3 class="cc-name">{{ pais.nombre }}</h3>
+          <p class="cc-desc">{{ pais.descripcion|truncatechars:110 }}</p>
+          <span class="cc-cta">Ver más →</span>
+        </a>
+        {% if es_admin %}
+        <div class="cc-admin-actions">
+          <a href="{% url 'detalle_pais' epoca.slug pais.pk %}" class="btn-cc-edit">✏️ Editar</a>
+          <form method="POST" action="{% url 'eliminar_pais' epoca.slug pais.pk %}" style="display:inline">
+            {% csrf_token %}
+            <button type="submit" class="btn-cc-delete"
+                    onclick="return confirm('¿Eliminar a {{ pais.nombre }}?')">
+              🗑 Eliminar
+            </button>
+          </form>
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+</main>
+
+<script src="{% static 'epocas/js/epocas.js' %}"></script>
+<script>
+document.querySelectorAll('.grados-toggle-check').forEach(function(chk) {
+  var lista = chk.closest('.grados-selector').querySelector('.grados-lista');
+  function sync() { lista.style.display = chk.checked ? 'none' : 'block'; }
+  chk.addEventListener('change', sync);
+  sync();
+});
+</script>
+</body>
+</html>

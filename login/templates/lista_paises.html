@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WorldLearn – {{ continente.nombre }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'epocas/css/epocas.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+<div class="noise"></div>
+
+<header class="site-header">
+  <a href="{% url 'lista_continentes' %}" class="btn-back">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    Continentes
+  </a>
+  <div class="header-center">
+    <span class="logo-owl">🦉</span>
+    <span class="site-name">WorldLearn</span>
+  </div>
+  <div class="header-right">
+    {% if es_admin %}<span class="admin-badge">✏️ Modo profesor</span>{% endif %}
+    <span class="welcome-text">{{ nombre }}</span>
+    <a href="{% url 'logout' %}" class="btn-logout">Salir</a>
+  </div>
+</header>
+
+<section class="epoch-hero">
+  <div class="epoch-hero__glow"></div>
+  <div class="epoch-hero__content">
+    <div class="ev-hero-icon">{{ continente.icono }}</div>
+    <h1 class="epoch-title">{{ continente.nombre }}</h1>
+    <p class="epoch-desc">Explora los países de {{ continente.nombre }} por región.</p>
+  </div>
+</section>
+
+<main class="main-content">
+  {% for region in regiones %}
+  <div class="region-seccion">
+    <div class="section-header">
+      <h2 class="section-title">{{ region.nombre }}</h2>
+    </div>
+    <div class="paises-grid">
+      {% for pais in region.paises.all %}
+      <a href="{% url 'detalle_pais_seccion' continente.slug pais.slug %}" class="pais-card">
+        <div class="pais-card__bandera">{{ pais.bandera }}</div>
+        <div class="pais-card__nombre">{{ pais.nombre }}</div>
+        <div class="pais-card__capital">{{ pais.capital }}</div>
+      </a>
+      {% empty %}
+        <p class="mat-empty">Sin países en esta región aún.</p>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+</main>
+
+<script src="{% static 'epocas/js/epocas.js' %}"></script>
+</body>
+</html>

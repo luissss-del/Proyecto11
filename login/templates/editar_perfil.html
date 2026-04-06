@@ -1,0 +1,170 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WorldLearn – Editar perfil</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'epocas/css/epocas.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+<div class="noise"></div>
+
+<header class="site-header">
+  <a href="{% url 'home' %}" class="btn-back">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M19 12H5M12 5l-7 7 7 7"/>
+    </svg>
+    Inicio
+  </a>
+  <div class="header-center">
+    <span class="logo-owl">🦉</span>
+    <span class="site-name">WorldLearn</span>
+  </div>
+  <div class="header-right">
+    {% if es_admin %}<span class="admin-badge">✏️ Modo profesor</span>{% endif %}
+    <span class="welcome-text">{{ nombre }}</span>
+    <a href="{% url 'logout' %}" class="btn-logout">Salir</a>
+  </div>
+</header>
+
+<section class="epoch-hero epoch-hero--evento">
+  <div class="epoch-hero__glow"></div>
+  <div class="epoch-hero__content">
+    <div class="ev-hero-icon">👤</div>
+    <h1 class="epoch-title">Mi perfil</h1>
+    <p class="epoch-desc">{{ usuario.nombre }} {{ usuario.apellido }}</p>
+  </div>
+</section>
+
+{% if messages %}
+<div class="messages-wrap">
+  {% for message in messages %}
+    <div class="msg msg--{{ message.tags }}">{{ message }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<main class="main-content main-content--evento">
+  <div class="evento-body">
+
+    <div class="evento-desc-block">
+      <div class="evento-desc-label">
+        <span class="evento-desc-icon">✏️</span> Editar información personal
+      </div>
+
+      {% if exito %}
+        <div class="msg msg--success" style="margin-bottom:1.2rem">
+          ✅ Perfil actualizado correctamente.
+        </div>
+      {% endif %}
+
+      {% if error %}
+        <div class="msg msg--error" style="margin-bottom:1.2rem">
+          ⚠️ {{ error }}
+        </div>
+      {% endif %}
+
+      <form method="POST">
+       
+        {% csrf_token %}
+        <div class="edit-grid">
+
+          <div class="edit-field">
+            <label>Nombre</label>
+            <input type="text" name="nombre" class="edit-input"
+                   value="{{ usuario.nombre }}" required>
+          </div>
+
+          <div class="edit-field">
+            <label>Apellido</label>
+            <input type="text" name="apellido" class="edit-input"
+                   value="{{ usuario.apellido }}" required>
+          </div>
+
+          <div class="edit-field edit-field--full">
+            <label>Correo electrónico</label>
+            <input type="email" name="correo" class="edit-input"
+                   value="{{ usuario.correo }}" required>
+          </div>
+
+          <div class="edit-field edit-field--full">
+            <label>Grado</label>
+            <select name="grado" class="edit-input edit-select">
+              <option value="">— Sin grado asignado —</option>
+              {% for g in grados %}
+                <option value="{{ g.pk }}" {% if usuario.grado_id == g.pk %}selected{% endif %}>{{ g.nombre }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="edit-field">
+            <label>Nueva contraseña <span style="font-size:.75em;opacity:.6">(dejar vacío para no cambiar)</span></label>
+            <input type="password" name="password" class="edit-input"
+                   placeholder="Mínimo 6 caracteres" minlength="6">
+          </div>
+
+          <div class="edit-field">
+            <label>Confirmar nueva contraseña</label>
+            <input type="password" name="confirmar" class="edit-input"
+                   placeholder="Repite la contraseña">
+          </div>
+
+        </div>
+
+        <div class="edit-actions" style="margin-top:1.5rem">
+          <button type="submit" class="btn-save">💾 Guardar cambios</button>
+          <a href="{% url 'home' %}" class="btn-cancel" style="display:inline-flex;align-items:center;text-decoration:none">
+            Cancelar
+          </a>
+        </div>
+      </form>
+
+    </div>
+
+    <!-- Info adicional -->
+    <div class="evento-desc-block">
+      <div class="evento-desc-label">
+        <span class="evento-desc-icon">📋</span> Información de la cuenta
+      </div>
+      <div class="pais-datos-grid" style="padding:0;margin:0">
+        <div class="pais-dato">
+          <span class="pais-dato__label">Tipo de identificación</span>
+          <span class="pais-dato__valor">{{ usuario.Ti }}</span>
+        </div>
+        <div class="pais-dato">
+          <span class="pais-dato__label">Rol</span>
+          <span class="pais-dato__valor">{% if es_admin %}Profesor{% else %}Estudiante{% endif %}</span>
+        </div>
+        <div class="pais-dato">
+          <span class="pais-dato__label">Grado</span>
+          <span class="pais-dato__valor">{% if usuario.grado %}{{ usuario.grado.nombre }}{% else %}Sin asignar{% endif %}</span>
+        </div>
+        <div class="pais-dato">
+          <span class="pais-dato__label">Correo actual</span>
+          <span class="pais-dato__valor">{{ usuario.correo }}</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script src="{% static 'epocas/js/epocas.js' %}"></script>
+<script>
+document.querySelectorAll('.msg').forEach(msg => {
+  setTimeout(() => {
+    msg.style.transition = 'opacity .5s';
+    msg.style.opacity = '0';
+    setTimeout(() => msg.remove(), 500);
+  }, 3000);
+});
+</script>
+
+</body>
+</html>
