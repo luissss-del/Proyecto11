@@ -1,0 +1,597 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WorldLearn – {{ titulo }}</title>
+  <script>
+    (function() {
+      var t = localStorage.getItem('wl_theme') || 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'epocas/css/epocas.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
+  <style>
+    /* ── Página completa ── */
+    .page-wrap {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+      padding: 7rem 1.5rem 5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ── Título de página ── */
+    .page-hero {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      animation: fadeDown .7s ease both;
+    }
+    .page-hero__label {
+      font-family: 'Cinzel', serif;
+      font-size: .68rem;
+      letter-spacing: .35em;
+      color: var(--accent);
+      opacity: .8;
+      margin-bottom: .5rem;
+    }
+    .page-hero__title {
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      font-size: clamp(1.6rem, 4vw, 2.5rem);
+      color: var(--text-lt);
+      line-height: 1.15;
+    }
+    .page-hero__sub {
+      margin-top: .6rem;
+      font-size: 1rem;
+      color: var(--text-dim);
+    }
+
+    /* ── Layout dos columnas: formulario + preview ── */
+    .form-layout {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 2rem;
+      width: 100%;
+      max-width: 960px;
+      animation: fadeUp .7s .1s ease both;
+    }
+    @media (max-width: 780px) {
+      .form-layout { grid-template-columns: 1fr; }
+    }
+
+    /* ── Tarjeta del formulario ── */
+    .form-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 2rem 2rem 1.8rem;
+      box-shadow: 0 4px 24px rgba(0,0,0,.07);
+    }
+
+    /* ── Mensajes ── */
+    .msg-wrap { margin-bottom: 1.2rem; }
+    .msg-error {
+      background: #fdecea;
+      border: 1px solid #e05252;
+      border-radius: 8px;
+      padding: .7rem 1rem;
+      color: #b71c1c;
+      font-family: 'Crimson Text', serif;
+      font-size: .95rem;
+    }
+    [data-theme="dark"] .msg-error {
+      background: rgba(192,57,43,.12);
+      border-color: rgba(192,57,43,.35);
+      color: #e07070;
+    }
+
+    /* ── Grupos de campo ── */
+    .form-group {
+      margin-bottom: 1.3rem;
+    }
+    .form-label {
+      display: block;
+      font-family: 'Cinzel', serif;
+      font-size: .67rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: .45rem;
+    }
+    .form-help {
+      font-size: .85rem;
+      color: var(--text-dim);
+      margin-top: .3rem;
+      opacity: .75;
+    }
+    .errorlist {
+      list-style: none;
+      padding: 0;
+      margin: .3rem 0 0;
+    }
+    .errorlist li {
+      color: #c0392b;
+      font-family: 'Crimson Text', serif;
+      font-size: .88rem;
+    }
+    [data-theme="dark"] .errorlist li { color: #e07070; }
+
+    /* ── Campos en fila ── */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+
+    /* ── Inputs (hereda de epocas.css pero sobrescribimos dark mode) ── */
+    .edit-input, .edit-textarea {
+      width: 100%;
+      box-sizing: border-box;
+    }
+    [data-theme="dark"] .edit-input,
+    [data-theme="dark"] .edit-textarea {
+      background: rgba(255,255,255,.06);
+      border-color: rgba(78,205,196,.2);
+      color: var(--text-lt);
+    }
+    [data-theme="dark"] .edit-input::placeholder,
+    [data-theme="dark"] .edit-textarea::placeholder { color: rgba(255,255,255,.25); }
+    [data-theme="dark"] .edit-input:focus,
+    [data-theme="dark"] .edit-textarea:focus {
+      border-color: var(--accent);
+      background: rgba(255,255,255,.09);
+    }
+
+    /* Campo color especial */
+    .color-row {
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+    }
+    .edit-input--color {
+      width: 52px;
+      height: 38px;
+      padding: .2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .color-hex-text {
+      font-family: 'Crimson Text', serif;
+      font-size: .95rem;
+      color: var(--text-dim);
+    }
+
+    /* ── Botones ── */
+    .form-actions {
+      display: flex;
+      gap: .9rem;
+      margin-top: 1.8rem;
+      flex-wrap: wrap;
+    }
+    .btn-save {
+      flex: 1;
+      min-width: 140px;
+      padding: .75rem 1.5rem;
+      background: linear-gradient(135deg, rgba(0,126,110,.18), rgba(0,126,110,.08));
+      border: 1px solid rgba(0,126,110,.45);
+      border-radius: 10px;
+      color: var(--accent);
+      font-family: 'Cinzel', serif;
+      font-size: .75rem;
+      letter-spacing: .09em;
+      cursor: pointer;
+      transition: background .2s, border-color .2s, transform .1s;
+    }
+    .btn-save:hover {
+      background: rgba(0,126,110,.25);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+    [data-theme="dark"] .btn-save {
+      background: linear-gradient(135deg, rgba(78,205,196,.18), rgba(78,205,196,.07));
+      border-color: rgba(78,205,196,.4);
+      color: var(--accent);
+    }
+    [data-theme="dark"] .btn-save:hover {
+      background: rgba(78,205,196,.25);
+    }
+    .btn-cancel {
+      padding: .75rem 1.2rem;
+      background: transparent;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      color: var(--text-dim);
+      font-family: 'Cinzel', serif;
+      font-size: .75rem;
+      letter-spacing: .09em;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      transition: background .2s, color .2s, border-color .2s;
+    }
+    .btn-cancel:hover {
+      background: var(--bg-mid);
+      color: var(--text-lt);
+      border-color: var(--accent-border);
+    }
+
+    /* ── Columna de preview ── */
+    .preview-col {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .preview-sticky {
+      position: sticky;
+      top: 7rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+    }
+
+    /* ── Tarjeta preview (igual que los portales del home) ── */
+    .preview-label {
+      font-family: 'Cinzel', serif;
+      font-size: .65rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      opacity: .7;
+      margin-bottom: .6rem;
+    }
+    .preview-portal {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,.07);
+      transition: border-color .3s, box-shadow .3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .preview-portal__glow {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: 16px;
+      opacity: .5;
+      transition: opacity .3s;
+    }
+    .preview-portal__era {
+      font-family: 'Cinzel', serif;
+      font-size: .68rem;
+      letter-spacing: .2em;
+      margin-bottom: .6rem;
+      opacity: .8;
+      position: relative;
+    }
+    .preview-portal__icon {
+      font-size: 3rem;
+      margin-bottom: .6rem;
+      line-height: 1;
+      position: relative;
+    }
+    .preview-portal__name {
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--text-lt);
+      margin-bottom: .55rem;
+      line-height: 1.25;
+      position: relative;
+    }
+    .preview-portal__desc {
+      font-size: .9rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+      position: relative;
+    }
+    .preview-portal__btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      margin-top: 1rem;
+      padding: .5rem 1.1rem;
+      border-radius: 8px;
+      font-family: 'Cinzel', serif;
+      font-size: .7rem;
+      letter-spacing: .08em;
+      border: 1px solid;
+      background: transparent;
+      cursor: default;
+      position: relative;
+    }
+
+    /* ── Info box orden ── */
+    .info-box {
+      background: var(--bg-mid);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.1rem 1.2rem;
+      font-family: 'Crimson Text', serif;
+      font-size: .92rem;
+      color: var(--text-dim);
+      line-height: 1.65;
+    }
+    .info-box strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* ── Animaciones ── */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+<div class="noise"></div>
+
+<header class="site-header">
+  <a href="{% url 'home' %}" class="btn-back">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    Inicio
+  </a>
+  <div class="header-center">
+    <span class="logo-owl">🦉</span>
+    <span class="site-name">WorldLearn</span>
+  </div>
+  <div class="header-right">
+    <span class="admin-badge">✏️ Modo profesor</span>
+    <a href="{% url 'editar_perfil' %}" class="welcome-text" style="text-decoration:none;cursor:pointer">
+      <strong>{{ nombre }}</strong> ✏️
+    </a>
+    <button class="btn-dark-mode" id="btnDarkMode" onclick="toggleDarkMode()" title="Cambiar modo oscuro/claro">
+      <span id="dmIcon">🌙</span>
+      <span class="dm-label" id="dmLabel">Oscuro</span>
+    </button>
+    <a href="{% url 'logout' %}" class="btn-logout">Salir</a>
+  </div>
+</header>
+
+<div class="page-wrap">
+
+  <div class="page-hero">
+    <p class="page-hero__label">Modo profesor</p>
+    <h1 class="page-hero__title">
+      {% if epoca %}✏️ Editar época{% else %}✨ Nueva época{% endif %}
+    </h1>
+    <p class="page-hero__sub">
+      {% if epoca %}
+        Modifica los datos. Los cambios se verán de inmediato en el inicio.
+      {% else %}
+        Completa los campos y la tarjeta aparecerá en la pantalla principal.
+      {% endif %}
+    </p>
+  </div>
+
+  <div class="form-layout">
+
+    <!-- ═══ Columna formulario ═══ -->
+    <div class="form-card">
+
+      {% if messages %}
+      <div class="msg-wrap">
+        {% for msg in messages %}
+          <div class="msg-error">{{ msg }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <form method="POST" id="epocaForm">
+        {% csrf_token %}
+
+        <!-- Nombre -->
+        <div class="form-group">
+          <label class="form-label" for="{{ form.nombre.id_for_label }}">
+            Nombre de la época *
+          </label>
+          {{ form.nombre }}
+          <p class="form-help">Ej: "Revolución Francesa", "Edad Media", "La Conquista de América"</p>
+          {% if form.nombre.errors %}<ul class="errorlist">{% for e in form.nombre.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+
+        <!-- Años -->
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="{{ form.anio_inicio.id_for_label }}">
+              Año de inicio *
+            </label>
+            {{ form.anio_inicio }}
+            {% if form.anio_inicio.errors %}<ul class="errorlist">{% for e in form.anio_inicio.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="{{ form.anio_fin.id_for_label }}">
+              Año de fin *
+            </label>
+            {{ form.anio_fin }}
+            {% if form.anio_fin.errors %}<ul class="errorlist">{% for e in form.anio_fin.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+          </div>
+        </div>
+
+        <!-- Descripción -->
+        <div class="form-group">
+          <label class="form-label" for="{{ form.descripcion.id_for_label }}">
+            Descripción corta *
+          </label>
+          {{ form.descripcion }}
+          <p class="form-help">2-3 líneas. Aparece en la tarjeta del inicio para motivar al estudiante.</p>
+          {% if form.descripcion.errors %}<ul class="errorlist">{% for e in form.descripcion.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+
+        <!-- Ícono + Color -->
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="{{ form.icono.id_for_label }}">
+              Emoji / Ícono
+            </label>
+            {{ form.icono }}
+            <p class="form-help">Pega un emoji. Ej: ⚔️ 🌍 ☢️ 🏛️ 👑</p>
+            {% if form.icono.errors %}<ul class="errorlist">{% for e in form.icono.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="{{ form.color_hex.id_for_label }}">
+              Color de la tarjeta
+            </label>
+            <div class="color-row">
+              {{ form.color_hex }}
+              <span class="color-hex-text" id="colorText">{{ form.color_hex.value|default:"#007E6E" }}</span>
+            </div>
+            {% if form.color_hex.errors %}<ul class="errorlist">{% for e in form.color_hex.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+          </div>
+        </div>
+
+        <!-- Orden -->
+        <div class="form-group">
+          <label class="form-label" for="{{ form.orden.id_for_label }}">
+            Orden de aparición
+          </label>
+          {{ form.orden }}
+          <p class="form-help">1 = primera tarjeta. Si dos tienen el mismo número, se ordenan por año de inicio.</p>
+          {% if form.orden.errors %}<ul class="errorlist">{% for e in form.orden.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+
+        <!-- Acciones -->
+        <div class="form-actions">
+          <button type="submit" class="btn-save">
+            {% if epoca %}💾 Guardar cambios{% else %}✅ Crear época{% endif %}
+          </button>
+          <a href="{% if epoca %}{% url 'detalle_epoca' epoca.slug %}{% else %}{% url 'home' %}{% endif %}"
+             class="btn-cancel">Cancelar</a>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- ═══ Columna preview ═══ -->
+    <div class="preview-col">
+      <div class="preview-sticky">
+        <div>
+          <p class="preview-label">Vista previa de la tarjeta</p>
+          <div class="preview-portal" id="previewPortal">
+            <div class="preview-portal__glow" id="prevGlow"></div>
+            <div class="preview-portal__era"  id="prevEra">???? – ????</div>
+            <div class="preview-portal__icon" id="prevIcon">📖</div>
+            <div class="preview-portal__name" id="prevName">Nombre de la época</div>
+            <div class="preview-portal__desc" id="prevDesc">La descripción aparecerá aquí…</div>
+            <div class="preview-portal__btn"  id="prevBtn">
+              <span>Viajar</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="info-box">
+          <strong>💡 Después de crear la época</strong><br>
+          Podrás agregar <strong>eventos</strong> desde la página de la época.
+          Cada evento tiene título, año, descripción y se organiza automáticamente
+          en la <strong>línea de tiempo</strong> según su fecha.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Partículas ── -->
+<script>
+const canvas = document.getElementById('particles');
+const ctx    = canvas.getContext('2d');
+let W, H;
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
+const pts = Array.from({length: 70}, () => ({
+  x: Math.random()*1920, y: Math.random()*1080,
+  vy: -(Math.random()*.3+.1), vx: (Math.random()-.5)*.15,
+  r: Math.random()*1.2+.3, a: Math.random()*.35+.08,
+  reset() { this.x = Math.random()*W; this.y = H+10; }
+}));
+(function anim() {
+  ctx.clearRect(0,0,W,H);
+  pts.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    if (p.y < -10) p.reset();
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle = `rgba(0,126,110,${p.a})`; ctx.fill();
+  });
+  requestAnimationFrame(anim);
+})();
+
+// ── Vista previa en tiempo real ──
+const fNombre  = document.getElementById('id_nombre');
+const fInicio  = document.getElementById('id_anio_inicio');
+const fFin     = document.getElementById('id_anio_fin');
+const fIcono   = document.getElementById('id_icono');
+const fColor   = document.getElementById('id_color_hex');
+const fDesc    = document.getElementById('id_descripcion');
+
+function actualizarPreview() {
+  const nombre = fNombre?.value  || 'Nombre de la época';
+  const inicio = fInicio?.value  || '????';
+  const fin    = fFin?.value     || '????';
+  const icono  = fIcono?.value   || '📖';
+  const color  = fColor?.value   || '#007E6E';
+  const desc   = fDesc?.value    || 'La descripción aparecerá aquí…';
+
+  document.getElementById('prevEra').textContent    = `${inicio} – ${fin}`;
+  document.getElementById('prevEra').style.color    = color;
+  document.getElementById('prevIcon').textContent   = icono;
+  document.getElementById('prevName').textContent   = nombre;
+  document.getElementById('prevDesc').textContent   = desc;
+  document.getElementById('colorText').textContent  = color;
+
+  const portal = document.getElementById('previewPortal');
+  portal.style.borderColor = color + '55';
+  portal.style.boxShadow   = `0 4px 28px ${color}18`;
+
+  document.getElementById('prevGlow').style.background =
+    `radial-gradient(ellipse at 50% 0%, ${color}30 0%, transparent 70%)`;
+
+  const btn = document.getElementById('prevBtn');
+  btn.style.color       = color;
+  btn.style.borderColor = color + '55';
+}
+
+[fNombre, fInicio, fFin, fIcono, fColor, fDesc].forEach(el => {
+  if (el) el.addEventListener('input', actualizarPreview);
+});
+actualizarPreview();
+
+// Modo oscuro
+function toggleDarkMode() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  const newTheme = isDark ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('wl_theme', newTheme);
+  actualizarBotonTema(newTheme);
+}
+function actualizarBotonTema(theme) {
+  const icon  = document.getElementById('dmIcon');
+  const label = document.getElementById('dmLabel');
+  if (!icon || !label) return;
+  if (theme === 'dark') { icon.textContent = '☀️'; label.textContent = 'Claro'; }
+  else                  { icon.textContent = '🌙'; label.textContent = 'Oscuro'; }
+}
+actualizarBotonTema(localStorage.getItem('wl_theme') || 'light');
+</script>
+</body>
+</html>

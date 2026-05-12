@@ -3,6 +3,13 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8"/>
+  <!-- Aplicar tema antes del render para evitar parpadeo -->
+  <script>
+    (function() {
+      var t = localStorage.getItem('wl_theme') || 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>WorldLearn – {{ epoca.nombre }}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,6 +36,10 @@
   <div class="header-right">
     {% if es_admin %}<span class="admin-badge">✏️ Modo profesor</span>{% endif %}
     <a href="{% url 'editar_perfil' %}" class="welcome-text" style="text-decoration:none;cursor:pointer"><strong>{{ nombre }}</strong> ✏️</a>
+        <button class="btn-dark-mode" id="btnDarkMode" onclick="toggleDarkMode()" title="Cambiar modo oscuro/claro">
+      <span id="dmIcon">🌙</span>
+      <span class="dm-label" id="dmLabel">Oscuro</span>
+    </button>
     <a href="{% url 'logout' %}" class="btn-logout">Salir</a>
   </div>
 </header>
@@ -39,6 +50,13 @@
     <p class="epoch-years">{{ epoca.anio_inicio }} — {{ epoca.anio_fin }}</p>
     <h1 class="epoch-title">{{ epoca.nombre }}</h1>
     <p class="epoch-desc">{{ epoca.descripcion }}</p>
+    {% if es_admin %}
+    <div style="display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-top:1.2rem;">
+      <a href="{% url 'editar_epoca' epoca.slug %}" class="btn-edit-toggle" style="text-decoration:none;">
+        ✏️ Editar época
+      </a>
+    </div>
+    {% endif %}
   </div>
 </section>
 
@@ -165,9 +183,23 @@
   <section class="content-section" id="sec-eventos">
     <div class="section-header">
       <div class="section-header__line"></div>
-      <h2 class="section-title">⚔️ Eventos históricos</h2>
-      <p class="section-sub">De inicio a fin — presiona un evento para explorar su historia completa.</p>
+      <div class="section-header__top">
+        <div>
+          <h2 class="section-title">⚔️ Eventos históricos</h2>
+          <p class="section-sub">De inicio a fin — presiona un evento para explorar su historia completa.</p>
+        </div>
+        {% if es_admin %}
+          <a href="{% url 'crear_evento' epoca.slug %}" class="btn-edit-toggle" style="text-decoration:none;">
+            ➕ Nuevo evento
+          </a>
+        {% endif %}
+        
+      </div>
     </div>
+
+    {% if not eventos and es_admin %}
+      <p class="mat-empty">Aún no hay eventos. Usa "Nuevo evento" para crear el primero.</p>
+    {% endif %}
 
     <div class="events-timeline">
       {% for evento in eventos %}
@@ -324,6 +356,27 @@ document.querySelectorAll('.grados-toggle-check').forEach(function(chk) {
   chk.addEventListener('change', sync);
   sync();
 });
+
+// ── Modo Oscuro ──────────────────────────────────────
+function toggleDarkMode() {
+  var html = document.documentElement;
+  var isDark = html.getAttribute('data-theme') === 'dark';
+  var newTheme = isDark ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('wl_theme', newTheme);
+  actualizarBotonTema(newTheme);
+}
+function actualizarBotonTema(theme) {
+  var icon = document.getElementById('dmIcon');
+  var label = document.getElementById('dmLabel');
+  if (!icon || !label) return;
+  if (theme === 'dark') { icon.textContent = '☀️'; label.textContent = 'Claro'; }
+  else { icon.textContent = '🌙'; label.textContent = 'Oscuro'; }
+}
+(function() {
+  var t = localStorage.getItem('wl_theme') || 'light';
+  actualizarBotonTema(t);
+})();
 </script>
 </body>
 </html>

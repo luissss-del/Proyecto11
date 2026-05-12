@@ -1,0 +1,44 @@
+# ══════════════════════════════════════════════════════════════════
+#  CÓMO TENER SESIÓN DE PROFESOR Y ESTUDIANTE AL MISMO TIEMPO
+# ══════════════════════════════════════════════════════════════════
+#
+# El problema raíz:
+#   Django guarda la sesión en una cookie llamada "sessionid".
+#   Un navegador solo guarda UNA cookie por dominio+puerto.
+#   Por eso, cuando abres la sesión del profesor, sobreescribe
+#   la del estudiante (y viceversa).
+#
+# La solución: correr DOS servidores en puertos distintos.
+#   Cada puerto tiene su propia cookie → sesiones completamente
+#   independientes en el mismo navegador.
+#
+# ── PASO 1: Abre DOS terminales en la carpeta del proyecto ────────
+#
+#   Terminal A (estudiante):
+#       python manage.py runserver 8000
+#       → Abre en el navegador: http://127.0.0.1:8000
+#       → Inicia sesión como estudiante
+#
+#   Terminal B (profesor):
+#       python manage.py runserver 8001
+#       → Abre en el navegador: http://127.0.0.1:8001
+#       → Inicia sesión como profesor
+#
+# ── PASO 2: Usa los dos al mismo tiempo ──────────────────────────
+#   Cada pestaña/ventana del navegador puede tener su propia URL.
+#   Como los puertos son distintos, las cookies son distintas.
+#   Nunca se pisan entre sí.
+#
+# ── PASO 3: Recargar para ver cambios del profesor ────────────────
+#   Cuando el profesor haga un cambio en el puerto 8001,
+#   recarga la página en el puerto 8000 (estudiante) → verás
+#   los datos actualizados porque ambos comparten la MISMA base
+#   de datos SQLite.
+#
+# ── NOTAS ─────────────────────────────────────────────────────────
+#   • Ambos servidores usan el mismo db.sqlite3 → los cambios
+#     del profesor aparecen al instante en el estudiante al recargar.
+#   • Esto es solo para desarrollo local. En producción (con un
+#     servidor real) cada usuario tiene su propio dispositivo y
+#     navegador, así que no hay conflicto.
+# ══════════════════════════════════════════════════════════════════

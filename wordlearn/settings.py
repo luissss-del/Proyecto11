@@ -10,26 +10,37 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+"""
+Django settings for wordlearn project.
+"""
+
 from pathlib import Path
 import os
+import sys
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-u!1i86qy$+xh(av7gkm=_d&fekl3buzv6nt+_4#ug)e2$p1)+o'
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
 
-# Application definition
+# ── Cookie de sesión única por puerto ─────────────────────────────────────────
+# Detecta el puerto desde el argumento de línea de comandos (runserver 8001).
+# Así cada instancia usa su propia cookie y las sesiones nunca se sobreescriben.
+def _puerto_actual():
+    for arg in sys.argv:
+        if ':' in arg:          # formato addr:puerto  ej. 0.0.0.0:8001
+            return arg.split(':')[-1]
+        if arg.isdigit():       # formato solo puerto  ej. 8001
+            return arg
+    return '8000'               # valor por defecto
+
+SESSION_COOKIE_NAME = f'sessionid_{_puerto_actual()}'
+# ──────────────────────────────────────────────────────────────────────────────
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -72,10 +83,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'wordlearn.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -83,47 +90,23 @@ DATABASES = {
     }
 }
 
-
-# Password validation
-# https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/6.0/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
 
 MEDIA_URL  = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# ── Email ─────────────────────────────────────────────
 EMAIL_BACKEND       = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST          = 'smtp.gmail.com'
 EMAIL_PORT          = 587
@@ -131,3 +114,5 @@ EMAIL_USE_TLS       = True
 EMAIL_HOST_USER     = 'worldlearn.recuperacion@gmail.com'
 EMAIL_HOST_PASSWORD = 'dumq nsqn khom yvhv'
 DEFAULT_FROM_EMAIL  = 'WorldLearn <worldlearn.recuperacion@gmail.com>'
+
+GROQ_API_KEY = "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"

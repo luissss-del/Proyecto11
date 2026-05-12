@@ -1,19 +1,3 @@
-"""
-URL configuration for wordlearn project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/6.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path
 from django.conf import settings
@@ -25,7 +9,7 @@ from paises import views as paises_views
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    # ── Login ─────────────────────────────────────────
+    # ── Login / sesión ────────────────────────────────
     path('',          login_views.index,       name='index'),
     path('register/', login_views.register,    name='register'),
     path('login/',    login_views.login_view,  name='login'),
@@ -36,48 +20,63 @@ urlpatterns = [
     path('reset/<uuid:token>/', login_views.reset_password, name='reset_password'),
     path('estudiante/<int:estudiante_id>/eliminar/', login_views.eliminar_estudiante, name='eliminar_estudiante'),
 
-    # ── Épocas ────────────────────────────────────────
+    # ── API ───────────────────────────────────────────
+    path('api/heartbeat/',   login_views.heartbeat,       name='heartbeat'),
+    path('api/estudiantes/', login_views.api_estudiantes, name='api_estudiantes'),
+
+    # ── CRUD de Épocas ────────────────────────────────
+    path('epoca/nueva/',
+         epocas_views.crear_epoca,   name='crear_epoca'),
+    path('epoca/<str:slug>/editar/',
+         epocas_views.editar_epoca,  name='editar_epoca'),
+    path('epoca/<str:slug>/eliminar/',
+         epocas_views.eliminar_epoca, name='eliminar_epoca'),
+
+    # ── Detalle de época ──────────────────────────────
     path('epoca/<str:slug>/',
          epocas_views.detalle_epoca,  name='detalle_epoca'),
+
+    # ── Eventos ───────────────────────────────────────
+    path('epoca/<str:slug>/evento/nuevo/',
+         epocas_views.crear_evento,   name='crear_evento'),
     path('epoca/<str:slug>/evento/<int:evento_id>/',
          epocas_views.detalle_evento, name='detalle_evento'),
-    path('epoca/<str:slug>/pais/<int:pais_id>/',
-         epocas_views.detalle_pais,   name='detalle_pais'),
-
-    # ── Admin: eventos ────────────────────────────────
     path('epoca/<str:slug>/evento/<int:evento_id>/editar/',
-         epocas_views.editar_evento, name='editar_evento'),
+         epocas_views.editar_evento,  name='editar_evento'),
+    path('epoca/<str:slug>/evento/<int:evento_id>/eliminar/',
+         epocas_views.eliminar_evento, name='eliminar_evento'),
     path('epoca/<str:slug>/evento/<int:evento_id>/material/agregar/',
          epocas_views.agregar_material, name='agregar_material'),
     path('epoca/<str:slug>/evento/<int:evento_id>/material/<int:material_id>/eliminar/',
          epocas_views.eliminar_material, name='eliminar_material'),
+    path('epoca/<str:slug>/evento/generar-ia/',
+         epocas_views.generar_evento_ia, name='generar_evento_ia'),
 
-    # ── Admin: países ─────────────────────────────────
+    # ── Países dentro de época ────────────────────────
+    path('epoca/<str:slug>/pais/<int:pais_id>/',
+         epocas_views.detalle_pais,   name='detalle_pais'),
     path('epoca/<str:slug>/material/agregar/',
          epocas_views.agregar_material_epoca, name='agregar_material_epoca'),
     path('epoca/<str:slug>/material/<int:material_id>/eliminar/',
          epocas_views.eliminar_material_epoca, name='eliminar_material_epoca'),
     path('epoca/<str:slug>/pais/crear/',
-         epocas_views.crear_pais, name='crear_pais'),
+         epocas_views.crear_pais,     name='crear_pais'),
     path('epoca/<str:slug>/pais/<int:pais_id>/editar/',
-         epocas_views.editar_pais, name='editar_pais'),
+         epocas_views.editar_pais,    name='editar_pais'),
     path('epoca/<str:slug>/pais/<int:pais_id>/eliminar/',
-         epocas_views.eliminar_pais, name='eliminar_pais'),
-
-    # ── Admin: materiales de países ───────────────────
+         epocas_views.eliminar_pais,  name='eliminar_pais'),
     path('epoca/<str:slug>/pais/<int:pais_id>/material/agregar/',
          epocas_views.agregar_material_pais, name='agregar_material_pais'),
     path('epoca/<str:slug>/pais/<int:pais_id>/material/<int:material_id>/eliminar/',
          epocas_views.eliminar_material_pais, name='eliminar_material_pais'),
 
-      path('paises/',
+    # ── Sección Países del mundo ──────────────────────
+    path('paises/',
          paises_views.lista_continentes, name='lista_continentes'),
     path('paises/<str:continente_slug>/',
          paises_views.lista_paises, name='lista_paises'),
     path('paises/<str:continente_slug>/<str:pais_slug>/',
          paises_views.detalle_pais, name='detalle_pais_seccion'),
-
-    # ── Admin sección Países ───────────────────────────────────
     path('paises/<str:continente_slug>/<str:pais_slug>/editar/',
          paises_views.editar_pais, name='editar_pais_seccion'),
     path('paises/<str:continente_slug>/<str:pais_slug>/ciudad/agregar/',

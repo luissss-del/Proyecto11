@@ -11,6 +11,14 @@ class user(models.Model):
     password = models.CharField(max_length=100)
     es_admin = models.BooleanField(default=False)
     grado = models.ForeignKey('Grado', on_delete=models.SET_NULL, null=True, blank=True, related_name='estudiantes')
+    ultimo_acceso = models.DateTimeField(null=True, blank=True)
+
+    def esta_conectado(self):
+        """Considera conectado si accedió en los últimos 5 minutos."""
+        if not self.ultimo_acceso:
+            return False
+        return (timezone.now() - self.ultimo_acceso).total_seconds() < 300
+
     def __str__(self):
         return f"{self.nombre} {self.apellido} {self.password}"
 

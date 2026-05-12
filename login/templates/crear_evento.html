@@ -1,0 +1,795 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WorldLearn – {{ titulo|default:"Nuevo evento" }}</title>
+  <script>
+    (function() {
+      var t = localStorage.getItem('wl_theme') || 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'epocas/css/epocas.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
+  <style>
+    .page-wrap {
+      position: relative; z-index: 10; min-height: 100vh;
+      padding: 7rem 1.5rem 5rem;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .page-hero { text-align: center; margin-bottom: 2.5rem; animation: fadeDown .7s ease both; }
+    .page-hero__label {
+      font-family: 'Cinzel', serif; font-size: .68rem; letter-spacing: .35em;
+      color: var(--accent); opacity: .8; margin-bottom: .5rem;
+    }
+    .page-hero__title {
+      font-family: 'Cinzel', serif; font-weight: 900;
+      font-size: clamp(1.6rem, 4vw, 2.5rem); color: var(--text-lt); line-height: 1.15;
+    }
+    .page-hero__sub { margin-top: .6rem; font-size: 1rem; color: var(--text-dim); }
+
+    .form-layout {
+      display: grid; grid-template-columns: 1fr 340px;
+      gap: 2rem; width: 100%; max-width: 960px;
+      animation: fadeUp .7s .1s ease both;
+    }
+    @media (max-width: 780px) { .form-layout { grid-template-columns: 1fr; } }
+
+    .form-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 16px; padding: 2rem 2rem 1.8rem;
+      box-shadow: 0 4px 24px rgba(0,0,0,.07);
+    }
+    .msg-wrap { margin-bottom: 1.2rem; }
+    .msg-error {
+      background: #fdecea; border: 1px solid #e05252; border-radius: 8px;
+      padding: .7rem 1rem; color: #b71c1c;
+      font-family: 'Crimson Text', serif; font-size: .95rem;
+    }
+    [data-theme="dark"] .msg-error {
+      background: rgba(192,57,43,.12); border-color: rgba(192,57,43,.35); color: #e07070;
+    }
+    .form-group { margin-bottom: 1.3rem; }
+    .form-label {
+      display: block; font-family: 'Cinzel', serif; font-size: .67rem;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--text-dim); margin-bottom: .45rem;
+    }
+    .form-help { font-size: .85rem; color: var(--text-dim); margin-top: .3rem; opacity: .75; }
+    .errorlist { list-style: none; padding: 0; margin: .3rem 0 0; }
+    .errorlist li { color: #c0392b; font-family: 'Crimson Text', serif; font-size: .88rem; }
+    [data-theme="dark"] .errorlist li { color: #e07070; }
+
+    .form-row   { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 480px) { .form-row, .form-row-2 { grid-template-columns: 1fr; } }
+
+    .edit-input, .edit-textarea { width: 100%; box-sizing: border-box; }
+    [data-theme="dark"] .edit-input,
+    [data-theme="dark"] .edit-textarea {
+      background: rgba(255,255,255,.06); border-color: rgba(78,205,196,.2); color: var(--text-lt);
+    }
+    [data-theme="dark"] .edit-input::placeholder,
+    [data-theme="dark"] .edit-textarea::placeholder { color: rgba(255,255,255,.25); }
+    [data-theme="dark"] .edit-input:focus,
+    [data-theme="dark"] .edit-textarea:focus { border-color: var(--accent); background: rgba(255,255,255,.09); }
+
+    .form-actions { display: flex; gap: .9rem; margin-top: 1.8rem; flex-wrap: wrap; }
+    .btn-save {
+      flex: 1; min-width: 140px; padding: .75rem 1.5rem;
+      background: linear-gradient(135deg, rgba(0,126,110,.18), rgba(0,126,110,.08));
+      border: 1px solid rgba(0,126,110,.45); border-radius: 10px; color: var(--accent);
+      font-family: 'Cinzel', serif; font-size: .75rem; letter-spacing: .09em;
+      cursor: pointer; transition: background .2s, border-color .2s, transform .1s;
+    }
+    .btn-save:hover { background: rgba(0,126,110,.25); border-color: var(--accent); transform: translateY(-1px); }
+    [data-theme="dark"] .btn-save {
+      background: linear-gradient(135deg, rgba(78,205,196,.18), rgba(78,205,196,.07));
+      border-color: rgba(78,205,196,.4);
+    }
+    [data-theme="dark"] .btn-save:hover { background: rgba(78,205,196,.25); }
+    .btn-cancel {
+      padding: .75rem 1.2rem; background: transparent; border: 1px solid var(--card-border);
+      border-radius: 10px; color: var(--text-dim); font-family: 'Cinzel', serif;
+      font-size: .75rem; letter-spacing: .09em; cursor: pointer;
+      text-decoration: none; display: inline-flex; align-items: center;
+      transition: background .2s, color .2s, border-color .2s;
+    }
+    .btn-cancel:hover { background: var(--bg-mid); color: var(--text-lt); border-color: var(--accent-border); }
+
+    .preview-col { display: flex; flex-direction: column; gap: 1.5rem; }
+    .preview-sticky { position: sticky; top: 7rem; display: flex; flex-direction: column; gap: 1.4rem; }
+    .preview-label {
+      font-family: 'Cinzel', serif; font-size: .65rem; letter-spacing: .18em;
+      text-transform: uppercase; color: var(--text-dim); opacity: .7; margin-bottom: .6rem;
+    }
+    .preview-event {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 14px; padding: 1.4rem 1.4rem 1.2rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,.07); transition: border-color .3s;
+    }
+    .preview-event__header { display: flex; align-items: flex-start; gap: .8rem; margin-bottom: .9rem; }
+    .preview-event__icon { font-size: 1.8rem; line-height: 1; flex-shrink: 0; }
+    .preview-event__meta { flex: 1; min-width: 0; }
+    .preview-event__date {
+      font-family: 'Cinzel', serif; font-size: .68rem; letter-spacing: .15em;
+      color: var(--accent); opacity: .9; margin-bottom: .2rem;
+    }
+    .preview-event__title {
+      font-family: 'Cinzel', serif; font-weight: 700;
+      font-size: .95rem; color: var(--text-lt); line-height: 1.25;
+    }
+    .preview-event__resumen {
+      font-family: 'Crimson Text', serif; font-size: .9rem; color: var(--text-dim);
+      line-height: 1.55; border-top: 1px solid var(--card-border); padding-top: .8rem;
+    }
+    .info-box {
+      background: var(--bg-mid); border: 1px solid var(--card-border);
+      border-radius: 12px; padding: 1.1rem 1.2rem;
+      font-family: 'Crimson Text', serif; font-size: .92rem;
+      color: var(--text-dim); line-height: 1.65;
+    }
+    .info-box strong { color: var(--accent); font-weight: 600; }
+
+    @keyframes fadeDown { from { opacity:0; transform:translateY(-14px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeUp   { from { opacity:0; transform:translateY(16px);  } to { opacity:1; transform:translateY(0); } }
+
+    /* ── Sección mapa en el formulario ── */
+    .mapa-seccion__header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: .5rem;
+    }
+    .btn-mapa-toggle {
+      padding: .42rem .9rem;
+      background: linear-gradient(135deg, rgba(0,126,110,.15), rgba(0,126,110,.07));
+      border: 1px solid rgba(0,126,110,.4); border-radius: 8px;
+      color: var(--accent); font-family: 'Cinzel', serif; font-size: .68rem;
+      letter-spacing: .08em; cursor: pointer; transition: background .2s, transform .1s;
+    }
+    .btn-mapa-toggle:hover { background: rgba(0,126,110,.25); transform: translateY(-1px); }
+    [data-theme="dark"] .btn-mapa-toggle { border-color: rgba(78,205,196,.4); }
+
+    .puntos-lista { margin-top: .8rem; display: flex; flex-direction: column; gap: .5rem; }
+    .punto-item {
+      display: flex; align-items: center; gap: .6rem;
+      background: var(--bg-mid); border: 1px solid var(--card-border);
+      border-radius: 8px; padding: .5rem .8rem; font-family: 'Crimson Text', serif;
+      font-size: .92rem; color: var(--text-lt);
+    }
+    .punto-item__dot {
+      width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; border: 2px solid;
+    }
+    .punto-item__info { flex: 1; min-width: 0; }
+    .punto-item__name { font-weight: 600; }
+    .punto-item__meta { font-size: .78rem; color: var(--text-dim); }
+    .punto-item__del {
+      background: transparent; border: none; cursor: pointer; color: #c0392b;
+      font-size: 1rem; padding: 0 .2rem; line-height: 1; opacity: .7;
+    }
+    .punto-item__del:hover { opacity: 1; }
+
+    /* ── Modal editor mapa ── */
+    .mapa-editor-overlay {
+      display: none; position: fixed; inset: 0; z-index: 9000;
+      background: rgba(0,0,0,.72); backdrop-filter: blur(4px);
+      align-items: center; justify-content: center;
+    }
+    .mapa-editor-overlay.open { display: flex; }
+    .mapa-editor-modal {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 18px; width: min(95vw, 900px); max-height: 90vh;
+      display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(0,0,0,.4);
+      overflow: hidden;
+    }
+    .mapa-editor-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.4rem; border-bottom: 1px solid var(--card-border);
+      font-family: 'Cinzel', serif; font-size: .8rem; letter-spacing: .1em;
+      color: var(--text-lt); flex-shrink: 0;
+    }
+    .mapa-editor-header button {
+      background: transparent; border: none; cursor: pointer;
+      color: var(--text-dim); font-size: 1.1rem; padding: .2rem .4rem;
+    }
+    .mapa-editor-body {
+      display: flex; gap: 0; flex: 1; min-height: 0; overflow: hidden;
+    }
+    #mapa-editor-leaflet {
+      flex: 1; min-height: 420px; cursor: crosshair;
+    }
+    .mapa-editor-panel {
+      width: 270px; flex-shrink: 0; border-left: 1px solid var(--card-border);
+      padding: 1.2rem 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem;
+    }
+    .mapa-editor-panel label {
+      display: block; font-family: 'Cinzel', serif; font-size: .62rem;
+      letter-spacing: .12em; text-transform: uppercase; color: var(--text-dim); margin-bottom: .35rem;
+    }
+    .mapa-editor-panel .edit-input,
+    .mapa-editor-panel .edit-textarea,
+    .mapa-editor-panel .edit-select { width: 100%; box-sizing: border-box; }
+    .mapa-editor-panel .edit-textarea { resize: vertical; }
+    .mapa-editor-leyenda {
+      display: flex; flex-wrap: wrap; gap: .5rem .9rem; padding: .6rem 1rem;
+      border-top: 1px solid var(--card-border); font-family: 'Crimson Text', serif;
+      font-size: .82rem; color: var(--text-dim); flex-shrink: 0;
+    }
+    .leyenda-item { display: flex; align-items: center; gap: .3rem; }
+    .mapa-editor-footer {
+      padding: .9rem 1.4rem; border-top: 1px solid var(--card-border);
+      display: flex; gap: .7rem; justify-content: flex-end; flex-shrink: 0;
+    }
+    .mapa-tooltip {
+      background: rgba(20,20,30,.88) !important; color: #fff !important;
+      border: none !important; border-radius: 6px !important;
+      font-family: 'Crimson Text', serif !important; font-size: .9rem !important;
+    }
+    @media (max-width: 640px) {
+      .mapa-editor-body { flex-direction: column; }
+      .mapa-editor-panel { width: 100%; border-left: none; border-top: 1px solid var(--card-border); }
+      #mapa-editor-leaflet { min-height: 260px; }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+<div class="noise"></div>
+
+<header class="site-header">
+  <a href="{% url 'detalle_epoca' epoca.slug %}" class="btn-back">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    {{ epoca.nombre }}
+  </a>
+  <div class="header-center">
+    <span class="logo-owl">🦉</span>
+    <span class="site-name">WorldLearn</span>
+  </div>
+  <div class="header-right">
+    <span class="admin-badge">✏️ Modo profesor</span>
+    <a href="{% url 'editar_perfil' %}" class="welcome-text" style="text-decoration:none;cursor:pointer">
+      <strong>{{ nombre }}</strong> ✏️
+    </a>
+    <button class="btn-dark-mode" id="btnDarkMode" onclick="toggleDarkMode()" title="Cambiar modo oscuro/claro">
+      <span id="dmIcon">🌙</span>
+      <span class="dm-label" id="dmLabel">Oscuro</span>
+    </button>
+    <a href="{% url 'logout' %}" class="btn-logout">Salir</a>
+  </div>
+</header>
+
+<div class="page-wrap">
+
+  <div class="page-hero">
+    <p class="page-hero__label">Modo profesor · {{ epoca.nombre }}</p>
+    <h1 class="page-hero__title">
+      {% if evento %}✏️ Editar evento{% else %}➕ Nuevo evento{% endif %}
+    </h1>
+    <p class="page-hero__sub">
+      {% if evento %}
+        Modifica los datos. Los cambios se verán de inmediato en la línea de tiempo.
+      {% else %}
+        Completa los campos y el evento aparecerá en la línea de tiempo de <strong>{{ epoca.nombre }}</strong>.
+      {% endif %}
+    </p>
+  </div>
+
+  <div class="form-layout">
+
+    <!-- ═══ Formulario ═══ -->
+    <div class="form-card">
+
+      {% if messages %}
+      <div class="msg-wrap">
+        {% for msg in messages %}
+          <div class="msg-error">{{ msg }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if es_admin %}
+      <div style="margin-bottom:1.5rem;">
+        <a href="{% url 'generar_evento_ia' epoca.slug %}"
+          style="display:flex;align-items:center;justify-content:center;gap:.6rem;
+            width:100%;padding:.8rem 1.5rem;box-sizing:border-box;
+            background:linear-gradient(135deg,rgba(139,92,246,.2),rgba(99,102,241,.1));
+            border:1px solid rgba(139,92,246,.5);border-radius:10px;
+            color:#a78bfa;font-family:'Cinzel',serif;font-size:.8rem;
+            letter-spacing:.1em;text-decoration:none;
+            transition:background .2s,transform .1s;"
+          onmouseover="this.style.background='rgba(139,92,246,.32)';this.style.transform='translateY(-1px)'"
+          onmouseout="this.style.background='linear-gradient(135deg,rgba(139,92,246,.2),rgba(99,102,241,.1))';this.style.transform=''">
+         🤖 Generar este evento con IA
+        </a>
+        <div style="display:flex;align-items:center;gap:.8rem;margin-top:1rem;margin-bottom:1rem;">
+          <div style="flex:1;height:1px;background:var(--card-border)"></div>
+          <span style="font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.12em;color:var(--text-dim);opacity:.6;">O CREA MANUALMENTE</span>
+          <div style="flex:1;height:1px;background:var(--card-border)"></div>
+        </div>
+      </div>
+      {% endif %}
+
+
+      <form method="POST" id="eventoForm">
+        {% csrf_token %}
+
+        <!-- Título -->
+        <div class="form-group">
+          <label class="form-label" for="{{ form.titulo.id_for_label }}">Título del evento *</label>
+          {{ form.titulo }}
+          <p class="form-help">Ej: "El Atentado de Sarajevo", "La Batalla del Somme", "El Tratado de Versalles"</p>
+          {% if form.titulo.errors %}<ul class="errorlist">{% for e in form.titulo.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+
+        <!-- Año · Mes · Ícono -->
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="{{ form.anio.id_for_label }}">Año *</label>
+            {{ form.anio }}
+            <p class="form-help">Ej: 1914</p>
+            {% if form.anio.errors %}<ul class="errorlist">{% for e in form.anio.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="{{ form.mes.id_for_label }}">Mes (opcional)</label>
+            {{ form.mes }}
+            <p class="form-help">1=ene … 12=dic</p>
+            {% if form.mes.errors %}<ul class="errorlist">{% for e in form.mes.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="{{ form.icono.id_for_label }}">Emoji / Ícono</label>
+            {{ form.icono }}
+            <p class="form-help">Ej: 💣 🗡️ 🤝 🚢</p>
+            {% if form.icono.errors %}<ul class="errorlist">{% for e in form.icono.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+          </div>
+        </div>
+
+        <!-- Resumen -->
+        <div class="form-group">
+          <label class="form-label" for="{{ form.resumen.id_for_label }}">Resumen corto *</label>
+          {{ form.resumen }}
+          <p class="form-help">1-2 frases que aparecen en la lista de eventos. Máx. 300 caracteres.</p>
+          {% if form.resumen.errors %}<ul class="errorlist">{% for e in form.resumen.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+
+        <!-- Descripción completa -->
+        <div class="form-group">
+          <label class="form-label" for="{{ form.descripcion.id_for_label }}">Descripción completa *</label>
+          {{ form.descripcion }}
+          <p class="form-help">Texto detallado que verán los estudiantes al abrir el evento. Puedes incluir causas, consecuencias, personajes y contexto histórico. Sin límite de extensión.</p>
+          {% if form.descripcion.errors %}<ul class="errorlist">{% for e in form.descripcion.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+
+        <!-- Orden -->
+        <div class="form-group">
+          <label class="form-label" for="{{ form.orden.id_for_label }}">Orden de aparición</label>
+          {{ form.orden }}
+          <p class="form-help">1 = primer evento en la lista. Si se deja en 0 los eventos se ordenan por año automáticamente.</p>
+          {% if form.orden.errors %}<ul class="errorlist">{% for e in form.orden.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+
+        <!-- ── Sección Mapa ─────────────────────────── -->
+        <div class="form-group mapa-seccion">
+          <div class="mapa-seccion__header">
+            <label class="form-label" style="margin:0">🗺️ Mapa interactivo <span style="opacity:.6;font-size:.65rem">(opcional)</span></label>
+            <button type="button" class="btn-mapa-toggle" id="btn-abrir-editor-mapa">➕ Agregar puntos al mapa</button>
+          </div>
+          <p class="form-help">Haz clic en el mapa para colocar puntos históricos con nombre, tipo y bando. Puedes agregar todos los que necesites.</p>
+
+          <!-- Lista de puntos agregados -->
+          <div id="lista-puntos" class="puntos-lista" style="display:none"></div>
+
+          <!-- Campo oculto con JSON de puntos -->
+          <input type="hidden" name="puntos_mapa_json" id="puntos_mapa_json" value="[]">
+        </div>
+
+        <!-- Acciones -->
+        <div class="form-actions">
+          <button type="submit" class="btn-save">
+            {% if evento %}💾 Guardar cambios{% else %}✅ Crear evento{% endif %}
+          </button>
+          <a href="{% url 'detalle_epoca' epoca.slug %}" class="btn-cancel">Cancelar</a>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- ═══ Preview ═══ -->
+    <div class="preview-col">
+      <div class="preview-sticky">
+        <div>
+          <p class="preview-label">Vista previa del evento</p>
+          <div class="preview-event" id="previewEvent">
+            <div class="preview-event__header">
+              <div class="preview-event__icon" id="prevIcon">📖</div>
+              <div class="preview-event__meta">
+                <div class="preview-event__date"  id="prevDate">????</div>
+                <div class="preview-event__title" id="prevTitle">Título del evento</div>
+              </div>
+            </div>
+            <div class="preview-event__resumen" id="prevResumen">
+              El resumen del evento aparecerá aquí…
+            </div>
+          </div>
+        </div>
+        <div class="info-box">
+          <strong>💡 Después de crear el evento</strong><br>
+          Podrás agregar <strong>materiales de apoyo</strong> (PDFs, videos, enlaces)
+          y un <strong>mapa interactivo</strong> con puntos, zonas y líneas de avance.
+          El evento quedará ordenado en la <strong>línea de tiempo</strong> según su año.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     MODAL EDITOR DE MAPA
+══════════════════════════════════════════════════ -->
+<div class="mapa-editor-overlay" id="mapa-editor-overlay">
+  <div class="mapa-editor-modal">
+
+    <div class="mapa-editor-header">
+      <span>🗺️ Editor de mapa — haz clic en el mapa para colocar un punto</span>
+      <button id="btn-cerrar-editor-mapa" title="Cerrar">✕</button>
+    </div>
+
+    <div class="mapa-editor-body">
+      <div id="mapa-editor-leaflet"></div>
+
+      <div class="mapa-editor-panel">
+        <p style="font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.1em;color:var(--accent);margin:0">
+          NUEVO PUNTO
+        </p>
+
+        <div>
+          <label>Nombre *</label>
+          <input type="text" id="ep-nombre" class="edit-input" placeholder="ej. Batalla del Marne">
+        </div>
+        <div>
+          <label>Descripción</label>
+          <textarea id="ep-desc" class="edit-textarea" rows="3" placeholder="Contexto, datos importantes…"></textarea>
+        </div>
+        <div>
+          <label>Tipo</label>
+          <select id="ep-tipo" class="edit-select">
+            <option value="batalla">⚔️ Batalla</option>
+            <option value="ciudad">🏙️ Ciudad clave</option>
+            <option value="frente">🪖 Frente de guerra</option>
+            <option value="ruta">➡️ Ruta de avance</option>
+            <option value="zona">📍 Zona estratégica</option>
+            <option value="otro">📌 Otro</option>
+          </select>
+        </div>
+        <div>
+          <label>Bando</label>
+          <select id="ep-bando" class="edit-select">
+            <option value="aliados">Aliados</option>
+            <option value="enemigos">Potencias Enemigas</option>
+            <option value="neutral" selected>Neutral</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+
+        <div style="display:flex;gap:.6rem;margin-top:.4rem">
+          <button type="button" id="btn-agregar-punto" class="btn-save" style="flex:1">➕ Agregar</button>
+          <button type="button" id="btn-limpiar-temp" class="btn-cancel" style="padding:.5rem .7rem">✕</button>
+        </div>
+
+        <hr style="border-color:var(--card-border);margin:.3rem 0">
+
+        <div id="ep-lista-panel" style="display:flex;flex-direction:column;gap:.5rem;max-height:220px;overflow-y:auto"></div>
+      </div>
+    </div>
+
+    <div class="mapa-editor-leyenda">
+      <span class="leyenda-item"><span style="color:#4fc3f7">●</span> Aliados</span>
+      <span class="leyenda-item"><span style="color:#ef9a9a">●</span> Potencias Enemigas</span>
+      <span class="leyenda-item"><span style="color:#a5d6a7">●</span> Neutral</span>
+      <span class="leyenda-item"><span style="color:#ce93d8">●</span> Otro</span>
+    </div>
+
+    <div class="mapa-editor-footer">
+      <button type="button" id="btn-confirmar-mapa" class="btn-save">✅ Confirmar puntos</button>
+      <button type="button" id="btn-cancelar-mapa"  class="btn-cancel">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'epocas/js/epocas.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+// ── Partículas ──
+const canvas = document.getElementById('particles');
+const ctx    = canvas.getContext('2d');
+let W, H;
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
+const pts = Array.from({length: 70}, () => ({
+  x: Math.random()*1920, y: Math.random()*1080,
+  vy: -(Math.random()*.3+.1), vx: (Math.random()-.5)*.15,
+  r: Math.random()*1.2+.3, a: Math.random()*.35+.08,
+  reset() { this.x = Math.random()*W; this.y = H+10; }
+}));
+(function anim() {
+  ctx.clearRect(0,0,W,H);
+  pts.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    if (p.y < -10) p.reset();
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle = `rgba(0,126,110,${p.a})`; ctx.fill();
+  });
+  requestAnimationFrame(anim);
+})();
+
+// ── Vista previa en tiempo real ──
+const fTitulo  = document.getElementById('id_titulo');
+const fAnio    = document.getElementById('id_anio');
+const fMes     = document.getElementById('id_mes');
+const fIcono   = document.getElementById('id_icono');
+const fResumen = document.getElementById('id_resumen');
+
+const MESES = ['','enero','febrero','marzo','abril','mayo','junio',
+               'julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+function actualizarPreview() {
+  const titulo  = fTitulo?.value  || 'Título del evento';
+  const anio    = fAnio?.value    || '????';
+  const mes     = parseInt(fMes?.value) || 0;
+  const icono   = fIcono?.value   || '📖';
+  const resumen = fResumen?.value || 'El resumen del evento aparecerá aquí…';
+
+  const fecha = (mes >= 1 && mes <= 12) ? `${MESES[mes]} de ${anio}` : String(anio);
+
+  document.getElementById('prevIcon').textContent    = icono;
+  document.getElementById('prevDate').textContent    = fecha;
+  document.getElementById('prevTitle').textContent   = titulo;
+  document.getElementById('prevResumen').textContent = resumen;
+}
+
+[fTitulo, fAnio, fMes, fIcono, fResumen].forEach(el => {
+  if (el) el.addEventListener('input', actualizarPreview);
+});
+actualizarPreview();
+
+// ── Modo oscuro ──
+function toggleDarkMode() {
+  const html = document.documentElement;
+  const newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('wl_theme', newTheme);
+  actualizarBotonTema(newTheme);
+}
+function actualizarBotonTema(theme) {
+  const icon  = document.getElementById('dmIcon');
+  const label = document.getElementById('dmLabel');
+  if (!icon || !label) return;
+  if (theme === 'dark') { icon.textContent = '☀️'; label.textContent = 'Claro'; }
+  else                  { icon.textContent = '🌙'; label.textContent = 'Oscuro'; }
+}
+actualizarBotonTema(localStorage.getItem('wl_theme') || 'light');
+</script>
+
+<script>
+// ══════════════════════════════════════════════
+// EDITOR DE MAPA INTERACTIVO
+// ══════════════════════════════════════════════
+(function () {
+
+  // Colores idénticos al detalle_evento.html
+  const colores = {
+    aliados:  { fill:'#4fc3f7', border:'#0288d1' },
+    enemigos: { fill:'#ef9a9a', border:'#c62828' },
+    neutral:  { fill:'#a5d6a7', border:'#2e7d32' },
+    otro:     { fill:'#ce93d8', border:'#6a1b9a' },
+  };
+  const iconos = { batalla:'⚔️', ciudad:'🏙️', frente:'🪖', ruta:'➡️', zona:'📍', otro:'📌' };
+
+  let puntos   = [];   // array de puntos confirmados
+  let markers  = [];   // marcadores Leaflet en el mapa
+  let tempMark = null; // marcador temporal (sin confirmar)
+  let tempLatLng = null;
+  let mapa     = null;
+
+  // ── Abrir modal ──────────────────────────────
+  document.getElementById('btn-abrir-editor-mapa').addEventListener('click', () => {
+    document.getElementById('mapa-editor-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => {
+      if (!mapa) iniciarMapaEditor();
+      else mapa.invalidateSize();
+    }, 150);
+  });
+
+  function cerrarEditor() {
+    document.getElementById('mapa-editor-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+    limpiarTemp();
+  }
+  document.getElementById('btn-cerrar-editor-mapa').addEventListener('click', cerrarEditor);
+  document.getElementById('btn-cancelar-mapa').addEventListener('click', cerrarEditor);
+  document.getElementById('mapa-editor-overlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('mapa-editor-overlay')) cerrarEditor();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.getElementById('mapa-editor-overlay').classList.contains('open')) cerrarEditor();
+  });
+
+  // ── Confirmar y cerrar ───────────────────────
+  document.getElementById('btn-confirmar-mapa').addEventListener('click', () => {
+    if (tempLatLng) {
+      // Si hay un punto sin confirmar, lo descartamos silenciosamente
+      limpiarTemp();
+    }
+    actualizarCampoOculto();
+    actualizarListaFormulario();
+    cerrarEditor();
+  });
+
+  // ── Iniciar mapa Leaflet ─────────────────────
+  function iniciarMapaEditor() {
+    mapa = L.map('mapa-editor-leaflet', { zoomControl: true, preferCanvas: true });
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      attribution: '© <a href="https://carto.com">CARTO</a> © <a href="https://openstreetmap.org">OpenStreetMap</a>',
+      subdomains: 'abcd', maxZoom: 19,
+    }).addTo(mapa);
+    mapa.setView([20, 10], 2);
+
+    // Re-dibujar puntos ya confirmados (si el usuario vuelve a abrir)
+    puntos.forEach(p => dibujarMarcador(p, false));
+
+    // Clic en el mapa → colocar marcador temporal
+    mapa.on('click', e => {
+      limpiarTemp();
+      tempLatLng = e.latlng;
+      tempMark = L.circleMarker([e.latlng.lat, e.latlng.lng], {
+        radius: 10, fillColor: '#ffd54f', color: '#f57f17',
+        weight: 2.5, opacity: 1, fillOpacity: 0.9,
+      }).addTo(mapa);
+      tempMark.bindTooltip('<strong>📍 Nuevo punto — rellena el panel y haz clic en Agregar</strong>', {
+        permanent: true, direction: 'top', className: 'mapa-tooltip',
+      }).openTooltip();
+    });
+  }
+
+  // ── Agregar punto ────────────────────────────
+  document.getElementById('btn-agregar-punto').addEventListener('click', () => {
+    const nombre = document.getElementById('ep-nombre').value.trim();
+    if (!nombre) { alert('Escribe un nombre para el punto.'); return; }
+    if (!tempLatLng) { alert('Primero haz clic en el mapa para colocar el punto.'); return; }
+
+    const punto = {
+      nombre:      nombre,
+      descripcion: document.getElementById('ep-desc').value.trim(),
+      tipo:        document.getElementById('ep-tipo').value,
+      bando:       document.getElementById('ep-bando').value,
+      lat:         +tempLatLng.lat.toFixed(6),
+      lng:         +tempLatLng.lng.toFixed(6),
+    };
+
+    puntos.push(punto);
+    dibujarMarcador(punto, false);
+    limpiarTemp();
+    resetPanel();
+    actualizarListaPanel();
+  });
+
+  // ── Limpiar marcador temporal ────────────────
+  function limpiarTemp() {
+    if (tempMark) { mapa.removeLayer(tempMark); tempMark = null; }
+    tempLatLng = null;
+  }
+  document.getElementById('btn-limpiar-temp').addEventListener('click', () => {
+    limpiarTemp();
+    resetPanel();
+  });
+
+  function resetPanel() {
+    document.getElementById('ep-nombre').value = '';
+    document.getElementById('ep-desc').value   = '';
+    document.getElementById('ep-tipo').value   = 'batalla';
+    document.getElementById('ep-bando').value  = 'neutral';
+  }
+
+  // ── Dibujar marcador definitivo ──────────────
+  function dibujarMarcador(p, animate) {
+    const c    = colores[p.bando] || colores.neutral;
+    const icon = iconos[p.tipo]   || '📌';
+    const mk   = L.circleMarker([p.lat, p.lng], {
+      radius: 11, fillColor: c.fill, color: c.border,
+      weight: 2.5, opacity: 1, fillOpacity: 0.88,
+    }).addTo(mapa);
+    mk.bindPopup(`
+      <div style="font-family:'Crimson Text',serif;min-width:200px;max-width:260px;padding:.2rem">
+        <div style="font-size:1.3rem;margin-bottom:.3rem">${icon}</div>
+        <strong style="font-size:1rem;color:#1a237e;display:block;margin-bottom:.25rem">${p.nombre}</strong>
+        <div style="font-size:.72rem;color:#777;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem">${p.tipo} · ${p.bando}</div>
+        <p style="font-size:.92rem;line-height:1.55;margin:0;color:#333">${p.descripcion}</p>
+      </div>
+    `, { maxWidth: 280 });
+    mk.bindTooltip(`<strong>${icon} ${p.nombre}</strong>`, {
+      permanent: false, direction: 'top', className: 'mapa-tooltip',
+    });
+    markers.push({ punto: p, marker: mk });
+  }
+
+  // ── Eliminar punto ───────────────────────────
+  function eliminarPunto(idx) {
+    const entry = markers.find(m => m.punto === puntos[idx]);
+    if (entry && mapa) mapa.removeLayer(entry.marker);
+    markers = markers.filter(m => m.punto !== puntos[idx]);
+    puntos.splice(idx, 1);
+    actualizarListaPanel();
+  }
+
+  // ── Lista en el panel lateral ────────────────
+  function actualizarListaPanel() {
+    const cont = document.getElementById('ep-lista-panel');
+    cont.innerHTML = '';
+    if (puntos.length === 0) return;
+    puntos.forEach((p, i) => {
+      const c    = colores[p.bando] || colores.neutral;
+      const icon = iconos[p.tipo]   || '📌';
+      const div  = document.createElement('div');
+      div.className = 'punto-item';
+      div.innerHTML = `
+        <span class="punto-item__dot" style="background:${c.fill};border-color:${c.border}"></span>
+        <span class="punto-item__info">
+          <span class="punto-item__name">${icon} ${p.nombre}</span>
+          <span class="punto-item__meta" style="display:block">${p.tipo} · ${p.bando}</span>
+        </span>
+        <button class="punto-item__del" data-idx="${i}" title="Eliminar">🗑</button>
+      `;
+      div.querySelector('.punto-item__del').addEventListener('click', () => eliminarPunto(i));
+      cont.appendChild(div);
+    });
+  }
+
+  // ── Actualizar lista en el formulario principal ──
+  function actualizarListaFormulario() {
+    const cont = document.getElementById('lista-puntos');
+    cont.innerHTML = '';
+    if (puntos.length === 0) {
+      cont.style.display = 'none';
+      return;
+    }
+    cont.style.display = 'flex';
+    puntos.forEach((p, i) => {
+      const c    = colores[p.bando] || colores.neutral;
+      const icon = iconos[p.tipo]   || '📌';
+      const div  = document.createElement('div');
+      div.className = 'punto-item';
+      div.innerHTML = `
+        <span class="punto-item__dot" style="background:${c.fill};border-color:${c.border}"></span>
+        <span class="punto-item__info">
+          <span class="punto-item__name">${icon} ${p.nombre}</span>
+          <span class="punto-item__meta" style="display:block">${p.tipo} · ${p.bando} — (${p.lat}, ${p.lng})</span>
+        </span>
+        <button type="button" class="punto-item__del" data-idx="${i}" title="Quitar">🗑</button>
+      `;
+      div.querySelector('.punto-item__del').addEventListener('click', () => {
+        // Quitar del array y marcador
+        const entry = markers.find(m => m.punto === puntos[i]);
+        if (entry && mapa) mapa.removeLayer(entry.marker);
+        markers = markers.filter(m => m.punto !== puntos[i]);
+        puntos.splice(i, 1);
+        actualizarCampoOculto();
+        actualizarListaFormulario();
+      });
+      cont.appendChild(div);
+    });
+  }
+
+  // ── Sincronizar campo oculto JSON ────────────
+  function actualizarCampoOculto() {
+    document.getElementById('puntos_mapa_json').value = JSON.stringify(puntos);
+  }
+
+})();
+</script>
+</body>
+</html>

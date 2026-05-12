@@ -17,6 +17,25 @@
   --accent:        #007E6E;
   --accent-glow:   rgba(0,126,110,0.15);
   --accent-border: rgba(0,126,110,0.25);
+  --card-bg:       #FDFAF4;
+  --card-border:   rgba(0,126,110,0.2);
+}
+
+/* ── Modo Oscuro ─────────────────────────────────────── */
+[data-theme="dark"] {
+  --bg-deep:       #0f1a17;
+  --bg-mid:        #162520;
+  --gold:          #4ecdc4;
+  --gold-lt:       #73AF6F;
+  --gold-dim:      #38b2aa;
+  --text-lt:       #e8f0ee;
+  --text-dim:      #9ab8b2;
+  --white:         #1a2e2a;
+  --accent:        #4ecdc4;
+  --accent-glow:   rgba(78,205,196,0.15);
+  --accent-border: rgba(78,205,196,0.25);
+  --card-bg:       #1a2e2a;
+  --card-border:   rgba(78,205,196,0.2);
 }
 
 /* Colores por época — mantenemos identidad visual */
@@ -598,4 +617,65 @@ body{
 .edit-select:focus {
   border-color: #007E6E;
   box-shadow: 0 0 0 3px rgba(0,126,110,.12);
+}
+
+/* ── Botón modo oscuro ───────────────────────────────── */
+.btn-dark-mode {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.45);
+  color: #ffffff;
+  border-radius: 30px;
+  padding: .3rem .75rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all .25s;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+}
+.btn-dark-mode:hover {
+  background: rgba(255,255,255,0.12);
+  border-color: #ffffff;
+}
+.btn-dark-mode .dm-label {
+  font-family: 'Cinzel', serif;
+  font-size: .62rem;
+  letter-spacing: .08em;
+}
+
+/* Ajustes dark mode específicos de épocas */
+[data-theme="dark"] .site-header {
+  background: #0a1512;
+  border-bottom-color: rgba(78,205,196,0.12);
+}
+[data-theme="dark"] .event-card,
+[data-theme="dark"] .material-card,
+[data-theme="dark"] .info-card {
+  background: var(--card-bg);
+  border-color: var(--card-border);
+}
+
+/* ── Event cards: fondo fluido en ambos modos ── */
+[data-theme="dark"] .event-card__body {
+  background: transparent;
+  border-color: rgba(78,205,196,.14);
+  box-shadow: none;
+}
+[data-theme="dark"] .event-card__body:hover {
+  background: rgba(78,205,196,.06);
+  border-color: var(--accent);
+  box-shadow: 0 8px 32px rgba(78,205,196,.08), -3px 0 0 var(--accent);
+}
+[data-theme="dark"] .event-card__title {
+  color: var(--text-lt);
+}
+[data-theme="dark"] .event-card__summary {
+  color: var(--text-dim);
+}
+[data-theme="dark"] .etl-dot {
+  box-shadow: 0 0 8px var(--accent);
+}
+[data-theme="dark"] .etl-line {
+  background: rgba(78,205,196,.2);
 }

@@ -1,18 +1,38 @@
 from django.db import models
+from django.utils.text import slugify
 
 
 class Epoca(models.Model):
-    EPOCAS_CHOICES = [
-        ('ww1', 'Primera Guerra Mundial'),
-        ('ww2', 'Segunda Guerra Mundial'),
-        ('cf',  'Guerra Fría'),
-    ]
-    slug        = models.CharField(max_length=10, unique=True, choices=EPOCAS_CHOICES)
+    # slug: identificador único en la URL, ej. "ww1", "revolucion-francesa"
+    # Se genera automáticamente desde el nombre si no se pone uno manual.
+    slug        = models.CharField(max_length=50, unique=True)
     nombre      = models.CharField(max_length=100)
+    # Años de inicio y fin que aparecen en la tarjeta, ej. 1914 / 1918
     anio_inicio = models.IntegerField()
     anio_fin    = models.IntegerField()
+    # Texto corto que aparece debajo del título en la tarjeta del home
     descripcion = models.TextField()
+    # Emoji o símbolo que aparece grande en la tarjeta, ej. ⚔️ 🌍 ☢️
+    icono       = models.CharField(max_length=10, default='📖')
+    # Color principal de la tarjeta en formato hex, ej. #c9a84c
     color_hex   = models.CharField(max_length=7, default='#c9a84c')
+    # Orden de aparición en el home (1 = primera tarjeta)
+    orden       = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ['orden', 'anio_inicio']
+
+    def save(self, *args, **kwargs):
+        # Si no tiene slug, lo genera desde el nombre automáticamente
+        if not self.slug:
+            base = slugify(self.nombre)
+            slug = base
+            n = 1
+            while Epoca.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base}-{n}"
+                n += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.nombre
@@ -95,13 +115,9 @@ class MaterialPais(models.Model):
 
     def __str__(self):
         return f"{self.titulo} ({self.tipo}) — {self.pais.nombre}"
-    
+
 
 class PuntoMapa(models.Model):
-    """
-    Punto geográfico asociado a un evento histórico.
-    Aparece como marcador en el mapa interactivo.
-    """
     TIPO_CHOICES = [
         ('batalla',   'Batalla'),
         ('ciudad',    'Ciudad clave'),
@@ -111,12 +127,11 @@ class PuntoMapa(models.Model):
         ('otro',      'Otro'),
     ]
     BANDO_CHOICES = [
-        ('aliados',      'Aliados'),
-        ('enemigos',     'Potencias Enemigas'),
-        ('neutral',      'Neutral'),
-        ('otro',         'Otro'),
+        ('aliados',  'Aliados'),
+        ('enemigos', 'Potencias Enemigas'),
+        ('neutral',  'Neutral'),
+        ('otro',     'Otro'),
     ]
-
     evento      = models.ForeignKey('Evento', on_delete=models.CASCADE, related_name='puntos_mapa')
     nombre      = models.CharField(max_length=200)
     descripcion = models.TextField(blank=True)
@@ -131,12 +146,9 @@ class PuntoMapa(models.Model):
 
     def __str__(self):
         return f"{self.nombre} — {self.evento.titulo}"
-    
+
+
 class ZonaMapa(models.Model):
-    """
-    Polígono resaltado en el mapa — territorios ocupados, zonas de batalla, áreas estratégicas.
-    coordenadas: JSON con lista de pares [[lat,lng], [lat,lng], ...]
-    """
     BANDO_CHOICES = [
         ('aliados',  'Aliados'),
         ('enemigos', 'Potencias Enemigas'),
@@ -147,7 +159,7 @@ class ZonaMapa(models.Model):
     nombre      = models.CharField(max_length=200)
     descripcion = models.TextField(blank=True)
     bando       = models.CharField(max_length=20, choices=BANDO_CHOICES, default='neutral')
-    coordenadas = models.JSONField()   # [[lat,lng], [lat,lng], ...]
+    coordenadas = models.JSONField()
     orden       = models.IntegerField(default=0)
 
     class Meta:
@@ -158,16 +170,12 @@ class ZonaMapa(models.Model):
 
 
 class LineaMapa(models.Model):
-    """
-    Línea sobre el mapa — frentes de guerra, rutas de avance, movimientos de tropas.
-    coordenadas: JSON con lista de pares [[lat,lng], [lat,lng], ...]
-    """
     TIPO_CHOICES = [
-        ('frente', 'Frente de guerra'),
-        ('ruta',   'Ruta de avance'),
-        ('retirada','Ruta de retirada'),
-        ('naval',  'Ruta naval'),
-        ('otro',   'Otro'),
+        ('frente',   'Frente de guerra'),
+        ('ruta',     'Ruta de avance'),
+        ('retirada', 'Ruta de retirada'),
+        ('naval',    'Ruta naval'),
+        ('otro',     'Otro'),
     ]
     BANDO_CHOICES = [
         ('aliados',  'Aliados'),
@@ -180,7 +188,7 @@ class LineaMapa(models.Model):
     descripcion = models.TextField(blank=True)
     tipo        = models.CharField(max_length=20, choices=TIPO_CHOICES, default='frente')
     bando       = models.CharField(max_length=20, choices=BANDO_CHOICES, default='neutral')
-    coordenadas = models.JSONField()   # [[lat,lng], [lat,lng], ...]
+    coordenadas = models.JSONField()
     orden       = models.IntegerField(default=0)
 
     class Meta:
@@ -188,6 +196,7 @@ class LineaMapa(models.Model):
 
     def __str__(self):
         return f"Línea: {self.nombre} — {self.evento.titulo}"
+
 
 class MaterialEpoca(models.Model):
     TIPO_CHOICES = [

@@ -1,10 +1,14 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.http import JsonResponse
+from django.utils import timezone
+from django.views.decorators.http import require_POST, require_GET
 from .models import user, login as LoginModel
 from .forms import userForm
 from django.core.mail import send_mail
 from django.conf import settings
 from .models import TokenRecuperacion
+from epocas.models import Epoca
 
 
 def index(request):
@@ -30,13 +34,17 @@ def register(request):
 
 def login_view(request):
     if request.method == 'POST':
-        nombre_ingresado   = request.POST.get('nombre', '').strip()
+        ti_ingresado       = request.POST.get('Ti', '').strip()
         password_ingresado = request.POST.get('password', '').strip()
 
+        if not ti_ingresado.isdigit():
+            messages.error(request, 'Ingresa un número de identificación válido.')
+            return render(request, 'login.html', {'form': userForm()})
+
         try:
-            usuario = user.objects.get(nombre=nombre_ingresado)
+            usuario = user.objects.get(Ti=int(ti_ingresado))
         except user.DoesNotExist:
-            messages.error(request, 'El usuario no existe.')
+            messages.error(request, 'No existe una cuenta con ese número de identificación.')
             return render(request, 'login.html', {'form': userForm()})
 
         if usuario.password != password_ingresado:
@@ -51,11 +59,13 @@ def login_view(request):
             messages.error(request, 'No tienes permiso de acceso.')
             return render(request, 'login.html', {'form': userForm()})
 
-        # Guardar sesión — incluyendo si es admin/profesor
+        # NO actualizamos ultimo_acceso en el login.
+        # El heartbeat lo hace cada 30 s mientras la pestaña está abierta.
         request.session['usuario_id']     = usuario.pk
         request.session['usuario_nombre'] = usuario.nombre
-        request.session['es_admin']       = usuario.es_admin  # ← nuevo
-        request.session.modified = True  # Asegura que se guarde la sesión
+        request.session['es_admin']       = usuario.es_admin
+        request.session.modified = True
+
         return redirect('home')
 
     return render(request, 'login.html', {'form': userForm()})
@@ -68,16 +78,62 @@ def home(request):
 
     nombre   = request.session.get('usuario_nombre', 'Estudiante')
     es_admin = request.session.get('es_admin', False)
-
-    estudiantes = []
-    if es_admin:
-        estudiantes = user.objects.filter(es_admin=False).select_related('grado').order_by('grado__orden', 'apellido')
+    epocas   = Epoca.objects.all().order_by('orden', 'anio_inicio')
 
     return render(request, 'home.html', {
-        'nombre': nombre,
+        'nombre':   nombre,
         'es_admin': es_admin,
-        'estudiantes': estudiantes,
+        'epocas':   epocas,
     })
+
+
+# ── Heartbeat ─────────────────────────────────────────────────────────────────
+@require_POST
+def heartbeat(request):
+    uid = request.session.get('usuario_id')
+    if not uid:
+        return JsonResponse({'ok': False}, status=401)
+    try:
+        u = user.objects.get(pk=uid)
+        u.ultimo_acceso = timezone.now()
+        u.save(update_fields=['ultimo_acceso'])
+        return JsonResponse({'ok': True})
+    except user.DoesNotExist:
+        return JsonResponse({'ok': False}, status=404)
+
+
+# ── API JSON estudiantes ──────────────────────────────────────────────────────
+@require_GET
+def api_estudiantes(request):
+    if not request.session.get('es_admin'):
+        return JsonResponse({'error': 'Sin permiso'}, status=403)
+
+    ahora = timezone.now()
+    lista = user.objects.filter(es_admin=False).select_related('grado').order_by('grado__orden', 'apellido')
+
+    data = []
+    for est in lista:
+        if est.ultimo_acceso:
+            seg = (ahora - est.ultimo_acceso).total_seconds()
+            if seg < 90:
+                estado, ultimo = 'conectado', 'En línea ahora'
+            elif seg < 3600:
+                estado, ultimo = 'reciente', f'Hace {int(seg//60)} min'
+            elif seg < 86400:
+                estado, ultimo = 'hoy', f'Hace {int(seg//3600)} h'
+            else:
+                d = int(seg // 86400)
+                estado, ultimo = 'inactivo', f'Hace {d} día{"s" if d != 1 else ""}'
+        else:
+            estado, ultimo = 'nunca', 'Nunca'
+
+        data.append({
+            'id': est.pk, 'nombre': est.nombre, 'apellido': est.apellido,
+            'correo': est.correo, 'grado': est.grado.nombre if est.grado else '—',
+            'estado': estado, 'ultimo': ultimo,
+        })
+
+    return JsonResponse({'estudiantes': data})
 
 
 def eliminar_estudiante(request, estudiante_id):
@@ -88,16 +144,25 @@ def eliminar_estudiante(request, estudiante_id):
         try:
             est = user.objects.get(pk=estudiante_id, es_admin=False)
             est.delete()
-            messages.success(request, f'Estudiante eliminado correctamente.')
+            messages.success(request, 'Estudiante eliminado correctamente.')
         except user.DoesNotExist:
             messages.error(request, 'Estudiante no encontrado.')
     return redirect('home')
 
 
 def logout_view(request):
+    uid = request.session.get('usuario_id')
+    if uid:
+        try:
+            u = user.objects.get(pk=uid)
+            u.ultimo_acceso = None
+            u.save(update_fields=['ultimo_acceso'])
+        except user.DoesNotExist:
+            pass
     request.session.flush()
     messages.info(request, 'Sesión cerrada correctamente.')
     return redirect('login')
+
 
 def recuperar_password(request):
     if request.method == 'POST':
@@ -115,7 +180,7 @@ def recuperar_password(request):
                 recipient_list=[correo],
             )
             return render(request, 'recuperar_password.html', {'enviado': True})
-        except Exception as e:
+        except Exception:
             return render(request, 'recuperar_password.html', {'error': 'Ocurrió un error al enviar el correo. Intenta de nuevo.'})
     return render(request, 'recuperar_password.html', {})
 
@@ -130,7 +195,7 @@ def reset_password(request, token):
         return render(request, 'reset_password.html', {'error': 'El enlace ha expirado. Solicita uno nuevo.'})
 
     if request.method == 'POST':
-        nueva = request.POST.get('password', '')
+        nueva     = request.POST.get('password', '')
         confirmar = request.POST.get('confirmar', '')
         if len(nueva) < 6:
             return render(request, 'reset_password.html', {'token': token, 'error': 'La contraseña debe tener al menos 6 caracteres.'})
@@ -144,22 +209,22 @@ def reset_password(request, token):
 
     return render(request, 'reset_password.html', {'token': token})
 
+
 def editar_perfil(request):
     if not request.session.get('usuario_id'):
         return redirect('login')
-    
+
     from .models import Grado
     usuario_id  = request.session.get('usuario_id')
     usuario_obj = user.objects.get(pk=usuario_id)
     grados      = Grado.objects.all()
-    
+
     ctx = {
         'nombre':   request.session.get('usuario_nombre', ''),
         'es_admin': request.session.get('es_admin', False),
         'grados':   grados,
     }
 
-    # Guardar de dónde viene el usuario
     if request.method == 'GET':
         request.session['perfil_next'] = request.META.get('HTTP_REFERER', '/')
 
@@ -172,25 +237,11 @@ def editar_perfil(request):
         grado_id  = request.POST.get('grado') or None
 
         if not nombre or not apellido or not correo:
-            return render(request, 'editar_perfil.html', {
-                'usuario': usuario_obj,
-                'error': 'Nombre, apellido y correo son obligatorios.',
-                **ctx,
-            })
-
+            return render(request, 'editar_perfil.html', {'usuario': usuario_obj, 'error': 'Nombre, apellido y correo son obligatorios.', **ctx})
         if password and password != confirmar:
-            return render(request, 'editar_perfil.html', {
-                'usuario': usuario_obj,
-                'error': 'Las contraseñas no coinciden.',
-                **ctx,
-            })
-
+            return render(request, 'editar_perfil.html', {'usuario': usuario_obj, 'error': 'Las contraseñas no coinciden.', **ctx})
         if password and len(password) < 6:
-            return render(request, 'editar_perfil.html', {
-                'usuario': usuario_obj,
-                'error': 'La contraseña debe tener al menos 6 caracteres.',
-                **ctx,
-            })
+            return render(request, 'editar_perfil.html', {'usuario': usuario_obj, 'error': 'La contraseña debe tener al menos 6 caracteres.', **ctx})
 
         usuario_obj.nombre   = nombre
         usuario_obj.apellido = apellido
@@ -206,7 +257,4 @@ def editar_perfil(request):
         next_url = request.session.pop('perfil_next', '/')
         return redirect(next_url)
 
-    return render(request, 'editar_perfil.html', {
-        'usuario': usuario_obj,
-        **ctx,
-    })
+    return render(request, 'editar_perfil.html', {'usuario': usuario_obj, **ctx})

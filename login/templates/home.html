@@ -5,49 +5,208 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>WorldLearn – Elige tu época</title>
+  <script>
+    (function() {
+      var t = localStorage.getItem('wl_theme') || 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'login/css/home.css' %}">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
+
+  <script>
+    const WL_USER = {
+      id:      {{ request.session.usuario_id|default:"null" }},
+      nombre:  "{{ request.session.usuario_nombre|escapejs }}",
+      esAdmin: {{ request.session.es_admin|yesno:"true,false" }},
+    };
+  </script>
+
   <style>
     #particles { pointer-events: none !important; }
     .noise      { pointer-events: none !important; }
     .transition-overlay { pointer-events: none !important; }
     .transition-overlay.active { pointer-events: all !important; }
 
-    /* ── Fila de países ── */
     .paises-wrap {
-      display: flex;
-      justify-content: center;
-      margin-top: 2.5rem;
-      padding: 0 1rem;
+      display: flex; justify-content: center; margin-top: 2.5rem; padding: 0 1rem;
     }
-    .portal--paises {
-      --color-paises: #2ecc71;
-      max-width: 380px;
+    .portal--paises { --color-paises: #2ecc71; max-width: 380px; width: 100%; }
+    .portal--paises .portal-glow { background: radial-gradient(ellipse at center, rgba(46,204,113,.35) 0%, rgba(46,204,113,.08) 60%, transparent 80%); }
+    .portal--paises .portal-ring { border-color: rgba(46,204,113,.25); }
+    .portal--paises .portal-btn  { background: linear-gradient(135deg, rgba(46,204,113,.15), rgba(46,204,113,.05)); border-color: rgba(46,204,113,.4); color: #2ecc71; }
+    .portal--paises .portal-btn:hover { background: rgba(46,204,113,.25); border-color: #2ecc71; box-shadow: 0 0 20px rgba(46,204,113,.3); }
+    .portal--paises .portal-era { color: rgba(46,204,113,.8); }
+
+    /* ── Botón gestión ── */
+    .btn-gestion {
+      display: inline-flex; align-items: center; gap: .6rem;
+      padding: .65rem 1.4rem;
+      background: linear-gradient(135deg, rgba(255,200,80,.15), rgba(255,160,40,.08));
+      border: 1px solid rgba(255,200,80,.45); border-radius: 10px;
+      color: #007E6E; font-family: 'Cinzel', serif; font-size: .82rem;
+      letter-spacing: .06em; cursor: pointer;
+      transition: background .2s, border-color .2s, box-shadow .2s, transform .15s;
+      text-decoration: none;
+    }
+    .btn-gestion:hover { border-color: rgba(255,200,80,.8); box-shadow: 0 0 18px rgba(255,200,80,.25), 0 4px 12px rgba(0,0,0,.3); transform: translateY(-2px); }
+    .btn-gestion:active { transform: translateY(0); }
+    .btn-gestion .badge { background: rgba(255,200,80,.25); border-radius: 20px; padding: .1rem .5rem; font-size: .72rem; font-family: 'Crimson Text', serif; color: #000000; }
+    .admin-btn-wrap { display: flex; justify-content: center; align-items: center; gap: .6rem; margin: 1.8rem 0 .5rem; flex-wrap: wrap; }
+
+    /* ── Modal overlay ── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(5,8,20,.82);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      z-index: 1000; display: flex; align-items: center; justify-content: center;
+      padding: 1rem; opacity: 0; pointer-events: none; transition: opacity .25s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: linear-gradient(160deg, #0e1628 0%, #0b1220 100%);
+      border: 1px solid rgba(255,200,80,.2); border-radius: 16px;
+      width: 100%; max-width: 820px; max-height: 85vh; display: flex; flex-direction: column;
+      box-shadow: 0 24px 60px rgba(0,0,0,.6), 0 0 40px rgba(255,200,80,.06);
+      transform: translateY(20px) scale(.97);
+      transition: transform .28s cubic-bezier(.34,1.56,.64,1);
+    }
+    .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+    .modal-head { display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 1.6rem 1rem; border-bottom: 1px solid rgba(255,200,80,.12); flex-shrink: 0; }
+    .modal-title { font-family: 'Cinzel', serif; font-size: 1rem; color: #ffd060; letter-spacing: .08em; display: flex; align-items: center; gap: .5rem; }
+    .modal-title-count { font-family: 'Crimson Text', serif; font-size: .85rem; color: rgba(255,208,96,.55); font-weight: 400; letter-spacing: 0; }
+    .modal-close { background: none; border: none; color: rgba(255,255,255,.4); font-size: 1.4rem; cursor: pointer; padding: .2rem .4rem; border-radius: 6px; transition: color .15s, background .15s; }
+    .modal-close:hover { color: #fff; background: rgba(255,255,255,.08); }
+    .modal-search-wrap { padding: .8rem 1.6rem .6rem; flex-shrink: 0; }
+    .modal-search { width: 100%; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); border-radius: 8px; padding: .5rem .9rem; color: #e0e8ff; font-family: 'Crimson Text', serif; font-size: 1rem; outline: none; transition: border-color .2s; box-sizing: border-box; }
+    .modal-search:focus { border-color: rgba(255,200,80,.4); }
+    .modal-search::placeholder { color: rgba(255,255,255,.25); }
+    .modal-body { overflow-y: auto; padding: .2rem 1.6rem 1.4rem; flex: 1; }
+    .modal-body::-webkit-scrollbar { width: 5px; }
+    .modal-body::-webkit-scrollbar-thumb { background: rgba(255,200,80,.2); border-radius: 4px; }
+    .st-table { width: 100%; border-collapse: collapse; font-family: 'Crimson Text', serif; font-size: .97rem; }
+    .st-table thead th { font-family: 'Cinzel', serif; font-size: .68rem; letter-spacing: .1em; color: rgba(255,208,96,.6); text-transform: uppercase; padding: .5rem .7rem; border-bottom: 1px solid rgba(255,200,80,.12); text-align: left; font-weight: 400; }
+    .st-table tbody tr { border-bottom: 1px solid rgba(255,255,255,.04); transition: background .15s; }
+    .st-table tbody tr:hover { background: rgba(255,255,255,.03); }
+    .st-table tbody td { padding: .65rem .7rem; color: #c8d4f0; vertical-align: middle; }
+    .st-table .td-name { color: #e8eeff; font-weight: 600; }
+    .st-table .td-grado { font-family: 'Cinzel', serif; font-size: .75rem; color: rgba(200,212,240,.6); letter-spacing: .05em; }
+    .status-pill { display: inline-flex; align-items: center; gap: .35rem; padding: .18rem .6rem; border-radius: 20px; font-size: .8rem; white-space: nowrap; }
+    .status-pill .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .pill--conectado { background: rgba(46,204,113,.15); color: #2ecc71; border: 1px solid rgba(46,204,113,.3); }
+    .pill--conectado .dot { background: #2ecc71; box-shadow: 0 0 5px #2ecc71; animation: pulse-green 1.5s infinite; }
+    .pill--reciente  { background: rgba(52,152,219,.12); color: #5dade2; border: 1px solid rgba(52,152,219,.25); }
+    .pill--reciente  .dot { background: #5dade2; }
+    .pill--hoy       { background: rgba(241,196,15,.1); color: #f1c40f; border: 1px solid rgba(241,196,15,.2); }
+    .pill--hoy       .dot { background: #f1c40f; }
+    .pill--inactivo  { background: rgba(255,255,255,.05); color: rgba(200,212,240,.45); border: 1px solid rgba(255,255,255,.08); }
+    .pill--inactivo  .dot { background: rgba(200,212,240,.3); }
+    .pill--nunca     { background: rgba(255,255,255,.03); color: rgba(200,212,240,.3); border: 1px solid rgba(255,255,255,.05); }
+    .pill--nunca     .dot { background: rgba(200,212,240,.15); }
+    @keyframes pulse-green { 0%,100%{opacity:1} 50%{opacity:.3} }
+    .btn-del { background: none; border: 1px solid rgba(231,76,60,.25); color: rgba(231,76,60,.6); border-radius: 6px; padding: .25rem .6rem; font-size: .8rem; cursor: pointer; transition: background .15s, color .15s, border-color .15s; }
+    .btn-del:hover { background: rgba(231,76,60,.12); color: #e74c3c; border-color: rgba(231,76,60,.5); }
+    .modal-empty { text-align: center; padding: 3rem 1rem; color: rgba(200,212,240,.35); font-family: 'Crimson Text', serif; font-size: 1.05rem; }
+    .modal-spinner { display: inline-block; width: 28px; height: 28px; border: 3px solid rgba(255,200,80,.15); border-top-color: rgba(255,200,80,.6); border-radius: 50%; animation: spin .7s linear infinite; margin-bottom: .8rem; }
+    @keyframes spin { to{transform:rotate(360deg)} }
+    .modal-footer { padding: .7rem 1.6rem; border-top: 1px solid rgba(255,200,80,.1); font-family: 'Crimson Text', serif; font-size: .85rem; color: rgba(200,212,240,.4); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+    .footer-online { color: #2ecc71; }
+
+    .port-banner {
+      position: fixed; bottom: 12px; right: 14px;
+      background: rgba(10,15,30,.85); border: 1px solid rgba(255,200,80,.2);
+      border-radius: 8px; padding: .3rem .75rem;
+      font-family: 'Cinzel', serif; font-size: .65rem;
+      color: rgba(255,208,96,.5); letter-spacing: .06em;
+      pointer-events: none; z-index: 9999;
+    }
+
+    /* ══════════════════════════════════════════════
+       PAGINACIÓN DE ÉPOCAS
+    ══════════════════════════════════════════════ */
+    .epochs-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.2rem;
       width: 100%;
     }
-    .portal--paises .portal-glow {
-      background: radial-gradient(ellipse at center,
-        rgba(46,204,113,.35) 0%,
-        rgba(46,204,113,.08) 60%,
-        transparent 80%);
+
+    /* Botones flecha prev/next */
+    .epochs-arrow {
+      display: flex; align-items: center; justify-content: center;
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--gold);
+      cursor: pointer; flex-shrink: 0;
+      transition: background .2s, border-color .2s, transform .15s, opacity .2s;
+      box-shadow: 0 2px 10px rgba(0,0,0,.08);
     }
-    .portal--paises .portal-ring {
-      border-color: rgba(46,204,113,.25);
+    .epochs-arrow:hover:not(:disabled) {
+      background: rgba(0,126,110,.12);
+      border-color: var(--gold);
+      transform: scale(1.08);
     }
-    .portal--paises .portal-btn {
-      background: linear-gradient(135deg, rgba(46,204,113,.15), rgba(46,204,113,.05));
-      border-color: rgba(46,204,113,.4);
-      color: #2ecc71;
+    .epochs-arrow:disabled { opacity: .25; cursor: default; transform: none; }
+    .epochs-arrow svg { width: 18px; height: 18px; }
+
+    /* Contenedor de portales con overflow oculto para la animación */
+    .portals-pager {
+      flex: 1;
+      position: relative;
+      min-height: 420px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .portal--paises .portal-btn:hover {
-      background: rgba(46,204,113,.25);
-      border-color: #2ecc71;
-      box-shadow: 0 0 20px rgba(46,204,113,.3);
+
+    /* Cada "página" de 3 portales */
+    .portals-page {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .35s ease, transform .35s ease;
+      transform: translateX(60px);
     }
-    .portal--paises .portal-era {
-      color: rgba(46,204,113,.8);
+    .portals-page.active {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateX(0);
+      position: relative;
+    }
+    .portals-page.exit-left  { opacity: 0; transform: translateX(-60px); }
+    .portals-page.exit-right { opacity: 0; transform: translateX(60px); }
+
+    /* Puntos indicadores */
+    .epochs-dots {
+      display: flex;
+      justify-content: center;
+      gap: .5rem;
+      margin-top: .8rem;
+    }
+    .epochs-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--card-border);
+      transition: background .25s, transform .25s;
+      cursor: pointer;
+    }
+    .epochs-dot.active {
+      background: var(--gold);
+      transform: scale(1.35);
+    }
+
+    @media (max-width: 700px) {
+      .epochs-nav { gap: .5rem; }
+      .portals-page { flex-direction: column; align-items: center; }
+      .epochs-arrow { width: 36px; height: 36px; }
     }
   </style>
 </head>
@@ -64,6 +223,10 @@
   <div class="header-right">
     {% if es_admin %}<span class="admin-badge">✏️ Modo profesor</span>{% endif %}
     <a href="{% url 'editar_perfil' %}" class="welcome-text" style="text-decoration:none;cursor:pointer">Bienvenido, <strong>{{ nombre }}</strong> ✏️</a>
+    <button class="btn-dark-mode" id="btnDarkMode" onclick="toggleDarkMode()" title="Cambiar modo oscuro/claro">
+      <span id="dmIcon">🌙</span>
+      <span class="dm-label" id="dmLabel">Oscuro</span>
+    </button>
     <a href="{% url 'logout' %}" class="btn-logout">Cerrar sesión</a>
   </div>
 </header>
@@ -76,228 +239,378 @@
     <p class="hero-desc">Selecciona una época y sumérgete en los eventos<br>que marcaron la historia de la humanidad.</p>
   </div>
 
-  <!-- ── Panel de gestión de estudiantes (solo admin) ── -->
   {% if es_admin %}
-  <div class="admin-students-wrap">
-    <div class="admin-students-header" id="toggleEstudiantes">
-      <span>👥 Gestión de estudiantes</span>
-      <span class="toggle-arrow">▼</span>
-    </div>
-    <div class="admin-students-body" id="estudiantesBody">
-      {% if estudiantes %}
-      <table class="students-table">
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Correo</th>
-            <th>Grado</th>
-            <th>Acción</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for est in estudiantes %}
-          <tr>
-            <td>{{ est.nombre }}</td>
-            <td>{{ est.apellido }}</td>
-            <td>{{ est.correo }}</td>
-            <td>{% if est.grado %}{{ est.grado.nombre }}{% else %}<span class="no-grado">Sin asignar</span>{% endif %}</td>
-            <td>
-              <form method="POST" action="{% url 'eliminar_estudiante' est.pk %}"
-                    onsubmit="return confirm('¿Eliminar a {{ est.nombre }} {{ est.apellido }}? Esta acción es permanente.')">
-                {% csrf_token %}
-                <button type="submit" class="btn-delete-student">🗑 Eliminar</button>
-              </form>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-      {% else %}
-        <p class="no-students">No hay estudiantes registrados.</p>
-      {% endif %}
-    </div>
+  <div class="admin-btn-wrap">
+    <button class="btn-gestion" id="btnGestion" onclick="abrirModal()">
+      👥 <strong>Gestión de estudiantes</strong>
+      <span class="badge" id="badgeCount"><strong>…</strong></span>
+    </button>
+    <a href="{% url 'crear_epoca' %}" class="btn-gestion" style="text-decoration:none;">
+      ✨ <strong>Nueva época</strong>
+    </a>
   </div>
   {% endif %}
 
-  <!-- ── Portales de épocas ── -->
-  <div class="portals-wrap">
+  <!-- ══════════════════════════════════════════════
+       PAGINADOR DE ÉPOCAS (dinámico desde la BD)
+  ══════════════════════════════════════════════ -->
+  <div class="epochs-nav" id="epochsNav">
+    <button class="epochs-arrow" id="arrowPrev" onclick="cambiarPagina(-1)" disabled>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </button>
 
-    <div class="portal" id="portal-ww1" style="--delay:0.1s">
-      <div class="portal-glow"></div>
-      <div class="portal-ring portal-ring--1"></div>
-      <div class="portal-ring portal-ring--2"></div>
-      <div class="portal-ring portal-ring--3"></div>
-      <div class="portal-inner">
-        <div class="portal-era">1914 – 1918</div>
-        <div class="portal-icon">⚔️</div>
-        <h2 class="portal-title">Primera Guerra<br>Mundial</h2>
-        <p class="portal-desc">La Gran Guerra. El mundo cambia para siempre en los campos de Europa.</p>
-        <a href="{% url 'detalle_epoca' 'ww1' %}" class="portal-btn">
-          <span>Viajar</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-      </div>
-      <div class="portal-particles">
-        <span></span><span></span><span></span>
-        <span></span><span></span><span></span>
-      </div>
+    <div class="portals-pager" id="portalsPager">
+      {# Las páginas se inyectan desde JS con los datos de Django #}
     </div>
 
-    <div class="portal portal--center" id="portal-ww2" style="--delay:0.25s">
-      <div class="portal-glow"></div>
-      <div class="portal-ring portal-ring--1"></div>
-      <div class="portal-ring portal-ring--2"></div>
-      <div class="portal-ring portal-ring--3"></div>
-      <div class="portal-inner">
-        <div class="portal-era">1939 – 1945</div>
-        <div class="portal-icon">🌍</div>
-        <h2 class="portal-title">Segunda Guerra<br>Mundial</h2>
-        <p class="portal-desc">El conflicto más devastador de la historia. Naciones enteras en llamas.</p>
-        <a href="{% url 'detalle_epoca' 'ww2' %}" class="portal-btn">
-          <span>Viajar</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-      </div>
-      <div class="portal-particles">
-        <span></span><span></span><span></span>
-        <span></span><span></span><span></span>
-      </div>
-    </div>
-
-    <div class="portal" id="portal-cf" style="--delay:0.4s">
-      <div class="portal-glow"></div>
-      <div class="portal-ring portal-ring--1"></div>
-      <div class="portal-ring portal-ring--2"></div>
-      <div class="portal-ring portal-ring--3"></div>
-      <div class="portal-inner">
-        <div class="portal-era">1947 – 1991</div>
-        <div class="portal-icon">☢️</div>
-        <h2 class="portal-title">Guerra<br>Fría</h2>
-        <p class="portal-desc">La tensión nuclear entre dos superpotencias al borde del abismo.</p>
-        <a href="{% url 'detalle_epoca' 'cf' %}" class="portal-btn">
-          <span>Viajar</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-      </div>
-      <div class="portal-particles">
-        <span></span><span></span><span></span>
-        <span></span><span></span><span></span>
-      </div>
-    </div>
-
+    <button class="epochs-arrow" id="arrowNext" onclick="cambiarPagina(1)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M9 18l6-6-6-6"/>
+      </svg>
+    </button>
   </div>
+  <div class="epochs-dots" id="epochsDots"></div>
 
-  <!-- ── Portal de Países ── -->
   <div class="paises-wrap">
     <div class="portal portal--paises" id="portal-paises" style="--delay:0.55s">
-      <div class="portal-glow"></div>
-      <div class="portal-ring portal-ring--1"></div>
-      <div class="portal-ring portal-ring--2"></div>
-      <div class="portal-ring portal-ring--3"></div>
+      <div class="portal-glow"></div><div class="portal-ring portal-ring--1"></div><div class="portal-ring portal-ring--2"></div><div class="portal-ring portal-ring--3"></div>
       <div class="portal-inner">
-        <div class="portal-era">195 PAÍSES</div>
-        <div class="portal-icon">🗺️</div>
+        <div class="portal-era">195 PAÍSES</div><div class="portal-icon">🗺️</div>
         <h2 class="portal-title">Explorador<br>de Países</h2>
         <p class="portal-desc">Explora todos los países del mundo, su historia, conflictos y geografía.</p>
-        <a href="{% url 'lista_continentes' %}" class="portal-btn">
-          <span>Explorar</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
+        <a href="{% url 'lista_continentes' %}" class="portal-btn"><span>Explorar</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
       </div>
-      <div class="portal-particles">
-        <span></span><span></span><span></span>
-        <span></span><span></span><span></span>
-      </div>
+      <div class="portal-particles"><span></span><span></span><span></span><span></span><span></span><span></span></div>
     </div>
   </div>
 
-  <!-- Línea de tiempo decorativa -->
-  <div class="timeline-bar">
+  <div class="timeline-bar" id="timelineBar">
     <div class="tl-line"></div>
-    <div class="tl-dot" style="left:18%"><span>1914</span></div>
-    <div class="tl-dot" style="left:46%"><span>1939</span></div>
-    <div class="tl-dot" style="left:74%"><span>1947</span></div>
-    <div class="tl-dot tl-dot--end" style="left:92%"><span>1991</span></div>
   </div>
 
 </main>
 
+<!-- Modal estudiantes (solo admin) -->
+{% if es_admin %}
+<div class="modal-overlay" id="modalOverlay" onclick="cerrarModalFuera(event)">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <div class="modal-title">👥 <strong>Gestión de estudiantes</strong> <span class="modal-title-count" id="modalCount"></span></div>
+      <button class="modal-close" onclick="cerrarModal()">✕</button>
+    </div>
+    <div class="modal-search-wrap">
+      <input type="text" class="modal-search" id="searchInput" placeholder="🔍  Buscar…" oninput="filtrarTabla()">
+    </div>
+    <div class="modal-body" id="modalBody">
+      <div class="modal-empty"><div class="modal-spinner"></div><br>Cargando…</div>
+    </div>
+    <div class="modal-footer">
+      <span id="footerInfo">—</span>
+      <span id="footerOnline" class="footer-online"></span>
+    </div>
+  </div>
+</div>
+<form id="formEliminar" method="POST" style="display:none">{% csrf_token %}</form>
+{% endif %}
+
+<div class="port-banner" id="portBanner"></div>
 <div class="transition-overlay" id="transitionOverlay">
-  <div class="transition-ring"></div>
-  <div class="transition-ring"></div>
-  <div class="transition-ring"></div>
+  <div class="transition-ring"></div><div class="transition-ring"></div><div class="transition-ring"></div>
   <p class="transition-text">Viajando en el tiempo...</p>
 </div>
 
 <script>
+// ════════════════════════════════════════════════════════════════
+// DATOS DE ÉPOCAS (inyectados desde Django)
+// ════════════════════════════════════════════════════════════════
+const EPOCAS = [
+  {% for ep in epocas %}
+  {
+    slug:       "{{ ep.slug|escapejs }}",
+    nombre:     "{{ ep.nombre|escapejs }}",
+    anioInicio: {{ ep.anio_inicio }},
+    anioFin:    {{ ep.anio_fin }},
+    descripcion:"{{ ep.descripcion|escapejs }}",
+    icono:      "{{ ep.icono|escapejs }}",
+    color:      "{{ ep.color_hex|escapejs }}",
+    orden:      {{ ep.orden }},
+  }{% if not forloop.last %},{% endif %}
+  {% endfor %}
+];
+
+const POR_PAGINA = 3;
+let paginaActual = 0;
+const totalPaginas = Math.max(1, Math.ceil(EPOCAS.length / POR_PAGINA));
+
+// ── Construir HTML de un portal dinámico ──────────────────────
+function htmlPortal(ep, index) {
+  const delay = (index * 0.15 + 0.1).toFixed(2);
+  const c = ep.color;
+  // Derivar un color de hover en RGBA para el inner
+  return `
+  <div class="portal portal--dyn" id="portal-dyn-${ep.slug}" style="--delay:${delay}s; --ep-color:${c}">
+    <div class="portal-glow" style="background:radial-gradient(circle,${c}4a 0%,transparent 70%)"></div>
+    <div class="portal-ring portal-ring--1" style="border-color:${c}55"></div>
+    <div class="portal-ring portal-ring--2" style="border-color:${c}2a; border-style:dashed"></div>
+    <div class="portal-ring portal-ring--3" style="border-color:${c}15"></div>
+    <div class="portal-inner portal-inner--dyn" data-color="${c}">
+      <div class="portal-era" style="color:${c};border-color:${c}33">${ep.anioInicio} – ${ep.anioFin}</div>
+      <div class="portal-icon">${ep.icono}</div>
+      <h2 class="portal-title">${esc(ep.nombre)}</h2>
+      <p class="portal-desc">${esc(ep.descripcion)}</p>
+      <a href="/epoca/${ep.slug}/" class="portal-btn" style="color:${c};border-color:${c}44;background:${c}0d">
+        <span>Viajar</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+    <div class="portal-particles"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+  </div>`;
+}
+
+// ── Renderizar todas las páginas ──────────────────────────────
+function renderPaginas() {
+  const pager = document.getElementById('portalsPager');
+  const dots  = document.getElementById('epochsDots');
+  pager.innerHTML = '';
+  dots.innerHTML  = '';
+
+  for (let p = 0; p < totalPaginas; p++) {
+    const page = document.createElement('div');
+    page.className = 'portals-page' + (p === 0 ? ' active' : '');
+    page.dataset.page = p;
+
+    const grupo = EPOCAS.slice(p * POR_PAGINA, p * POR_PAGINA + POR_PAGINA);
+    // Si la página tiene 1 ó 2 épocas, añadimos clase para centrar bien
+    if (grupo.length === 2) page.style.justifyContent = 'center';
+    if (grupo.length === 1) page.style.justifyContent = 'center';
+
+    grupo.forEach((ep, i) => {
+      page.innerHTML += htmlPortal(ep, i);
+    });
+    pager.appendChild(page);
+
+    // Dot indicador
+    const dot = document.createElement('button');
+    dot.className = 'epochs-dot' + (p === 0 ? ' active' : '');
+    dot.title = `Página ${p + 1}`;
+    dot.onclick = () => irPagina(p);
+    dots.appendChild(dot);
+  }
+
+  // Ocultar navegación si solo hay 1 página
+  document.getElementById('arrowPrev').style.display = totalPaginas <= 1 ? 'none' : '';
+  document.getElementById('arrowNext').style.display = totalPaginas <= 1 ? 'none' : '';
+  if (totalPaginas <= 1) dots.style.display = 'none';
+
+  actualizarBotones();
+  activarTilt();
+  renderTimeline();
+}
+
+// ── Cambiar página con animación ──────────────────────────────
+function irPagina(nueva) {
+  if (nueva === paginaActual || nueva < 0 || nueva >= totalPaginas) return;
+  const pages   = document.querySelectorAll('.portals-page');
+  const dir     = nueva > paginaActual ? 1 : -1;
+  const current = pages[paginaActual];
+  const next    = pages[nueva];
+
+  current.classList.remove('active');
+  current.classList.add(dir > 0 ? 'exit-left' : 'exit-right');
+
+  // Pre-posicionar la nueva página al lado contrario
+  next.style.transform = `translateX(${dir > 0 ? '60px' : '-60px'})`;
+  next.style.opacity   = '0';
+  next.style.position  = 'absolute';
+
+  // Forzar reflow
+  next.offsetWidth;
+
+  next.classList.add('active');
+  next.style.transform = '';
+  next.style.opacity   = '';
+  next.style.position  = '';
+
+  setTimeout(() => {
+    current.classList.remove('exit-left', 'exit-right');
+    current.style.transform = '';
+    current.style.opacity   = '';
+  }, 380);
+
+  paginaActual = nueva;
+  actualizarBotones();
+  activarTilt();
+  renderTimeline();
+}
+
+function cambiarPagina(dir) { irPagina(paginaActual + dir); }
+
+function actualizarBotones() {
+  document.getElementById('arrowPrev').disabled = paginaActual === 0;
+  document.getElementById('arrowNext').disabled = paginaActual === totalPaginas - 1;
+  document.querySelectorAll('.epochs-dot').forEach((d, i) => {
+    d.classList.toggle('active', i === paginaActual);
+  });
+}
+
+// ── Hover color dinámico para portal-inner ────────────────────
+function activarTilt() {
+  document.querySelectorAll('.portals-page.active .portal').forEach(portal => {
+    // Quitar listeners viejos clonando el nodo
+    const clone = portal.cloneNode(true);
+    portal.parentNode.replaceChild(clone, portal);
+
+    clone.addEventListener('mousemove', e => {
+      const r=clone.getBoundingClientRect(), dx=(e.clientX-r.left-r.width/2)/(r.width/2), dy=(e.clientY-r.top-r.height/2)/(r.height/2);
+      clone.style.transform=`perspective(800px) rotateY(${dx*8}deg) rotateX(${-dy*8}deg) translateY(-8px)`;
+    });
+    clone.addEventListener('mouseleave', () => { clone.style.transform=''; });
+
+    // Hover color del inner
+    const inner = clone.querySelector('.portal-inner--dyn');
+    if (inner) {
+      const c = inner.dataset.color;
+      clone.addEventListener('mouseenter', () => {
+        inner.style.borderColor = c + '80';
+        inner.style.boxShadow   = `0 8px 40px ${c}1e`;
+      });
+      clone.addEventListener('mouseleave', () => {
+        inner.style.borderColor = '';
+        inner.style.boxShadow   = '';
+      });
+    }
+  });
+}
+
+// ── Línea de tiempo dinámica ──────────────────────────────────
+function renderTimeline() {
+  const bar   = document.getElementById('timelineBar');
+  const grupo = EPOCAS.slice(paginaActual * POR_PAGINA, paginaActual * POR_PAGINA + POR_PAGINA);
+  if (!grupo.length) { bar.style.display = 'none'; return; }
+  bar.style.display = '';
+
+  // Recopilar años únicos
+  const years = [];
+  grupo.forEach(ep => { years.push(ep.anioInicio); years.push(ep.anioFin); });
+  const sorted = [...new Set(years)].sort((a,b) => a-b);
+
+  const min = sorted[0], max = sorted[sorted.length-1], range = max - min || 1;
+  const positions = [12, 38, 62, 88]; // posiciones % fijas para hasta 4 puntos
+
+  // Generar puntos
+  const puntos = sorted.map((y, i) => {
+    const pct = positions[i] ?? (12 + (i / (sorted.length-1 || 1)) * 76);
+    return `<div class="tl-dot${i===sorted.length-1?' tl-dot--end':''}" style="left:${pct.toFixed(0)}%"><span>${y}</span></div>`;
+  }).join('');
+
+  bar.innerHTML = `<div class="tl-line"></div>${puntos}`;
+}
+
+// ── Init ──────────────────────────────────────────────────────
+renderPaginas();
+
+// ════════════════════════════════════════════════════════════════
+// BANNER PUERTO
+// ════════════════════════════════════════════════════════════════
+document.getElementById('portBanner').textContent =
+  `Puerto ${location.port || '80'} · ${WL_USER.esAdmin ? 'Profesor' : 'Estudiante'}`;
+
+// ════════════════════════════════════════════════════════════════
+// HEARTBEAT
+// ════════════════════════════════════════════════════════════════
+function enviarHeartbeat() {
+  fetch('/api/heartbeat/', { method:'POST', headers:{'X-CSRFToken':getCookie('csrftoken')} }).catch(()=>{});
+}
+if (WL_USER.id) {
+  enviarHeartbeat();
+  setInterval(() => { if (document.visibilityState==='visible') enviarHeartbeat(); }, 30000);
+}
+function getCookie(name) {
+  const v = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+  return v ? v.pop() : '';
+}
+
+// ════════════════════════════════════════════════════════════════
+// PARTÍCULAS
+// ════════════════════════════════════════════════════════════════
 const canvas = document.getElementById('particles');
 const ctx    = canvas.getContext('2d');
 let W, H, particles = [];
-
-function resize() {
-  W = canvas.width  = window.innerWidth;
-  H = canvas.height = window.innerHeight;
-}
-resize();
-window.addEventListener('resize', resize);
-
+function resize() { W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
 class Particle {
-  constructor() { this.reset(true); }
-  reset(init = false) {
-    this.x  = Math.random() * W;
-    this.y  = init ? Math.random() * H : H + 10;
-    this.r  = Math.random() * 1.5 + 0.3;
-    this.vy = -(Math.random() * 0.4 + 0.15);
-    this.vx = (Math.random() - 0.5) * 0.2;
-    this.a  = Math.random() * 0.5 + 0.1;
-  }
-  update() {
-    this.x += this.vx;
-    this.y += this.vy;
-    if (this.y < -10) this.reset();
-  }
-  draw() {
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(200,210,255,${this.a})`;
-    ctx.fill();
-  }
+  constructor(){ this.reset(true); }
+  reset(init=false){ this.x=Math.random()*W; this.y=init?Math.random()*H:H+10; this.r=Math.random()*1.5+0.3; this.vy=-(Math.random()*.4+.15); this.vx=(Math.random()-.5)*.2; this.a=Math.random()*.5+.1; }
+  update(){ this.x+=this.vx; this.y+=this.vy; if(this.y<-10) this.reset(); }
+  draw(){ ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.fillStyle=`rgba(200,210,255,${this.a})`; ctx.fill(); }
 }
-
-for (let i = 0; i < 120; i++) particles.push(new Particle());
-
-function animParticles() {
-  ctx.clearRect(0, 0, W, H);
-  particles.forEach(p => { p.update(); p.draw(); });
-  requestAnimationFrame(animParticles);
-}
+for(let i=0;i<120;i++) particles.push(new Particle());
+function animParticles(){ ctx.clearRect(0,0,W,H); particles.forEach(p=>{p.update();p.draw();}); requestAnimationFrame(animParticles); }
 animParticles();
 
-// ── Toggle panel estudiantes ──────────────────────────
-const toggleBtn   = document.getElementById('toggleEstudiantes');
-const estudBody   = document.getElementById('estudiantesBody');
-if (toggleBtn) {
-  toggleBtn.addEventListener('click', () => {
-    const open = estudBody.classList.toggle('open');
-    toggleBtn.querySelector('.toggle-arrow').textContent = open ? '▲' : '▼';
-  });
+// ════════════════════════════════════════════════════════════════
+// MODAL DE ESTUDIANTES
+// ════════════════════════════════════════════════════════════════
+let todosEstudiantes = [];
+async function abrirModal() {
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  await cargarEstudiantes();
+}
+function cerrarModal() { document.getElementById('modalOverlay').classList.remove('open'); document.body.style.overflow=''; }
+function cerrarModalFuera(e) { if(e.target===document.getElementById('modalOverlay')) cerrarModal(); }
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') cerrarModal(); });
+async function cargarEstudiantes() {
+  document.getElementById('modalBody').innerHTML='<div class="modal-empty"><div class="modal-spinner"></div><br>Cargando…</div>';
+  try {
+    const res=await fetch('/api/estudiantes/'); const data=await res.json();
+    todosEstudiantes=data.estudiantes||[]; renderTabla(todosEstudiantes); actualizarContadores(todosEstudiantes);
+    const badge=document.getElementById('badgeCount'); if(badge) badge.textContent=todosEstudiantes.length;
+  } catch { document.getElementById('modalBody').innerHTML='<div class="modal-empty">Error al cargar los datos.</div>'; }
+}
+function renderTabla(lista) {
+  const body=document.getElementById('modalBody');
+  if(!lista.length){ body.innerHTML='<div class="modal-empty">No hay estudiantes.</div>'; return; }
+  body.innerHTML=`<table class="st-table"><thead><tr><th>Nombre</th><th>Correo</th><th>Grado</th><th>Última conexión</th><th></th></tr></thead><tbody>${lista.map(est=>`<tr><td class="td-name">${esc(est.nombre)} ${esc(est.apellido)}</td><td>${esc(est.correo)}</td><td class="td-grado">${esc(est.grado)}</td><td><span class="status-pill pill--${est.estado}"><span class="dot"></span>${esc(est.ultimo)}</span></td><td><button class="btn-del" onclick="confirmarEliminar(${est.id},'${esc(est.nombre)} ${esc(est.apellido)}')">🗑</button></td></tr>`).join('')}</tbody></table>`;
+}
+function actualizarContadores(lista) {
+  const online=lista.filter(e=>e.estado==='conectado').length;
+  document.getElementById('modalCount').textContent=`(${lista.length} estudiantes)`;
+  document.getElementById('footerInfo').textContent=`${lista.length} estudiante${lista.length!==1?'s':''} en total`;
+  document.getElementById('footerOnline').textContent=online>0?`🟢 ${online} en línea ahora`:'';
+}
+function filtrarTabla() {
+  const q=document.getElementById('searchInput').value.toLowerCase().trim();
+  const f=q?todosEstudiantes.filter(e=>`${e.nombre} ${e.apellido} ${e.correo} ${e.grado}`.toLowerCase().includes(q)):todosEstudiantes;
+  renderTabla(f); actualizarContadores(f);
+}
+function confirmarEliminar(id,nombre) {
+  if(!confirm(`¿Eliminar a ${nombre}? Esta acción es permanente.`)) return;
+  const f=document.getElementById('formEliminar'); f.action=`/estudiante/${id}/eliminar/`; f.submit();
+}
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+if(WL_USER.esAdmin){
+  fetch('/api/estudiantes/').then(r=>r.json()).then(d=>{ const b=document.getElementById('badgeCount'); if(b&&d.estudiantes) b.textContent=d.estudiantes.length; }).catch(()=>{});
 }
 
-document.querySelectorAll('.portal').forEach(portal => {
-  portal.addEventListener('mousemove', e => {
-    const rect = portal.getBoundingClientRect();
-    const cx   = rect.left + rect.width  / 2;
-    const cy   = rect.top  + rect.height / 2;
-    const dx   = (e.clientX - cx) / (rect.width  / 2);
-    const dy   = (e.clientY - cy) / (rect.height / 2);
-    portal.style.transform = `perspective(800px) rotateY(${dx * 8}deg) rotateX(${-dy * 8}deg) translateY(-8px)`;
-  });
-  portal.addEventListener('mouseleave', () => {
-    portal.style.transform = '';
-  });
-});
+// ════════════════════════════════════════════════════════════════
+// MODO OSCURO
+// ════════════════════════════════════════════════════════════════
+function toggleDarkMode() {
+  const html=document.documentElement, isDark=html.getAttribute('data-theme')==='dark';
+  const newTheme=isDark?'light':'dark';
+  html.setAttribute('data-theme', newTheme); localStorage.setItem('wl_theme', newTheme);
+  actualizarBotonTema(newTheme);
+}
+function actualizarBotonTema(theme) {
+  const icon=document.getElementById('dmIcon'), label=document.getElementById('dmLabel');
+  if(!icon||!label) return;
+  if(theme==='dark'){ icon.textContent='☀️'; label.textContent='Claro'; }
+  else { icon.textContent='🌙'; label.textContent='Oscuro'; }
+}
+(function(){ actualizarBotonTema(localStorage.getItem('wl_theme')||'light'); })();
 </script>
-
 </body>
 </html>

@@ -8,8 +8,9 @@
       "nombre": "Primera Guerra Mundial",
       "anio_inicio": 1914,
       "anio_fin": 1918,
-      "descripcion": "El conflicto armado más devastador hasta entonces visto, enfrentó a las grandes potencias europeas en dos bloques: los Aliados y las Potencias Centrales. Originado por el asesinato del archiduque Francisco Fernando, desencadenó cuatro años de guerra de trincheras, nuevas armas industriales y millones de muertos.",
-      "color_hex": "#c0392b"
+      "descripcion": "El conflicto armado más devastador hasta entonces visto, enfrentó a las grandes potencias europeas en dos bloques: los Aliados y las Potencias Centrales.Desencadenó cuatro años de guerra de trincheras, nuevas armas industriales y millones de muertos.",
+      "color_hex": "#c0392b",
+      "icono": "⚔️"
     }
   },
   {
@@ -21,7 +22,8 @@
       "anio_inicio": 1939,
       "anio_fin": 1945,
       "descripcion": "El conflicto más destructivo de la historia humana, con más de 70 millones de muertos. Enfrentó a los Aliados contra las Potencias del Eje lideradas por la Alemania nazi. Incluyó el Holocausto, el uso de bombas atómicas y redefinió el orden mundial.",
-      "color_hex": "#c9a84c"
+      "color_hex": "#c9a84c",
+      "icono": "💣"
     }
   },
   {
@@ -33,7 +35,8 @@
       "anio_inicio": 1947,
       "anio_fin": 1991,
       "descripcion": "Tensión geopolítica entre Estados Unidos y la Unión Soviética tras la Segunda Guerra Mundial. Sin enfrentamiento directo, la rivalidad se expresó en la carrera armamentista, la carrera espacial, guerras proxy y la amenaza nuclear constante. Terminó con la disolución de la URSS.",
-      "color_hex": "#1abc9c"
+      "color_hex": "#1abc9c",
+      "icono": ""
     }
   },
 

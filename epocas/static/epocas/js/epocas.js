@@ -1,8 +1,3 @@
-/* ══════════════════════════════════════════════════════
-   WorldLearn – epocas.js
-   Ruta: epocas/static/epocas/js/epocas.js
-══════════════════════════════════════════════════════ */
-
 // ── Paneles admin: abrir / cerrar ─────────────────────
 document.querySelectorAll('.btn-edit-toggle').forEach(btn => {
   btn.addEventListener('click', () => {

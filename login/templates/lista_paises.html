@@ -3,6 +3,13 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8"/>
+  <!-- Aplicar tema antes del render para evitar parpadeo -->
+  <script>
+    (function() {
+      var t = localStorage.getItem('wl_theme') || 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>WorldLearn – {{ continente.nombre }}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,6 +34,10 @@
   <div class="header-right">
     {% if es_admin %}<span class="admin-badge">✏️ Modo profesor</span>{% endif %}
     <span class="welcome-text">{{ nombre }}</span>
+        <button class="btn-dark-mode" id="btnDarkMode" onclick="toggleDarkMode()" title="Cambiar modo oscuro/claro">
+      <span id="dmIcon">🌙</span>
+      <span class="dm-label" id="dmLabel">Oscuro</span>
+    </button>
     <a href="{% url 'logout' %}" class="btn-logout">Salir</a>
   </div>
 </header>
@@ -61,6 +72,27 @@
   {% endfor %}
 </main>
 
-<script src="{% static 'epocas/js/epocas.js' %}"></script>
+<script src="{% static 'epocas/js/epocas.js' %}">
+// ── Modo Oscuro ──────────────────────────────────────
+function toggleDarkMode() {
+  var html = document.documentElement;
+  var isDark = html.getAttribute('data-theme') === 'dark';
+  var newTheme = isDark ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('wl_theme', newTheme);
+  actualizarBotonTema(newTheme);
+}
+function actualizarBotonTema(theme) {
+  var icon = document.getElementById('dmIcon');
+  var label = document.getElementById('dmLabel');
+  if (!icon || !label) return;
+  if (theme === 'dark') { icon.textContent = '☀️'; label.textContent = 'Claro'; }
+  else { icon.textContent = '🌙'; label.textContent = 'Oscuro'; }
+}
+(function() {
+  var t = localStorage.getItem('wl_theme') || 'light';
+  actualizarBotonTema(t);
+})();
+</script>
 </body>
 </html>
