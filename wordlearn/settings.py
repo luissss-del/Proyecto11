@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-u!1i86qy$+xh(av7gkm=_d&fekl3buzv6nt+_4#ug)e2$p1)+o
 
 DEBUG = True
 
-ALLOWED_HOSTS = [*]
+ALLOWED_HOSTS = ['*']
 
 
 # ── Cookie de sesión única por puerto ─────────────────────────────────────────
