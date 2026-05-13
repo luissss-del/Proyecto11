@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-u!1i86qy$+xh(av7gkm=_d&fekl3buzv6nt+_4#ug)e2$p1)+o
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [*]
 
 
 # ── Cookie de sesión única por puerto ─────────────────────────────────────────
@@ -56,6 +56,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -116,3 +117,9 @@ EMAIL_HOST_PASSWORD = 'dumq nsqn khom yvhv'
 DEFAULT_FROM_EMAIL  = 'WorldLearn <worldlearn.recuperacion@gmail.com>'
 
 GROQ_API_KEY = "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"
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+SECRET_KEY = os.environ.get('SECRECT_KEY', 'django-insecure-u!1i86qy$+xh(av7gkm=_d&fekl3buzv6nt+_4#ug)e2$p1)+o')
+GROQ_API_KEY = os.environ.get('GROQ_API_KEY', "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")
