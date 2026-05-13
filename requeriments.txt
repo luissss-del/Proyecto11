@@ -1,0 +1,6 @@
+django>=5.1
+groq
+pillow
+whitenoise
+gunicorn
+
