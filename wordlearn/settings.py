@@ -52,6 +52,9 @@ INSTALLED_APPS = [
     'login',
     'epocas',
     'paises',
+    'cloudinary_storage',
+    'cloudinary',
+    'django.contrib.staticfiles',
 ]
 
 MIDDLEWARE = [
@@ -124,3 +127,13 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 SECRET_KEY = os.environ.get('SECRECT_KEY', 'django-insecure-u!1i86qy$+xh(av7gkm=_d&fekl3buzv6nt+_4#ug)e2$p1)+o')
 GROQ_API_KEY = os.environ.get('GROQ_API_KEY', "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")
+
+import cloudinary
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME', 'dkcrrnukk'),
+    'API_KEY':    os.environ.get('CLOUDINARY_API_KEY', '292822167939573'),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET', 'zYshL6BSpG72iS4xLUny9Hk_4jU'),
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
