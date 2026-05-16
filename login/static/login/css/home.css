@@ -605,7 +605,10 @@ body {
     gap: .4rem;
   }
   .header-left .site-name { display: none; }
-  .welcome-text { display: none; }
+  /* Ocultar texto pero mostrar ícono editar perfil */
+  .welcome-text { font-size: 0; }
+  .welcome-text strong { display: none; }
+  .welcome-text::after { content: "✏️"; font-size: 1rem; }
   .admin-badge { display: none; }
   .btn-logout {
     padding: .3rem .7rem;

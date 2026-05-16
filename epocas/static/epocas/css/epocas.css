@@ -686,15 +686,36 @@ body{
 @media (max-width: 600px) {
 
   /* ── Navbar ── */
-  .site-header { padding: .6rem 1rem; gap: .4rem; }
-  .header-center { display: none; }
-  .welcome-text { display: none; }
+  .site-header {
+    padding: .6rem 1rem;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: .4rem;
+  }
+  /* header-center se centra en su celda del grid */
+  .header-center {
+    display: flex;
+    justify-content: center;
+    position: static;
+    transform: none;
+    left: auto;
+  }
+  /* En páginas con btn-back el logo puede chocar — reducir tamaño */
+  .header-center .site-name { font-size: .72rem; letter-spacing: .08em; }
+  .header-center .logo-owl  { font-size: 1rem; }
+  /* Ocultar nombre usuario pero mostrar icono editar */
+  .welcome-text { font-size: 0; }
+  .welcome-text strong { font-size: .78rem; display: none; }
+  .welcome-text::after { content: "✏️"; font-size: 1rem; }
   .admin-badge { display: none; }
   .btn-logout { padding: .3rem .7rem; font-size: .62rem; }
-  .btn-back { font-size: .68rem; padding: .35rem .7rem; gap: .3rem; }
-  .btn-back svg { width: 14px; height: 14px; }
+  .btn-back { font-size: .65rem; padding: .3rem .6rem; gap: .25rem; white-space: nowrap; }
+  .btn-back svg { width: 12px; height: 12px; }
   .btn-dark-mode .dm-label { display: none; }
   .btn-dark-mode { padding: .3rem .5rem; }
+  /* Header-right compacto */
+  .header-right { gap: .45rem; }
 
   /* ── Hero época ── */
   .epoch-hero { padding: 4.5rem 1.2rem 2rem; }
