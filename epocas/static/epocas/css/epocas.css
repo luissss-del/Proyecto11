@@ -679,3 +679,86 @@ body{
 [data-theme="dark"] .etl-line {
   background: rgba(78,205,196,.2);
 }
+/* ══════════════════════════════════════════════════════
+   RESPONSIVE MÓVIL — epocas.css
+   Breakpoints: 600px (móvil), 400px (móvil pequeño)
+══════════════════════════════════════════════════════ */
+@media (max-width: 600px) {
+
+  /* ── Navbar ── */
+  .site-header { padding: .6rem 1rem; gap: .4rem; }
+  .header-center { display: none; }
+  .welcome-text { display: none; }
+  .admin-badge { display: none; }
+  .btn-logout { padding: .3rem .7rem; font-size: .62rem; }
+  .btn-back { font-size: .68rem; padding: .35rem .7rem; gap: .3rem; }
+  .btn-back svg { width: 14px; height: 14px; }
+  .btn-dark-mode .dm-label { display: none; }
+  .btn-dark-mode { padding: .3rem .5rem; }
+
+  /* ── Hero época ── */
+  .epoch-hero { padding: 4.5rem 1.2rem 2rem; }
+  .epoch-years { font-size: .65rem; }
+  .epoch-title { font-size: clamp(1.5rem, 8vw, 2.2rem); }
+  .epoch-desc  { font-size: .9rem; }
+
+  /* ── Secciones de contenido ── */
+  .content-section { padding: 1.5rem 1.2rem; }
+  .section-title { font-size: 1.1rem; }
+  .section-header__top { flex-direction: column; align-items: flex-start; gap: .8rem; }
+  .btn-edit-toggle { width: 100%; text-align: center; justify-content: center; }
+
+  /* ── Línea de tiempo eventos ── */
+  .events-timeline { padding-left: .5rem; }
+  .event-card { grid-template-columns: 24px 1fr; gap: 0 .5rem; }
+  .event-card__body { padding: 1rem 1rem; }
+  .event-card__title { font-size: .9rem; }
+  .event-card__summary { font-size: .85rem; }
+  .etl-dot { width: 10px; height: 10px; }
+
+  /* ── Detalle evento ── */
+  .ev-header { padding: 5rem 1.2rem 2rem; }
+  .ev-title { font-size: clamp(1.4rem, 7vw, 2rem); }
+  .ev-desc  { font-size: .9rem; }
+  .ev-meta  { flex-direction: column; gap: .5rem; align-items: flex-start; }
+  .ev-section { padding: 1.5rem 1.2rem; }
+  .ev-nav { flex-direction: column; gap: .6rem; padding: 1rem 1.2rem; }
+  .ev-nav__btn { max-width: 100%; font-size: .7rem; padding: .7rem 1rem; }
+
+  /* ── Materiales ── */
+  .materials-grid { grid-template-columns: 1fr; }
+  .material-card  { padding: 1rem 1rem; }
+
+  /* ── Mapa ── */
+  .mapa-overlay { padding: 0; }
+  .mapa-modal   { max-width: 100%; height: 100vh; border-radius: 0; }
+  .mapa-modal__header { padding: .8rem 1rem; }
+  .mapa-modal__leyenda { flex-wrap: wrap; gap: .5rem; padding: .6rem 1rem; }
+  .mapa-modal__map    { height: calc(100vh - 140px); }
+
+  /* ── Países ── */
+  .continentes-grid { grid-template-columns: 1fr 1fr; gap: 1rem; padding: 1rem 1rem 4rem; margin: 1.5rem auto; }
+  .continente-card  { padding: 1.4rem 1rem; }
+  .continente-icon  { font-size: 2rem; }
+  .continente-nombre { font-size: .75rem; }
+  .countries-grid { grid-template-columns: 1fr; }
+
+  /* ── Formularios crear/editar ── */
+  .page-wrap { padding: 5.5rem 1rem 4rem; }
+  .form-layout { grid-template-columns: 1fr !important; }
+  .form-card { padding: 1.4rem 1.2rem; }
+  .form-row, .form-row--2, .form-row--3 { grid-template-columns: 1fr !important; }
+  .preview-sticky { position: static; }
+  .form-actions { flex-direction: column; }
+  .btn-save, .btn-cancel { width: 100%; text-align: center; justify-content: center; }
+
+  /* ── Loading IA ── */
+  .loading-steps li { font-size: .85rem; }
+}
+
+@media (max-width: 400px) {
+  .epoch-title { font-size: 1.4rem; }
+  .continentes-grid { grid-template-columns: 1fr; }
+  .event-card__body { padding: .8rem .8rem; }
+  .form-card { padding: 1.1rem 1rem; }
+}

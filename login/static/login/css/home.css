@@ -593,3 +593,77 @@ body {
 [data-theme="dark"] .students-table { color: rgba(232,240,238,0.8); }
 [data-theme="dark"] .no-students { color: rgba(232,240,238,0.4); }
 [data-theme="dark"] .site-header { background: #0a1512; border-bottom-color: rgba(78,205,196,0.12); }
+/* ══════════════════════════════════════════════════════
+   RESPONSIVE MÓVIL — home.css
+   Breakpoints: 600px (móvil), 400px (móvil pequeño)
+══════════════════════════════════════════════════════ */
+@media (max-width: 600px) {
+
+  /* ── Navbar ── */
+  .site-header {
+    padding: .6rem 1rem;
+    gap: .4rem;
+  }
+  .header-left .site-name { display: none; }
+  .welcome-text { display: none; }
+  .admin-badge { display: none; }
+  .btn-logout {
+    padding: .3rem .7rem;
+    font-size: .62rem;
+  }
+  .btn-dark-mode .dm-label { display: none; }
+  .btn-dark-mode { padding: .3rem .5rem; }
+
+  /* ── Hero ── */
+  .hero-text { padding: 0 1rem; margin-top: 1rem; }
+  .hero-sub  { font-size: .6rem; letter-spacing: .25em; }
+  .hero-title { font-size: clamp(1.8rem, 9vw, 2.6rem); }
+  .hero-desc  { font-size: .88rem; }
+
+  /* ── Botones admin ── */
+  .admin-btn-wrap {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0 1.2rem;
+    gap: .5rem;
+  }
+  .btn-gestion { justify-content: center; font-size: .76rem; }
+
+  /* ── Paginador épocas ── */
+  .epochs-nav { gap: .3rem; padding: 0 .5rem; }
+  .epochs-arrow { width: 32px; height: 32px; }
+  .portals-page {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+  }
+  .portal {
+    width: 100% !important;
+    max-width: 320px !important;
+    min-height: auto !important;
+  }
+  .portal-inner { padding: 1.4rem 1.2rem; }
+  .portal-title { font-size: 1rem; }
+  .portal-desc  { font-size: .82rem; }
+
+  /* ── Portal países ── */
+  .paises-wrap { padding: 0 1.2rem; }
+  .portal--paises { max-width: 100%; }
+
+  /* ── Modal estudiantes ── */
+  .modal { max-height: 92vh; }
+  .modal-head { padding: .9rem 1rem .8rem; }
+  .modal-title { font-size: .85rem; }
+  .modal-search-wrap { padding: .6rem 1rem .5rem; }
+  .modal-body { padding: .2rem 1rem 1rem; }
+  .st-table { font-size: .82rem; }
+  .st-table thead th { font-size: .58rem; padding: .4rem .4rem; }
+  .st-table tbody td { padding: .5rem .4rem; }
+  .modal-footer { padding: .5rem 1rem; font-size: .78rem; }
+}
+
+@media (max-width: 400px) {
+  .hero-title { font-size: 1.6rem; }
+  .portal-title { font-size: .9rem; }
+  .epochs-arrow { width: 28px; height: 28px; }
+}
