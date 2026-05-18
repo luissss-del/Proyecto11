@@ -92,17 +92,17 @@ class Material(models.Model):
     todos_los_grados  = models.BooleanField(default=True)
     grados            = models.ManyToManyField('login.Grado', blank=True, related_name='materiales_evento')
 
-    def get_url(self):
-        if self.archivo:
-            url = self.archivo.url
-            if 'cloudinary' in url and '/upload/' in url:
-                # Convertir a URL raw para que el navegador descargue/abra correctamente
-                return url.replace('/upload/', '/upload/fl_attachment/')
-            return url
-        return self.url or ''
 
-    def __str__(self):
-        return f"{self.titulo} ({self.tipo})"
+    def get_url(self):
+    if self.archivo:
+        url = self.archivo.url
+        if 'cloudinary' in url:
+            # Forzar entrega como raw para PDFs y documentos
+            url = url.replace('/image/upload/', '/raw/upload/')
+            url = url.replace('/video/upload/', '/raw/upload/')
+            return url
+        return url
+    return self.url or ''
 
 
 class MaterialPais(models.Model):
@@ -124,15 +124,15 @@ class MaterialPais(models.Model):
 
 
     def get_url(self):
-        if self.archivo:
-            url = self.archivo.url
-            if 'cloudinary' in url and '/upload/' in url:
-                return url.replace('/upload/', '/upload/fl_attachment/')
+    if self.archivo:
+        url = self.archivo.url
+        if 'cloudinary' in url:
+            # Forzar entrega como raw para PDFs y documentos
+            url = url.replace('/image/upload/', '/raw/upload/')
+            url = url.replace('/video/upload/', '/raw/upload/')
             return url
-        return self.url or ''
-
-    def __str__(self):
-        return f"{self.titulo} ({self.tipo}) — {self.pais.nombre}"
+        return url
+    return self.url or ''
 
 
 class PuntoMapa(models.Model):
@@ -237,12 +237,12 @@ class MaterialEpoca(models.Model):
 
 
     def get_url(self):
-        if self.archivo:
-            url = self.archivo.url
-            if 'cloudinary' in url and '/upload/' in url:
-                return url.replace('/upload/', '/upload/fl_attachment/')
+    if self.archivo:
+        url = self.archivo.url
+        if 'cloudinary' in url:
+            # Forzar entrega como raw para PDFs y documentos
+            url = url.replace('/image/upload/', '/raw/upload/')
+            url = url.replace('/video/upload/', '/raw/upload/')
             return url
-        return self.url or ''
-
-    def __str__(self):
-        return f"{self.titulo} ({self.tipo}) — {self.epoca.nombre}"
+        return url
+    return self.url or ''
