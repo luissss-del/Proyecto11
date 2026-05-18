@@ -97,7 +97,6 @@ class Material(models.Model):
     if self.archivo:
         url = self.archivo.url
         if 'cloudinary' in url:
-            # Forzar entrega como raw para PDFs y documentos
             url = url.replace('/image/upload/', '/raw/upload/')
             url = url.replace('/video/upload/', '/raw/upload/')
             return url
@@ -127,7 +126,6 @@ class MaterialPais(models.Model):
     if self.archivo:
         url = self.archivo.url
         if 'cloudinary' in url:
-            # Forzar entrega como raw para PDFs y documentos
             url = url.replace('/image/upload/', '/raw/upload/')
             url = url.replace('/video/upload/', '/raw/upload/')
             return url
@@ -240,7 +238,6 @@ class MaterialEpoca(models.Model):
     if self.archivo:
         url = self.archivo.url
         if 'cloudinary' in url:
-            # Forzar entrega como raw para PDFs y documentos
             url = url.replace('/image/upload/', '/raw/upload/')
             url = url.replace('/video/upload/', '/raw/upload/')
             return url
