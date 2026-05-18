@@ -94,14 +94,14 @@ class Material(models.Model):
 
 
     def get_url(self):
-    if self.archivo:
-        url = self.archivo.url
-        if 'cloudinary' in url:
-            url = url.replace('/image/upload/', '/raw/upload/')
-            url = url.replace('/video/upload/', '/raw/upload/')
+        if self.archivo:
+            url = self.archivo.url
+            if 'cloudinary' in url:
+                url = url.replace('/image/upload/', '/raw/upload/')
+                url = url.replace('/video/upload/', '/raw/upload/')
+                return url
             return url
-        return url
-    return self.url or ''
+        return self.url or ''
 
 
 class MaterialPais(models.Model):
@@ -123,14 +123,14 @@ class MaterialPais(models.Model):
 
 
     def get_url(self):
-    if self.archivo:
-        url = self.archivo.url
-        if 'cloudinary' in url:
-            url = url.replace('/image/upload/', '/raw/upload/')
-            url = url.replace('/video/upload/', '/raw/upload/')
+        if self.archivo:
+            url = self.archivo.url
+            if 'cloudinary' in url:
+                url = url.replace('/image/upload/', '/raw/upload/')
+                url = url.replace('/video/upload/', '/raw/upload/')
+                return url
             return url
-        return url
-    return self.url or ''
+        return self.url or ''
 
 
 class PuntoMapa(models.Model):
@@ -235,11 +235,11 @@ class MaterialEpoca(models.Model):
 
 
     def get_url(self):
-    if self.archivo:
-        url = self.archivo.url
-        if 'cloudinary' in url:
-            url = url.replace('/image/upload/', '/raw/upload/')
-            url = url.replace('/video/upload/', '/raw/upload/')
+        if self.archivo:
+            url = self.archivo.url
+            if 'cloudinary' in url:
+                url = url.replace('/image/upload/', '/raw/upload/')
+                url = url.replace('/video/upload/', '/raw/upload/')
+                return url
             return url
-        return url
-    return self.url or ''
+        return self.url or ''
