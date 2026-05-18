@@ -249,7 +249,7 @@
         <div class="mat-grid">
           {% for mat in materiales %}
           <div class="mat-card-wrap">
-            <a href="{% if mat.archivo %}{{ mat.archivo.url }}{% else %}{{ mat.url }}{% endif %}"
+            <a href="{{ mat.get_url }}"
                target="_blank" class="mat-card mat-card--{{ mat.tipo }}">
               <span class="mat-icon">
                 {% if mat.tipo == 'pdf' %}📄{% elif mat.tipo == 'video' %}🎬{% else %}🔗{% endif %}

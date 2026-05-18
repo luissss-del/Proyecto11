@@ -92,6 +92,15 @@ class Material(models.Model):
     todos_los_grados  = models.BooleanField(default=True)
     grados            = models.ManyToManyField('login.Grado', blank=True, related_name='materiales_evento')
 
+    def get_url(self):
+        if self.archivo:
+            url = self.archivo.url
+            if 'cloudinary' in url and '/upload/' in url:
+                # Convertir a URL raw para que el navegador descargue/abra correctamente
+                return url.replace('/upload/', '/upload/fl_attachment/')
+            return url
+        return self.url or ''
+
     def __str__(self):
         return f"{self.titulo} ({self.tipo})"
 
@@ -112,6 +121,15 @@ class MaterialPais(models.Model):
     subido_en         = models.DateTimeField(auto_now_add=True)
     todos_los_grados  = models.BooleanField(default=True)
     grados            = models.ManyToManyField('login.Grado', blank=True, related_name='materiales_pais')
+
+
+    def get_url(self):
+        if self.archivo:
+            url = self.archivo.url
+            if 'cloudinary' in url and '/upload/' in url:
+                return url.replace('/upload/', '/upload/fl_attachment/')
+            return url
+        return self.url or ''
 
     def __str__(self):
         return f"{self.titulo} ({self.tipo}) — {self.pais.nombre}"
@@ -216,6 +234,15 @@ class MaterialEpoca(models.Model):
 
     class Meta:
         ordering = ['subido_en']
+
+
+    def get_url(self):
+        if self.archivo:
+            url = self.archivo.url
+            if 'cloudinary' in url and '/upload/' in url:
+                return url.replace('/upload/', '/upload/fl_attachment/')
+            return url
+        return self.url or ''
 
     def __str__(self):
         return f"{self.titulo} ({self.tipo}) — {self.epoca.nombre}"
