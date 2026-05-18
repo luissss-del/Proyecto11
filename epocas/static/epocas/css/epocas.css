@@ -679,6 +679,57 @@ body{
 [data-theme="dark"] .etl-line {
   background: rgba(78,205,196,.2);
 }
+
+/* ── Materiales dark mode ── */
+[data-theme="dark"] .mat-card {
+  background: transparent;
+  border-color: rgba(78,205,196,.14);
+  box-shadow: none;
+}
+[data-theme="dark"] .mat-card:hover {
+  background: rgba(78,205,196,.06);
+  border-color: var(--accent);
+}
+[data-theme="dark"] .mat-nombre { color: var(--text-lt); }
+[data-theme="dark"] .mat-tipo   { color: var(--text-dim); }
+
+/* ── Country cards dark mode ── */
+[data-theme="dark"] .country-card {
+  background: transparent;
+  box-shadow: none;
+}
+[data-theme="dark"] .country-card:hover {
+  background: rgba(78,205,196,.06);
+}
+[data-theme="dark"] .cc-name { color: var(--text-lt); }
+[data-theme="dark"] .cc-desc { color: var(--text-dim); }
+
+/* ── Pais cards dark mode ── */
+[data-theme="dark"] .pais-card {
+  background: transparent;
+  border-color: rgba(78,205,196,.14);
+  box-shadow: none;
+}
+[data-theme="dark"] .pais-card:hover {
+  background: rgba(78,205,196,.06);
+  border-color: var(--accent);
+}
+[data-theme="dark"] .pais-card__nombre { color: var(--text-lt); }
+[data-theme="dark"] .pais-card__capital { color: var(--text-dim); }
+
+/* ── Evento desc block (hoja de descripcion) dark mode ── */
+[data-theme="dark"] .evento-desc-block {
+  background: transparent;
+  border-color: rgba(78,205,196,.14);
+  box-shadow: none;
+}
+[data-theme="dark"] .evento-desc-text { color: var(--text-lt); }
+
+/* ── Secciones generales con fondo beige ── */
+[data-theme="dark"] .content-section,
+[data-theme="dark"] .ev-section {
+  background: transparent;
+}
 /* ══════════════════════════════════════════════════════
    RESPONSIVE MÓVIL — epocas.css
    Breakpoints: 600px (móvil), 400px (móvil pequeño)
