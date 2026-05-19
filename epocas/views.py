@@ -549,9 +549,8 @@ def proxy_material(request, modelo, pk):
     obj = get_object_or_404(modelos[modelo], pk=pk)
     
     if not obj.archivo:
-        return redirect(obj.url)
+        return redirect(obj.url or '/')
     
-    # Intentar primero raw, si falla usar image
     url_raw   = obj.archivo.url.replace('/image/upload/', '/raw/upload/').replace('/video/upload/', '/raw/upload/')
     url_image = obj.archivo.url
     
@@ -560,10 +559,23 @@ def proxy_material(request, modelo, pk):
         r = req_lib.get(url_image, timeout=30)
     
     nombre = str(obj.archivo).split('/')[-1]
-    content_type, _ = mimetypes.guess_type(nombre)
-    if not content_type:
-        content_type = 'application/octet-stream'
+    
+    # Detectar tipo por extensión
+    ext = nombre.lower().split('.')[-1] if '.' in nombre else ''
+    
+    tipos = {
+        'pdf':  ('application/pdf', 'inline'),
+        'docx': ('application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'attachment'),
+        'doc':  ('application/msword', 'attachment'),
+        'pptx': ('application/vnd.openxmlformats-officedocument.presentationml.presentation', 'attachment'),
+        'xlsx': ('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'attachment'),
+        'png':  ('image/png', 'inline'),
+        'jpg':  ('image/jpeg', 'inline'),
+        'jpeg': ('image/jpeg', 'inline'),
+    }
+    
+    content_type, disposition = tipos.get(ext, ('application/octet-stream', 'attachment'))
     
     response = HttpResponse(r.content, content_type=content_type)
-    response['Content-Disposition'] = f'inline; filename="{nombre}"'
+    response['Content-Disposition'] = f'{disposition}; filename="{nombre}"'
     return response
