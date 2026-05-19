@@ -534,6 +534,7 @@ def generar_evento_ia(request, slug):
 
 import requests as req_lib
 from django.http import HttpResponse
+import mimetypes
 
 def proxy_material(request, modelo, pk):
     if not _check_sesion(request):
@@ -553,7 +554,12 @@ def proxy_material(request, modelo, pk):
     
     r = req_lib.get(url, stream=True, timeout=30)
     
-    content_type = r.headers.get('Content-Type', 'application/octet-stream')
+    # Detectar tipo por nombre del archivo
+    nombre = str(obj.archivo).split('/')[-1]
+    content_type, _ = mimetypes.guess_type(nombre)
+    if not content_type:
+        content_type = r.headers.get('Content-Type', 'application/octet-stream')
+    
     response = HttpResponse(r.content, content_type=content_type)
-    response['Content-Disposition'] = f'inline; filename="{obj.titulo}"'
+    response['Content-Disposition'] = f'inline; filename="{nombre}"'
     return response
