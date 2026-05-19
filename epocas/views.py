@@ -541,8 +541,10 @@ def proxy_material(request, modelo, pk):
         return redirect('login')
     
     from .models import Material, MaterialPais, MaterialEpoca
-    modelos = {'evento': Material, 'pais': MaterialPais, 'epoca': MaterialEpoca}
+    import requests as req_lib
+    import mimetypes
     
+    modelos = {'evento': Material, 'pais': MaterialPais, 'epoca': MaterialEpoca}
     obj = get_object_or_404(modelos[modelo], pk=pk)
     
     if not obj.archivo:
@@ -551,20 +553,21 @@ def proxy_material(request, modelo, pk):
     url = obj.archivo.url
     url = url.replace('/image/upload/', '/raw/upload/')
     url = url.replace('/video/upload/', '/raw/upload/')
-
+    
     print(f"DEBUG URL: {url}")
+    
+    r = req_lib.get(url, stream=False, timeout=30)
+    
     print(f"DEBUG STATUS: {r.status_code}")
     print(f"DEBUG CONTENT-TYPE: {r.headers.get('Content-Type')}")
     print(f"DEBUG CONTENT-LENGTH: {len(r.content)}")
     
-    r = req_lib.get(url, stream=True, timeout=30)
-    
-    # Detectar tipo por nombre del archivo
     nombre = str(obj.archivo).split('/')[-1]
     content_type, _ = mimetypes.guess_type(nombre)
     if not content_type:
         content_type = r.headers.get('Content-Type', 'application/octet-stream')
     
+    from django.http import HttpResponse
     response = HttpResponse(r.content, content_type=content_type)
     response['Content-Disposition'] = f'inline; filename="{nombre}"'
     return response
