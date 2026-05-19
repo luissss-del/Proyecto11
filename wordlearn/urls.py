@@ -87,5 +87,7 @@ urlpatterns = [
          paises_views.agregar_material, name='agregar_material_pais_seccion'),
     path('paises/<str:continente_slug>/<str:pais_slug>/material/<int:material_id>/eliminar/',
          paises_views.eliminar_material, name='eliminar_material_pais_seccion'),
+    path('material/<str:modelo>/<int:pk>/ver/',
+         epocas_views.proxy_material, name='proxy_material'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

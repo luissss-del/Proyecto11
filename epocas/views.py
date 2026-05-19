@@ -531,3 +531,29 @@ def generar_evento_ia(request, slug):
         return render(request, 'generar_evento_ia.html', {
             'epoca': epoca, **_ctx(request),
         })
+
+import requests as req_lib
+from django.http import HttpResponse
+
+def proxy_material(request, modelo, pk):
+    if not _check_sesion(request):
+        return redirect('login')
+    
+    from .models import Material, MaterialPais, MaterialEpoca
+    modelos = {'evento': Material, 'pais': MaterialPais, 'epoca': MaterialEpoca}
+    
+    obj = get_object_or_404(modelos[modelo], pk=pk)
+    
+    if not obj.archivo:
+        return redirect(obj.url)
+    
+    url = obj.archivo.url
+    url = url.replace('/image/upload/', '/raw/upload/')
+    url = url.replace('/video/upload/', '/raw/upload/')
+    
+    r = req_lib.get(url, stream=True, timeout=30)
+    
+    content_type = r.headers.get('Content-Type', 'application/octet-stream')
+    response = HttpResponse(r.content, content_type=content_type)
+    response['Content-Disposition'] = f'inline; filename="{obj.titulo}"'
+    return response
