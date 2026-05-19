@@ -551,6 +551,11 @@ def proxy_material(request, modelo, pk):
     url = obj.archivo.url
     url = url.replace('/image/upload/', '/raw/upload/')
     url = url.replace('/video/upload/', '/raw/upload/')
+
+    print(f"DEBUG URL: {url}")
+    print(f"DEBUG STATUS: {r.status_code}")
+    print(f"DEBUG CONTENT-TYPE: {r.headers.get('Content-Type')}")
+    print(f"DEBUG CONTENT-LENGTH: {len(r.content)}")
     
     r = req_lib.get(url, stream=True, timeout=30)
     
