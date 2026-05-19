@@ -541,9 +541,7 @@ def proxy_material(request, modelo, pk):
         return redirect('login')
     
     from .models import Material, MaterialPais, MaterialEpoca
-    import requests as req_lib
-    import mimetypes
-    from django.http import HttpResponse
+    from urllib.parse import quote
     
     modelos = {'evento': Material, 'pais': MaterialPais, 'epoca': MaterialEpoca}
     obj = get_object_or_404(modelos[modelo], pk=pk)
@@ -551,31 +549,15 @@ def proxy_material(request, modelo, pk):
     if not obj.archivo:
         return redirect(obj.url or '/')
     
-    url_raw   = obj.archivo.url.replace('/image/upload/', '/raw/upload/').replace('/video/upload/', '/raw/upload/')
-    url_image = obj.archivo.url
+    # Construir URL raw codificando correctamente
+    url = obj.archivo.url
+    # Separar base y path
+    if '/upload/' in url:
+        base, path = url.split('/upload/', 1)
+        # Codificar solo el path del archivo
+        path_encoded = quote(path, safe='/_-.')
+        url_raw = f"{base}/upload/fl_attachment/{path_encoded}"
+    else:
+        url_raw = url
     
-    r = req_lib.get(url_raw, timeout=30)
-    if r.status_code != 200:
-        r = req_lib.get(url_image, timeout=30)
-    
-    nombre = str(obj.archivo).split('/')[-1]
-    
-    # Detectar tipo por extensión
-    ext = nombre.lower().split('.')[-1] if '.' in nombre else ''
-    
-    tipos = {
-        'pdf':  ('application/pdf', 'inline'),
-        'docx': ('application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'attachment'),
-        'doc':  ('application/msword', 'attachment'),
-        'pptx': ('application/vnd.openxmlformats-officedocument.presentationml.presentation', 'attachment'),
-        'xlsx': ('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'attachment'),
-        'png':  ('image/png', 'inline'),
-        'jpg':  ('image/jpeg', 'inline'),
-        'jpeg': ('image/jpeg', 'inline'),
-    }
-    
-    content_type, disposition = tipos.get(ext, ('application/octet-stream', 'attachment'))
-    
-    response = HttpResponse(r.content, content_type=content_type)
-    response['Content-Disposition'] = f'{disposition}; filename="{nombre}"'
-    return response
+    return redirect(url_raw)
