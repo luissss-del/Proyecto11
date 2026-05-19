@@ -543,6 +543,7 @@ def proxy_material(request, modelo, pk):
     from .models import Material, MaterialPais, MaterialEpoca
     import requests as req_lib
     import mimetypes
+    from django.http import HttpResponse
     
     modelos = {'evento': Material, 'pais': MaterialPais, 'epoca': MaterialEpoca}
     obj = get_object_or_404(modelos[modelo], pk=pk)
@@ -550,24 +551,19 @@ def proxy_material(request, modelo, pk):
     if not obj.archivo:
         return redirect(obj.url)
     
-    url = obj.archivo.url
-    url = url.replace('/image/upload/', '/raw/upload/')
-    url = url.replace('/video/upload/', '/raw/upload/')
+    # Intentar primero raw, si falla usar image
+    url_raw   = obj.archivo.url.replace('/image/upload/', '/raw/upload/').replace('/video/upload/', '/raw/upload/')
+    url_image = obj.archivo.url
     
-    print(f"DEBUG URL: {url}")
-    
-    r = req_lib.get(url, stream=False, timeout=30)
-    
-    print(f"DEBUG STATUS: {r.status_code}")
-    print(f"DEBUG CONTENT-TYPE: {r.headers.get('Content-Type')}")
-    print(f"DEBUG CONTENT-LENGTH: {len(r.content)}")
+    r = req_lib.get(url_raw, timeout=30)
+    if r.status_code != 200:
+        r = req_lib.get(url_image, timeout=30)
     
     nombre = str(obj.archivo).split('/')[-1]
     content_type, _ = mimetypes.guess_type(nombre)
     if not content_type:
-        content_type = r.headers.get('Content-Type', 'application/octet-stream')
+        content_type = 'application/octet-stream'
     
-    from django.http import HttpResponse
     response = HttpResponse(r.content, content_type=content_type)
     response['Content-Disposition'] = f'inline; filename="{nombre}"'
     return response
