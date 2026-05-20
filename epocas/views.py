@@ -353,6 +353,9 @@ def agregar_material(request, slug, evento_id):
     if form.is_valid():
         mat        = form.save(commit=False)
         mat.evento = evento
+        if request.FILES.get('archivo'):
+            from .supabase_storage import subir_archivo
+            mat.archivo = subir_archivo(request.FILES['archivo'], 'eventos')
         if mat.todos_los_grados:
             mat.save()
             mat.grados.clear()
@@ -387,6 +390,9 @@ def agregar_material_pais(request, slug, pais_id):
     if form.is_valid():
         mat      = form.save(commit=False)
         mat.pais = pais
+        if request.FILES.get('archivo'):
+            from .supabase_storage import subir_archivo
+            mat.archivo = subir_archivo(request.FILES['archivo'], 'paises')
         if mat.todos_los_grados:
             mat.save()
             mat.grados.clear()
@@ -420,6 +426,9 @@ def agregar_material_epoca(request, slug):
     if form.is_valid():
         mat       = form.save(commit=False)
         mat.epoca = epoca
+        if request.FILES.get('archivo'):
+            from .supabase_storage import subir_archivo
+            mat.archivo = subir_archivo(request.FILES['archivo'], 'epocas')
         if mat.todos_los_grados:
             mat.save()
             mat.grados.clear()
@@ -430,7 +439,6 @@ def agregar_material_epoca(request, slug):
     else:
         messages.error(request, f'Error al subir el material: {form.errors}')
     return redirect('detalle_epoca', slug=slug)
-
 
 @require_POST
 def eliminar_material_epoca(request, slug, material_id):
@@ -539,25 +547,8 @@ import mimetypes
 def proxy_material(request, modelo, pk):
     if not _check_sesion(request):
         return redirect('login')
-    
     from .models import Material, MaterialPais, MaterialEpoca
-    from urllib.parse import quote
-    
     modelos = {'evento': Material, 'pais': MaterialPais, 'epoca': MaterialEpoca}
     obj = get_object_or_404(modelos[modelo], pk=pk)
-    
-    if not obj.archivo:
-        return redirect(obj.url or '/')
-    
-    # Construir URL raw codificando correctamente
-    url = obj.archivo.url
-    # Separar base y path
-    if '/upload/' in url:
-        base, path = url.split('/upload/', 1)
-        # Codificar solo el path del archivo
-        path_encoded = quote(path, safe='/_-.')
-        url_raw = f"{base}/upload/fl_attachment/{path_encoded}"
-    else:
-        url_raw = url
-    
-    return redirect(url_raw)
+    url = str(obj.archivo) if obj.archivo else obj.url
+    return redirect(url)
