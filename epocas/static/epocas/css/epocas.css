@@ -483,18 +483,28 @@ body{
 .pais-card__capital{font-family:'Crimson Text',serif;font-size:.8rem;color:var(--text-dim);}
 
 .pais-datos-grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
   gap:1rem;max-width:860px;margin:0 auto 1.5rem;padding:0 1.5rem;
+}
+@media(min-width:600px){
+  .pais-datos-grid{ grid-template-columns:repeat(4,1fr); }
 }
 .pais-dato{
   background:#FDFAF4;border:1px solid rgba(0,126,110,.15);
   border-radius:10px;padding:.9rem 1rem;box-shadow:0 1px 4px rgba(0,0,0,.04);
+  text-align:center;
 }
 .pais-dato__label{
   display:block;font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.1em;
   text-transform:uppercase;color:#007E6E;margin-bottom:.3rem;
 }
 .pais-dato__valor{font-family:'Crimson Text',serif;font-size:1rem;color:var(--text-lt);}
+[data-theme="dark"] .pais-dato{
+  background:transparent;
+  border-color:rgba(78,205,196,.14);
+  box-shadow:none;
+}
 
 /* ── Nav botones países ─────────────────────────────── */
 .pais-nav{display:flex;align-items:center;gap:.8rem;padding:1.5rem 2rem;position:relative;z-index:10;max-width:860px;margin:0 auto;}
