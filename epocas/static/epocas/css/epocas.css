@@ -834,3 +834,86 @@ body{
   .event-card__body { padding: .8rem .8rem; }
   .form-card { padding: 1.1rem 1rem; }
 }
+/* ══════════════════════════════════════════════════════
+   FIXES: Dark mode modal materiales + ev-nav + mapa móvil
+══════════════════════════════════════════════════════ */
+
+/* ── 1. Botones anterior/siguiente en modo oscuro ── */
+[data-theme="dark"] .ev-nav__btn {
+  background: transparent;
+  border-color: rgba(78,205,196,.18);
+  color: var(--text-lt);
+}
+[data-theme="dark"] .ev-nav__btn:hover {
+  background: rgba(78,205,196,.08);
+  border-color: var(--accent);
+}
+[data-theme="dark"] .ev-nav__label { color: var(--text-dim); }
+[data-theme="dark"] .ev-nav__name  { color: var(--text-lt); }
+
+/* ── 2. Modal/panel de agregar material en modo oscuro ── */
+[data-theme="dark"] .edit-panel,
+[data-theme="dark"] .panel-add-material,
+[data-theme="dark"] [id^="panel-add"] {
+  background: var(--card-bg);
+  border-color: var(--card-border);
+}
+[data-theme="dark"] .edit-input,
+[data-theme="dark"] .edit-textarea,
+[data-theme="dark"] .edit-file {
+  background: rgba(255,255,255,.07);
+  border-color: rgba(78,205,196,.25);
+  color: #e8f0ee;
+}
+[data-theme="dark"] .edit-input::placeholder,
+[data-theme="dark"] .edit-textarea::placeholder {
+  color: rgba(232,240,238,.3);
+}
+[data-theme="dark"] .edit-input:focus,
+[data-theme="dark"] .edit-textarea:focus {
+  border-color: var(--accent);
+  background: rgba(255,255,255,.1);
+}
+[data-theme="dark"] .edit-select {
+  background-color: rgba(255,255,255,.07);
+  border-color: rgba(78,205,196,.25);
+  color: #e8f0ee;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234ECDC4' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+}
+[data-theme="dark"] .edit-select option {
+  background: #0e1f1a;
+  color: #e8f0ee;
+}
+[data-theme="dark"] .edit-label,
+[data-theme="dark"] .form-label-sm {
+  color: var(--text-dim);
+}
+[data-theme="dark"] .grados-lista {
+  background: rgba(255,255,255,.04);
+  border-color: rgba(78,205,196,.15);
+}
+[data-theme="dark"] .grados-lista ul li {
+  color: var(--text-dim);
+}
+
+/* ── 3. Mapa modal en móvil ── */
+@media (max-width: 600px) {
+  .mapa-overlay { padding: 0; align-items: flex-end; }
+  .mapa-modal {
+    max-width: 100%;
+    width: 100%;
+    height: 85vh;
+    border-radius: 16px 16px 0 0;
+    max-height: 85vh;
+  }
+  .mapa-modal__header { padding: .7rem 1rem; }
+  .mapa-modal__title  { font-size: .7rem; }
+  .mapa-modal__leyenda {
+    flex-wrap: wrap; gap: .4rem;
+    padding: .4rem .8rem;
+    overflow-x: auto;
+  }
+  .leyenda-item { font-size: .78rem; white-space: nowrap; }
+  #mapa-leaflet { height: calc(85vh - 110px) !important; min-height: 300px; }
+  .mapa-btn-centrar { font-size: .6rem; padding: .28rem .6rem; }
+}
