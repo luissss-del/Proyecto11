@@ -668,14 +668,14 @@ body{
 
 /* ── Event cards: fondo fluido en ambos modos ── */
 [data-theme="dark"] .event-card__body {
-  background: transparent;
-  border-color: rgba(78,205,196,.14);
+  background: transparent !important;
+  border-color: rgba(78,205,196,.12);
   box-shadow: none;
 }
 [data-theme="dark"] .event-card__body:hover {
-  background: rgba(78,205,196,.06);
-  border-color: var(--accent);
-  box-shadow: 0 8px 32px rgba(78,205,196,.08), -3px 0 0 var(--accent);
+  background: rgba(78,205,196,.05) !important;
+  border-color: rgba(78,205,196,.4);
+  box-shadow: 0 4px 24px rgba(78,205,196,.06), -3px 0 0 var(--accent);
 }
 [data-theme="dark"] .event-card__title {
   color: var(--text-lt);
