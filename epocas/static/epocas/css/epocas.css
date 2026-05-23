@@ -168,8 +168,8 @@ body{
   background:linear-gradient(to bottom,var(--accent) 0%,rgba(0,126,110,.08) 100%);}
 .event-card__body{
   display:flex;flex-direction:column;gap:.55rem;
-  background:#FDFAF4;
-  border:1px solid rgba(0,126,110,.18);border-radius:var(--radius);
+  background:var(--card-bg);
+  border:1px solid var(--card-border);border-radius:var(--radius);
   padding:1.4rem 1.6rem;margin-bottom:1.4rem;
   text-decoration:none;color:inherit;
   box-shadow:0 2px 12px rgba(0,0,0,.05);
