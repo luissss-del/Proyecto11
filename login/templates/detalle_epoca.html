@@ -55,6 +55,15 @@
       <a href="{% url 'editar_epoca' epoca.slug %}" class="btn-edit-toggle" style="text-decoration:none;">
         ✏️ Editar época
       </a>
+      <form method="POST" action="{% url 'eliminar_epoca' epoca.slug %}"
+            onsubmit="return confirm('⚠️ ¿Eliminar la época '{{ epoca.nombre }}' y TODO su contenido? Esta acción no se puede deshacer.')"
+            style="margin:0;">
+        {% csrf_token %}
+        <button type="submit" class="btn-edit-toggle"
+                style="background:rgba(220,50,50,.12);border-color:rgba(220,50,50,.4);color:#e07070;cursor:pointer;">
+          🗑️ Eliminar época
+        </button>
+      </form>
     </div>
     {% endif %}
   </div>
@@ -376,51 +385,6 @@ function actualizarBotonTema(theme) {
 (function() {
   var t = localStorage.getItem('wl_theme') || 'light';
   actualizarBotonTema(t);
-})();
-</script>
-<script>
-// ── Partículas ──────────────────────────────────────
-(function() {
-  var canvas = document.getElementById('particles');
-  if (!canvas) return;
-  var ctx = canvas.getContext('2d');
-  var W, H;
-  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-  resize();
-  window.addEventListener('resize', resize);
-
-  function isDark() {
-    return document.documentElement.getAttribute('data-theme') === 'dark';
-  }
-
-  var pts = [];
-  for (var i = 0; i < 90; i++) {
-    pts.push({
-      x: Math.random() * 1920,
-      y: Math.random() * 1080,
-      vy: -(Math.random() * 0.35 + 0.1),
-      vx: (Math.random() - 0.5) * 0.18,
-      r: Math.random() * 1.3 + 0.3,
-      a: Math.random() * 0.4 + 0.08,
-      reset: function() { this.x = Math.random() * W; this.y = H + 10; }
-    });
-  }
-
-  function anim() {
-    ctx.clearRect(0, 0, W, H);
-    if (isDark()) {
-      pts.forEach(function(p) {
-        p.x += p.vx; p.y += p.vy;
-        if (p.y < -10) p.reset();
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(200,210,255,' + p.a + ')';
-        ctx.fill();
-      });
-    }
-    requestAnimationFrame(anim);
-  }
-  anim();
 })();
 </script>
 </body>

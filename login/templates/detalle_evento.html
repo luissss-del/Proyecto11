@@ -77,6 +77,15 @@
           {% endif %}
           {% if es_admin %}
             <button class="btn-edit-toggle" data-panel="panel-edit-evento">✏️ Editar</button>
+            <form method="POST" action="{% url 'eliminar_evento' epoca.slug evento.pk %}"
+                  onsubmit="return confirm('⚠️ ¿Eliminar el evento '{{ evento.titulo }}' y todos sus materiales? Esta acción no se puede deshacer.')"
+                  style="margin:0;display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn-edit-toggle"
+                      style="background:rgba(220,50,50,.12);border-color:rgba(220,50,50,.4);color:#e07070;cursor:pointer;">
+                🗑️ Eliminar
+              </button>
+            </form>
           {% endif %}
         </div>
       </div>
