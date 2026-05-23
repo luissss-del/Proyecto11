@@ -1,0 +1,259 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WorldLearn – Generar época con IA</title>
+  <script>
+    (function() {
+      var t = localStorage.getItem('wl_theme') || 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'epocas/css/epocas.css' %}">
+  <style>
+    .page-wrap {
+      position: relative; z-index: 10; min-height: 100vh;
+      padding: 7rem 1.5rem 5rem;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .page-hero { text-align: center; margin-bottom: 2.5rem; animation: fadeDown .7s ease both; }
+    .page-hero__label { font-family:'Cinzel',serif; font-size:.68rem; letter-spacing:.35em; color:var(--accent); opacity:.85; margin-bottom:.5rem; }
+    .page-hero__title { font-family:'Cinzel',serif; font-weight:900; font-size:clamp(1.6rem,4vw,2.4rem); color:var(--text-lt); line-height:1.15; }
+    .page-hero__sub { margin-top:.6rem; font-size:1rem; color:var(--text-dim); }
+
+    .form-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 16px; padding: 2rem; width: 100%; max-width: 580px;
+      box-shadow: 0 4px 24px rgba(0,0,0,.07); animation: fadeUp .7s .1s ease both;
+    }
+    .form-group { margin-bottom: 1.3rem; }
+    .form-label { display:block; font-family:'Cinzel',serif; font-size:.67rem; letter-spacing:.12em; text-transform:uppercase; color:var(--text-lt); margin-bottom:.45rem; }
+    .form-help  { font-size:.85rem; color:var(--text-dim); margin-top:.3rem; }
+
+    .edit-input {
+      width:100%; box-sizing:border-box;
+      background:#FDFAF4; border:1px solid rgba(0,126,110,.3);
+      border-radius:8px; padding:.6rem .85rem;
+      color:#1a2a1a; font-family:'Crimson Text',serif; font-size:1rem;
+      transition:border-color .2s; outline:none;
+    }
+    .edit-input::placeholder { color:rgba(26,42,26,.38); }
+    .edit-input:focus { border-color:var(--accent); }
+    [data-theme="dark"] .edit-input {
+      background:rgba(255,255,255,.07); border-color:rgba(78,205,196,.28); color:#e8f0ee;
+    }
+    [data-theme="dark"] .edit-input::placeholder { color:rgba(232,240,238,.3); }
+
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+
+    /* Botón IA */
+    .btn-ia {
+      width:100%; padding:.85rem 1.5rem; margin-top:.5rem;
+      background: linear-gradient(135deg, rgba(139,92,246,.22), rgba(99,102,241,.12));
+      border: 1px solid rgba(139,92,246,.5); border-radius:10px;
+      color:#a78bfa; font-family:'Cinzel',serif; font-size:.82rem; letter-spacing:.1em;
+      cursor:pointer; transition:background .2s, border-color .2s, transform .1s;
+      display:flex; align-items:center; justify-content:center; gap:.6rem;
+    }
+    .btn-ia:hover { background:rgba(139,92,246,.32); border-color:#a78bfa; transform:translateY(-1px); }
+    .btn-ia:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+
+    .btn-manual {
+      width:100%; padding:.7rem 1.5rem;
+      background:transparent; border:1px solid var(--card-border);
+      border-radius:10px; color:var(--text-dim);
+      font-family:'Cinzel',serif; font-size:.72rem; letter-spacing:.09em;
+      cursor:pointer; text-decoration:none; display:block; text-align:center;
+      transition:background .2s, color .2s; margin-top:.8rem;
+    }
+    .btn-manual:hover { background:var(--bg-mid); color:var(--text-lt); }
+
+    .divider { display:flex; align-items:center; gap:.8rem; margin:1.2rem 0; }
+    .divider__line { flex:1; height:1px; background:var(--card-border); }
+    .divider__text { font-family:'Cinzel',serif; font-size:.62rem; letter-spacing:.12em; color:var(--text-dim); opacity:.6; }
+
+    /* Loading */
+    .loading-wrap { display:none; flex-direction:column; align-items:center; gap:1rem; padding:2rem 0; text-align:center; }
+    .loading-wrap.visible { display:flex; }
+    .loading-ring { width:52px; height:52px; border:3px solid rgba(139,92,246,.15); border-top-color:rgba(139,92,246,.8); border-radius:50%; animation:spin .8s linear infinite; }
+    .loading-steps { list-style:none; padding:0; margin:0; }
+    .loading-steps li { font-family:'Crimson Text',serif; font-size:.95rem; color:var(--text-dim); padding:.2rem 0; opacity:.4; transition:opacity .4s, color .4s; }
+    .loading-steps li.active { opacity:1; color:var(--accent); }
+    .loading-steps li.done { opacity:.6; color:var(--text-dim); }
+    .loading-steps li.done::before { content:"✓ "; color:var(--accent); }
+
+    .msg-error { background:#fdecea; border:1px solid #e05252; border-radius:8px; padding:.7rem 1rem; color:#b71c1c; font-family:'Crimson Text',serif; font-size:.95rem; margin-bottom:1.2rem; }
+    [data-theme="dark"] .msg-error { background:rgba(192,57,43,.14); border-color:rgba(192,57,43,.4); color:#e07070; }
+
+    .info-box { background:var(--bg-mid); border:1px solid var(--card-border); border-radius:12px; padding:1rem 1.2rem; margin-top:1.4rem; font-family:'Crimson Text',serif; font-size:.92rem; color:var(--text-dim); line-height:1.65; }
+    .info-box strong { color:var(--accent); font-weight:600; }
+
+    @keyframes fadeDown { from{opacity:0;transform:translateY(-14px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeUp   { from{opacity:0;transform:translateY(16px)}  to{opacity:1;transform:translateY(0)} }
+    @keyframes spin     { to{transform:rotate(360deg)} }
+  </style>
+</head>
+<body>
+<canvas id="particles"></canvas>
+<div class="noise"></div>
+
+<header class="site-header">
+  <a href="{% url 'home' %}" class="btn-back">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    Inicio
+  </a>
+  <div class="header-center">
+    <span class="logo-owl">🦉</span>
+    <span class="site-name">WorldLearn</span>
+  </div>
+  <div class="header-right">
+    <span class="admin-badge">✏️ Modo profesor</span>
+    <button class="btn-dark-mode" id="btnDarkMode" onclick="toggleDarkMode()">
+      <span id="dmIcon">🌙</span>
+      <span class="dm-label" id="dmLabel">Oscuro</span>
+    </button>
+    <a href="{% url 'logout' %}" class="btn-logout">Salir</a>
+  </div>
+</header>
+
+<div class="page-wrap">
+  <div class="page-hero">
+    <p class="page-hero__label">Modo profesor</p>
+    <h1 class="page-hero__title">🤖 Generar época con IA</h1>
+    <p class="page-hero__sub">Escribe el nombre y los años — la IA crea la época completa con todos sus eventos y mapas.</p>
+  </div>
+
+  <div class="form-card">
+
+    {% if messages %}
+      {% for msg in messages %}
+        <div class="msg-error">{{ msg }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <div id="formWrap">
+      <form method="POST" id="iaForm">
+        {% csrf_token %}
+
+        <div class="form-group">
+          <label class="form-label">Nombre de la época *</label>
+          <input type="text" name="nombre" class="edit-input" required
+            placeholder="Ej: Revolución Francesa, Edad Media, La Conquista…"
+            autocomplete="off">
+          <p class="form-help">Sé específico para que la IA genere mejores eventos y mapas.</p>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Año de inicio *</label>
+            <input type="number" name="anio_inicio" class="edit-input" required placeholder="Ej: 1789">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Año de fin *</label>
+            <input type="number" name="anio_fin" class="edit-input" required placeholder="Ej: 1799">
+          </div>
+        </div>
+
+        <button type="submit" class="btn-ia" id="btnGenerar">
+          <span>🤖</span> Generar época completa con IA
+        </button>
+      </form>
+
+      <div class="divider">
+        <div class="divider__line"></div>
+        <span class="divider__text">O</span>
+        <div class="divider__line"></div>
+      </div>
+
+      <a href="{% url 'crear_epoca' %}" class="btn-manual">
+        ✍️ Crear época manualmente
+      </a>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading-wrap" id="loadingWrap">
+      <div class="loading-ring"></div>
+      <ul class="loading-steps" id="loadingSteps">
+        <li id="step1">Consultando base de conocimiento histórico…</li>
+        <li id="step2">Definiendo nombre, descripción e ícono…</li>
+        <li id="step3">Generando eventos principales de la época…</li>
+        <li id="step4">Calculando coordenadas de cada mapa…</li>
+        <li id="step5">Creando puntos, zonas y líneas históricas…</li>
+        <li id="step6">Guardando todo en la base de datos…</li>
+      </ul>
+    </div>
+
+    <div class="info-box">
+      <strong>💡 ¿Qué genera la IA?</strong><br>
+      Crea la <strong>época completa</strong>: nombre, descripción, emoji y color de la tarjeta.
+      Luego genera <strong>5 a 8 eventos</strong> con descripción detallada, resumen y
+      <strong>mapa histórico</strong> con marcadores, zonas y rutas.
+      Al terminar puedes editar todo lo que quieras.
+    </div>
+  </div>
+</div>
+
+<script>
+// Partículas
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let W, H;
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
+const pts = Array.from({length:60}, () => ({
+  x:Math.random()*1920, y:Math.random()*1080,
+  vy:-(Math.random()*.3+.1), vx:(Math.random()-.5)*.15,
+  r:Math.random()*1.2+.3, a:Math.random()*.3+.08,
+  reset(){ this.x=Math.random()*W; this.y=H+10; }
+}));
+(function anim(){
+  ctx.clearRect(0,0,W,H);
+  pts.forEach(p => { p.x+=p.vx; p.y+=p.vy; if(p.y<-10) p.reset();
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(139,92,246,${p.a})`; ctx.fill(); });
+  requestAnimationFrame(anim);
+})();
+
+// Loading steps
+const pasos = ['step1','step2','step3','step4','step5','step6'];
+let pasoActual = 0;
+function avanzarPaso() {
+  if (pasoActual > 0) document.getElementById(pasos[pasoActual-1]).className = 'done';
+  if (pasoActual < pasos.length) {
+    document.getElementById(pasos[pasoActual]).className = 'active';
+    pasoActual++;
+  }
+}
+
+document.getElementById('iaForm').addEventListener('submit', function() {
+  document.getElementById('formWrap').style.display = 'none';
+  document.getElementById('loadingWrap').classList.add('visible');
+  document.getElementById('btnGenerar').disabled = true;
+  pasoActual = 0;
+  avanzarPaso();
+  setInterval(avanzarPaso, 3500);
+});
+
+// Modo oscuro
+function toggleDarkMode() {
+  const html = document.documentElement;
+  const newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('wl_theme', newTheme);
+  actualizarBotonTema(newTheme);
+}
+function actualizarBotonTema(theme) {
+  const icon = document.getElementById('dmIcon');
+  const label = document.getElementById('dmLabel');
+  if (!icon || !label) return;
+  if (theme === 'dark') { icon.textContent = '☀️'; label.textContent = 'Claro'; }
+  else { icon.textContent = '🌙'; label.textContent = 'Oscuro'; }
+}
+actualizarBotonTema(localStorage.getItem('wl_theme') || 'light');
+</script>
+</body>
+</html>

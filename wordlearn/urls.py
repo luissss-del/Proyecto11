@@ -35,6 +35,9 @@ urlpatterns = [
     # ── Detalle de época ──────────────────────────────
     path('epoca/<str:slug>/',
          epocas_views.detalle_epoca,  name='detalle_epoca'),
+         
+     path('epoca/generar-ia/',
+     epocas_views.generar_epoca_ia, name='generar_epoca_ia'),
 
     # ── Eventos ───────────────────────────────────────
     path('epoca/<str:slug>/evento/nuevo/',

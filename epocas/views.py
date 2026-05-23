@@ -552,3 +552,100 @@ def proxy_material(request, modelo, pk):
     obj = get_object_or_404(modelos[modelo], pk=pk)
     url = str(obj.archivo) if obj.archivo else obj.url
     return redirect(url)
+
+# ── Pega esto al final de epocas/views.py ──────────────────────────────────
+
+def generar_epoca_ia(request):
+    if not _check_admin(request):
+        messages.error(request, 'Sin permiso.')
+        return redirect('login')
+
+    if request.method == 'GET':
+        return render(request, 'generar_epoca_ia.html', {**_ctx(request)})
+
+    nombre      = request.POST.get('nombre', '').strip()
+    anio_inicio = request.POST.get('anio_inicio', '').strip()
+    anio_fin    = request.POST.get('anio_fin', '').strip()
+
+    if not nombre or not anio_inicio or not anio_fin:
+        messages.error(request, 'El nombre y los años son obligatorios.')
+        return render(request, 'generar_epoca_ia.html', {**_ctx(request)})
+
+    try:
+        from .ia_service import generar_epoca_completa
+        datos = generar_epoca_completa(nombre, anio_inicio, anio_fin)
+
+        # Crear la época
+        from django.utils.text import slugify
+        slug_base = slugify(datos.get('nombre', nombre))
+        slug = slug_base
+        contador = 1
+        while Epoca.objects.filter(slug=slug).exists():
+            slug = f"{slug_base}-{contador}"
+            contador += 1
+
+        epoca = Epoca.objects.create(
+            nombre      = datos.get('nombre', nombre),
+            slug        = slug,
+            anio_inicio = int(datos.get('anio_inicio', anio_inicio)),
+            anio_fin    = int(datos.get('anio_fin', anio_fin)),
+            descripcion = datos.get('descripcion_epoca', ''),
+            icono       = datos.get('icono', '📖'),
+            color_hex   = datos.get('color_hex', '#007E6E'),
+            orden       = Epoca.objects.count() + 1,
+        )
+
+        # Crear cada evento con su mapa
+        for i, ev in enumerate(datos.get('eventos', [])):
+            evento = Evento.objects.create(
+                epoca       = epoca,
+                titulo      = str(ev.get('titulo', ''))[:200],
+                anio        = int(ev.get('anio', anio_inicio)),
+                mes         = ev.get('mes') or None,
+                icono       = ev.get('icono', '📖'),
+                resumen     = str(ev.get('resumen', ''))[:300],
+                descripcion = ev.get('descripcion', ''),
+                orden       = ev.get('orden', i + 1),
+            )
+
+            for j, p in enumerate(ev.get('puntos_mapa', [])):
+                PuntoMapa.objects.create(
+                    evento      = evento,
+                    nombre      = str(p.get('nombre', ''))[:200],
+                    descripcion = str(p.get('descripcion', '')),
+                    tipo        = p.get('tipo', 'otro'),
+                    bando       = p.get('bando', 'neutral'),
+                    latitud     = float(p.get('latitud', 0)),
+                    longitud    = float(p.get('longitud', 0)),
+                    orden       = p.get('orden', j),
+                )
+
+            for j, z in enumerate(ev.get('zonas_mapa', [])):
+                ZonaMapa.objects.create(
+                    evento      = evento,
+                    nombre      = str(z.get('nombre', ''))[:200],
+                    descripcion = str(z.get('descripcion', '')),
+                    bando       = z.get('bando', 'neutral'),
+                    coordenadas = z.get('coordenadas', []),
+                    orden       = z.get('orden', j),
+                )
+
+            for j, l in enumerate(ev.get('lineas_mapa', [])):
+                LineaMapa.objects.create(
+                    evento      = evento,
+                    nombre      = str(l.get('nombre', ''))[:200],
+                    descripcion = str(l.get('descripcion', '')),
+                    tipo        = l.get('tipo', 'otro'),
+                    bando       = l.get('bando', 'neutral'),
+                    coordenadas = l.get('coordenadas', []),
+                    orden       = l.get('orden', j),
+                )
+
+        messages.success(request,
+            f'✅ Época "{epoca.nombre}" creada con {len(datos.get("eventos", []))} eventos. '
+            f'Revisa y edita lo que necesites.')
+        return redirect('detalle_epoca', slug=epoca.slug)
+
+    except Exception as e:
+        messages.error(request, f'Error al generar con IA: {e}')
+        return render(request, 'generar_epoca_ia.html', {**_ctx(request)})

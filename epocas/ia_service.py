@@ -101,3 +101,101 @@ def generar_evento(titulo, anio, epoca_nombre, mes=None):
 
     datos = json.loads(texto)
     return datos
+
+# ── Pega esto al final de epocas/ia_service.py ──────────────────────────────
+
+PROMPT_EPOCA = """Eres un historiador experto. Cuando te den el nombre de una época histórica
+y sus años, generas un JSON completo con toda la información de la época y sus eventos principales.
+
+REGLAS ESTRICTAS:
+- Responde SOLO con el JSON, sin texto extra, sin markdown, sin explicaciones.
+- Genera entre 5 y 8 eventos históricos importantes de esa época.
+- Cada evento debe tener mapa con coordenadas reales a nivel de ciudad/región, NUNCA calles.
+- El campo "descripcion" de cada evento mínimo 300 palabras.
+- El campo "resumen" de cada evento máximo 280 caracteres.
+- El campo "descripcion_epoca" mínimo 2 oraciones, máximo 3. Es el texto de la tarjeta del home.
+- El color_hex debe ser un color hexadecimal que represente visualmente la época.
+- Los campos "tipo" de puntos: batalla, ciudad, frente, ruta, zona, otro
+- Los campos "bando": aliados, enemigos, neutral, otro
+- Los campos "tipo" de líneas: frente, ruta, retirada, naval, otro
+
+ESTRUCTURA EXACTA:
+{
+  "nombre": "string",
+  "anio_inicio": número,
+  "anio_fin": número,
+  "descripcion_epoca": "string 2-3 oraciones para la tarjeta del home",
+  "icono": "emoji que represente la época",
+  "color_hex": "#RRGGBB",
+  "eventos": [
+    {
+      "titulo": "string",
+      "anio": número,
+      "mes": número o null,
+      "icono": "emoji",
+      "resumen": "string máx 280 chars",
+      "descripcion": "string detallado mín 300 palabras",
+      "orden": número,
+      "puntos_mapa": [
+        {
+          "nombre": "string",
+          "descripcion": "string",
+          "tipo": "batalla|ciudad|frente|ruta|zona|otro",
+          "bando": "aliados|enemigos|neutral|otro",
+          "latitud": número,
+          "longitud": número,
+          "orden": número
+        }
+      ],
+      "zonas_mapa": [
+        {
+          "nombre": "string",
+          "descripcion": "string",
+          "bando": "aliados|enemigos|neutral|otro",
+          "coordenadas": [[lat,lng], [lat,lng]],
+          "orden": número
+        }
+      ],
+      "lineas_mapa": [
+        {
+          "nombre": "string",
+          "descripcion": "string",
+          "tipo": "frente|ruta|retirada|naval|otro",
+          "bando": "aliados|enemigos|neutral|otro",
+          "coordenadas": [[lat,lng], [lat,lng]],
+          "orden": número
+        }
+      ]
+    }
+  ]
+}"""
+
+
+def generar_epoca_completa(nombre, anio_inicio, anio_fin):
+    """
+    Llama a Groq y devuelve un dict con la época completa + todos sus eventos.
+    """
+    cliente = _cliente()
+
+    prompt_usuario = (
+        f"Época: {nombre}\n"
+        f"Años: {anio_inicio} – {anio_fin}\n"
+        f"Genera el JSON completo con la época y todos sus eventos históricos principales."
+    )
+
+    respuesta = cliente.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[
+            {"role": "system", "content": PROMPT_EPOCA},
+            {"role": "user",   "content": prompt_usuario},
+        ],
+        temperature=0.4,
+        max_tokens=8000,
+    )
+
+    texto = respuesta.choices[0].message.content.strip()
+    texto = re.sub(r'^```(?:json)?\s*', '', texto)
+    texto = re.sub(r'\s*```$', '', texto)
+
+    datos = json.loads(texto)
+    return datos
