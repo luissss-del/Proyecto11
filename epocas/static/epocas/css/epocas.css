@@ -34,7 +34,7 @@
   --accent:        #4ecdc4;
   --accent-glow:   rgba(78,205,196,0.15);
   --accent-border: rgba(78,205,196,0.25);
-  --card-bg:       #1a2e2a;
+  --card-bg:       transparent;
   --card-border:   rgba(78,205,196,0.2);
 }
 
