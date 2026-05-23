@@ -27,6 +27,8 @@ urlpatterns = [
     # ── CRUD de Épocas ────────────────────────────────
     path('epoca/nueva/',
          epocas_views.crear_epoca,   name='crear_epoca'),
+     path('epoca/generar-ia/',
+         epocas_views.generar_epoca_ia, name='generar_epoca_ia'),
     path('epoca/<str:slug>/editar/',
          epocas_views.editar_epoca,  name='editar_epoca'),
     path('epoca/<str:slug>/eliminar/',
@@ -35,9 +37,6 @@ urlpatterns = [
     # ── Detalle de época ──────────────────────────────
     path('epoca/<str:slug>/',
          epocas_views.detalle_epoca,  name='detalle_epoca'),
-         
-     path('epoca/generar-ia/',
-     epocas_views.generar_epoca_ia, name='generar_epoca_ia'),
 
     # ── Eventos ───────────────────────────────────────
     path('epoca/<str:slug>/evento/nuevo/',
