@@ -563,17 +563,18 @@ def generar_epoca_ia(request):
     if request.method == 'GET':
         return render(request, 'generar_epoca_ia.html', {**_ctx(request)})
 
-    nombre      = request.POST.get('nombre', '').strip()
-    anio_inicio = request.POST.get('anio_inicio', '').strip()
-    anio_fin    = request.POST.get('anio_fin', '').strip()
+    nombre            = request.POST.get('nombre', '').strip()
+    anio_inicio       = request.POST.get('anio_inicio', '').strip() or None
+    anio_fin          = request.POST.get('anio_fin', '').strip() or None
+    descripcion_extra = request.POST.get('descripcion_extra', '').strip() or None
 
-    if not nombre or not anio_inicio or not anio_fin:
-        messages.error(request, 'El nombre y los años son obligatorios.')
+    if not nombre:
+        messages.error(request, 'El nombre de la época es obligatorio.')
         return render(request, 'generar_epoca_ia.html', {**_ctx(request)})
 
     try:
         from .ia_service import generar_epoca_completa
-        datos = generar_epoca_completa(nombre, anio_inicio, anio_fin)
+        datos = generar_epoca_completa(nombre, anio_inicio, anio_fin, descripcion_extra)
 
         # Crear la época
         from django.utils.text import slugify

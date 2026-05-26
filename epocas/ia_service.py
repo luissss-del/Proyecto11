@@ -105,10 +105,12 @@ def generar_evento(titulo, anio, epoca_nombre, mes=None):
 # ── Pega esto al final de epocas/ia_service.py ──────────────────────────────
 
 PROMPT_EPOCA = """Eres un historiador experto. Cuando te den el nombre de una época histórica
-y sus años, generas un JSON completo con toda la información de la época y sus eventos principales.
+generas un JSON completo con toda la información de la época y sus eventos principales.
 
 REGLAS ESTRICTAS:
 - Responde SOLO con el JSON, sin texto extra, sin markdown, sin explicaciones.
+- Si no te dan años, investígalos tú mismo con tu conocimiento histórico y colócalos en el JSON.
+- Si te dan especificaciones del profesor, tenlas en cuenta para los eventos y la descripción.
 - Genera entre 5 y 8 eventos históricos importantes de esa época.
 - Cada evento debe tener mapa con coordenadas reales a nivel de ciudad/región, NUNCA calles.
 - El campo "descripcion" de cada evento mínimo 300 palabras.
@@ -171,17 +173,23 @@ ESTRUCTURA EXACTA:
 }"""
 
 
-def generar_epoca_completa(nombre, anio_inicio, anio_fin):
+def generar_epoca_completa(nombre, anio_inicio=None, anio_fin=None, descripcion_extra=None):
     """
     Llama a Groq y devuelve un dict con la época completa + todos sus eventos.
+    Los años y la descripción extra son opcionales.
     """
     cliente = _cliente()
 
-    prompt_usuario = (
-        f"Época: {nombre}\n"
-        f"Años: {anio_inicio} – {anio_fin}\n"
-        f"Genera el JSON completo con la época y todos sus eventos históricos principales."
-    )
+    partes = [f"Época: {nombre}"]
+    if anio_inicio and anio_fin:
+        partes.append(f"Años: {anio_inicio} – {anio_fin}")
+    else:
+        partes.append("Años: investígalos tú mismo según tu conocimiento histórico.")
+    if descripcion_extra:
+        partes.append(f"Especificaciones del profesor: {descripcion_extra}")
+    partes.append("Genera el JSON completo con la época y todos sus eventos históricos principales.")
+
+    prompt_usuario = "\n".join(partes)
 
     respuesta = cliente.chat.completions.create(
         model="llama-3.3-70b-versatile",
