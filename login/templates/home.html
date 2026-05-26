@@ -110,6 +110,27 @@
     .modal-empty { text-align: center; padding: 3rem 1rem; color: rgba(200,212,240,.35); font-family: 'Crimson Text', serif; font-size: 1.05rem; }
     .modal-spinner { display: inline-block; width: 28px; height: 28px; border: 3px solid rgba(255,200,80,.15); border-top-color: rgba(255,200,80,.6); border-radius: 50%; animation: spin .7s linear infinite; margin-bottom: .8rem; }
     @keyframes spin { to{transform:rotate(360deg)} }
+
+    /* ── Toast notificaciones ── */
+    .toast-wrap {
+      position: fixed; top: 5rem; left: 50%; transform: translateX(-50%);
+      z-index: 9999; display: flex; flex-direction: column; gap: .5rem;
+      pointer-events: none; width: max-content; max-width: 90vw;
+    }
+    .toast {
+      padding: .7rem 1.4rem; border-radius: 10px;
+      font-family: 'Cinzel', serif; font-size: .78rem; letter-spacing: .06em;
+      box-shadow: 0 4px 20px rgba(0,0,0,.25);
+      animation: toastIn .35s ease both, toastOut .35s ease 3.5s both;
+    }
+    .toast--success {
+      background: rgba(0,126,110,.92); border: 1px solid rgba(0,200,160,.4); color: #e0fff8;
+    }
+    .toast--error {
+      background: rgba(180,40,40,.92); border: 1px solid rgba(220,80,80,.4); color: #ffe0e0;
+    }
+    @keyframes toastIn  { from{opacity:0;transform:translateY(-12px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes toastOut { from{opacity:1;transform:translateY(0)} to{opacity:0;transform:translateY(-12px)} }
     .modal-footer { padding: .7rem 1.6rem; border-top: 1px solid rgba(255,200,80,.1); font-family: 'Crimson Text', serif; font-size: .85rem; color: rgba(200,212,240,.4); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
     .footer-online { color: #2ecc71; }
 
@@ -232,6 +253,17 @@
 </header>
 
 <main class="main-content">
+
+{% if messages %}
+<div class="toast-wrap" id="toastWrap">
+  {% for message in messages %}
+    <div class="toast toast--{{ message.tags }}">
+      {% if message.tags == 'success' %}✅{% else %}❌{% endif %}
+      {{ message }}
+    </div>
+  {% endfor %}
+</div>
+{% endif %}
 
   <div class="hero-text">
     <p class="hero-sub">MÁQUINA DEL TIEMPO</p>
@@ -597,6 +629,12 @@ if(WL_USER.esAdmin){
 // ════════════════════════════════════════════════════════════════
 // MODO OSCURO
 // ════════════════════════════════════════════════════════════════
+// Auto-remove toasts
+setTimeout(function() {
+  var wrap = document.getElementById('toastWrap');
+  if (wrap) wrap.remove();
+}, 4000);
+
 function toggleDarkMode() {
   const html=document.documentElement, isDark=html.getAttribute('data-theme')==='dark';
   const newTheme=isDark?'light':'dark';
