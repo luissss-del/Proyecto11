@@ -144,10 +144,10 @@
         <div class="mat-grid">
           {% for mat in materiales %}
           <div class="mat-card-wrap">
-            <a href="{% url 'proxy_material' 'evento' mat.pk %}"
-               target="_blank" class="mat-card mat-card--{{ mat.tipo }}">
+            <a href="{% if mat.tipo == 'video' or mat.tipo == 'link' %}{{ mat.url }}{% else %}{% url 'proxy_material' 'evento' mat.pk %}{% endif %}"
+               target="_blank" rel="noopener noreferrer" class="mat-card mat-card--{{ mat.tipo }}">
               <span class="mat-icon">
-                {% if mat.tipo == 'pdf' %}📄{% elif mat.tipo == 'video' %}🎬{% else %}🔗{% endif %}
+                {% if mat.tipo == 'pdf' %}📄{% elif mat.tipo == 'video' %}🎬{% elif mat.tipo == 'link' %}🔗{% else %}📝{% endif %}
               </span>
               <div>
                 <p class="mat-tipo">{{ mat.get_tipo_display }}</p>

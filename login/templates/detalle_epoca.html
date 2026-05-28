@@ -102,7 +102,7 @@
       <div class="mat-grid">
         {% for mat in materiales_epoca %}
         <div class="mat-card-wrap">
-          <a href="{% url 'proxy_material' 'epoca' mat.pk %}"
+          <a href="{% if mat.tipo == 'video' or mat.tipo == 'link' %}{{ mat.url }}{% else %}{% url 'proxy_material' 'epoca' mat.pk %}{% endif %}"
              target="_blank" class="mat-card mat-card--{{ mat.tipo }}">
             <span class="mat-icon">
               {% if mat.tipo == 'video' %}🎬
