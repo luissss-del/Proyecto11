@@ -109,13 +109,7 @@ STATIC_URL = 'static/'
 MEDIA_URL  = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-EMAIL_BACKEND       = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST          = 'smtp.gmail.com'
-EMAIL_PORT          = 587
-EMAIL_USE_TLS       = True
-EMAIL_HOST_USER     = 'worldlearn.recuperacion@gmail.com'
-EMAIL_HOST_PASSWORD = 'dumq nsqn khom yvhv'
-DEFAULT_FROM_EMAIL  = 'WorldLearn <worldlearn.recuperacion@gmail.com>'
+
 
 GROQ_API_KEY = "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"
 
@@ -128,3 +122,12 @@ GROQ_API_KEY = os.environ.get('GROQ_API_KEY', "gsk_13B69bmcZ9g8vJwHiyJKWGdyb3FYR
 SUPABASE_URL = os.environ.get('SUPABASE_URL', 'https://jlomiuulmzpuxjnhncyg.supabase.co')
 SUPABASE_KEY = os.environ.get('SUPABASE_KEY', 'sb_publishable_racwoGpYMiIQ_ZyMaLQomA_5KxHwx-x')
 SUPABASE_BUCKET = 'materiales'
+
+# Correo Gmail
+EMAIL_BACKEND       = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST          = 'smtp.gmail.com'
+EMAIL_PORT          = 587
+EMAIL_USE_TLS       = True
+EMAIL_HOST_USER     = os.environ.get('EMAIL_HOST_USER', 'wordlearn82@gmail.com')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '170609SENA')
+DEFAULT_FROM_EMAIL  = 'WordLearn <wordlearn82@gmail.com>'

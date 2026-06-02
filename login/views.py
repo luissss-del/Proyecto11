@@ -166,13 +166,18 @@ def logout_view(request):
 
 def recuperar_password(request):
     if request.method == 'POST':
-        correo = request.POST.get('correo', '').strip()
+        ti = request.POST.get('ti', '').strip()
         try:
-            usuario = user.objects.filter(correo=correo).first()
+            if not ti.isdigit():
+                return render(request, 'recuperar_password.html', {'error': 'Ingresa un número de identificación válido.'})
+            usuario = user.objects.filter(Ti=int(ti)).first()
             if not usuario:
-                return render(request, 'recuperar_password.html', {'error': 'No existe una cuenta con ese correo.'})
+                return render(request, 'recuperar_password.html', {'error': 'No existe una cuenta con ese número de identificación.'})
+            if not usuario.correo:
+                return render(request, 'recuperar_password.html', {'error': 'Esta cuenta no tiene un correo registrado. Contacta al profesor.'})
             token = TokenRecuperacion.objects.create(usuario=usuario)
-            link = f"http://127.0.0.1:8000/reset/{token.token}/"
+            dominio = request.build_absolute_uri('/').rstrip('/')
+            link = f"{dominio}/reset/{token.token}/"
             send_mail(
                 subject='WorldLearn — Recuperación de contraseña',
                 message=f'Hola {usuario.nombre},\n\nHaz clic en el siguiente enlace para restablecer tu contraseña. El link es válido por 1 hora:\n\n{link}\n\nSi no solicitaste esto, ignora este correo.',
