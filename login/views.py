@@ -186,7 +186,7 @@ def recuperar_password(request):
             )
             return render(request, 'recuperar_password.html', {'enviado': True})
         except Exception as e:
-    return render(request, 'recuperar_password.html', {'error': f'Error: {str(e)}'})
+            return render(request, 'recuperar_password.html', {'error': f'Error: {str(e)}'})
     return render(request, 'recuperar_password.html', {})
 
 
