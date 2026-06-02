@@ -185,8 +185,8 @@ def recuperar_password(request):
                 recipient_list=[correo],
             )
             return render(request, 'recuperar_password.html', {'enviado': True})
-        except Exception:
-            return render(request, 'recuperar_password.html', {'error': 'Ocurrió un error al enviar el correo. Intenta de nuevo.'})
+        except Exception as e:
+    return render(request, 'recuperar_password.html', {'error': f'Error: {str(e)}'})
     return render(request, 'recuperar_password.html', {})
 
 
