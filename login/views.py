@@ -9,6 +9,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from .models import TokenRecuperacion
 from epocas.models import Epoca
+import os
 
 
 def index(request):
@@ -166,13 +167,22 @@ def logout_view(request):
 import threading
 
 def _enviar_correo(usuario, link):
-    send_mail(
-        subject='WorldLearn — Recuperación de contraseña',
-        message=f'Hola {usuario.nombre},\n\nHaz clic en el siguiente enlace para restablecer tu contraseña. El link es válido por 1 hora:\n\n{link}\n\nSi no solicitaste esto, ignora este correo.',
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[usuario.correo],
-        fail_silently=True,
-    )
+    import resend
+    resend.api_key = os.environ.get('RESEND_API_KEY', '')
+    resend.Emails.send({
+        "from": "WorldLearn <onboarding@resend.dev>",
+        "to": [usuario.correo],
+        "subject": "WorldLearn — Recuperación de contraseña",
+        "html": f"""
+        <h2>🦉 WorldLearn</h2>
+        <p>Hola <strong>{usuario.nombre}</strong>,</p>
+        <p>Haz clic en el siguiente botón para restablecer tu contraseña. El enlace es válido por <strong>1 hora</strong>.</p>
+        <a href="{link}" style="background:#007E6E;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;display:inline-block;margin:16px 0;">
+          Restablecer contraseña
+        </a>
+        <p>Si no solicitaste esto, ignora este correo.</p>
+        """,
+    })
 
 def recuperar_password(request):
     if request.method == 'POST':
