@@ -506,6 +506,21 @@ body{
   box-shadow:none;
 }
 
+/* ── Continente cards dark mode ── */
+[data-theme="dark"] .continente-card {
+  background: transparent;
+  border-color: rgba(78,205,196,.14);
+  box-shadow: none;
+}
+[data-theme="dark"] .continente-card:hover {
+  background: rgba(78,205,196,.06);
+  border-color: rgba(78,205,196,.4);
+  box-shadow: 0 8px 30px rgba(78,205,196,.08);
+}
+[data-theme="dark"] .continente-card__nombre {
+  color: var(--accent);
+}
+
 /* ── Nav botones países ─────────────────────────────── */
 .pais-nav{display:flex;align-items:center;gap:.8rem;padding:1.5rem 2rem;position:relative;z-index:10;max-width:860px;margin:0 auto;}
 .pais-nav__btn{
