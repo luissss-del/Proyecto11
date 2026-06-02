@@ -155,7 +155,7 @@
   <div class="page-hero">
     <p class="page-hero__label">Modo profesor · {{ epoca.nombre }}</p>
     <h1 class="page-hero__title">🤖 Generar evento con IA</h1>
-    <p class="page-hero__sub">Escribe el título y año — la IA crea la descripción, el resumen y el mapa completo.</p>
+    <p class="page-hero__sub">Solo escribe el título — la IA investiga la fecha, crea la descripción y el mapa.</p>
   </div>
 
   <div class="form-card">
@@ -176,33 +176,15 @@
           <input type="text" name="titulo" class="edit-input" required
             placeholder="Ej: La toma de la Bastilla, Batalla de Waterloo…"
             autocomplete="off">
-          <p class="form-help">Sé específico para que la IA ubique mejor el mapa.</p>
+          <p class="form-help">La IA investigará la fecha automáticamente si no la pones.</p>
         </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Año *</label>
-            <input type="number" name="anio" class="edit-input" required
-              placeholder="Ej: 1789">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Mes (opcional)</label>
-            <select name="mes" class="mes-select">
-              <option value="">— Sin mes —</option>
-              <option value="1">01 · Enero</option>
-              <option value="2">02 · Febrero</option>
-              <option value="3">03 · Marzo</option>
-              <option value="4">04 · Abril</option>
-              <option value="5">05 · Mayo</option>
-              <option value="6">06 · Junio</option>
-              <option value="7">07 · Julio</option>
-              <option value="8">08 · Agosto</option>
-              <option value="9">09 · Septiembre</option>
-              <option value="10">10 · Octubre</option>
-              <option value="11">11 · Noviembre</option>
-              <option value="12">12 · Diciembre</option>
-            </select>
-          </div>
+        <div class="form-group">
+          <label class="form-label">Descripción / Especificaciones <span style="opacity:.5;font-size:.8em">(opcional)</span></label>
+          <textarea name="descripcion_extra" class="edit-input" rows="3"
+            style="resize:vertical;min-height:80px;"
+            placeholder="Ej: Enfocarse en el aspecto político, mencionar los personajes clave, incluir la reacción internacional…"></textarea>
+          <p class="form-help">Cuéntale a la IA qué quieres que resalte en este evento.</p>
         </div>
 
         <button type="submit" class="btn-ia" id="btnGenerar">

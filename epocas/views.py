@@ -469,18 +469,19 @@ def generar_evento_ia(request, slug):
         })
 
     # POST — recibir datos y llamar a Groq
-    titulo = request.POST.get('titulo', '').strip()
-    anio   = request.POST.get('anio', '').strip()
-    mes    = request.POST.get('mes', '').strip() or None
+    titulo            = request.POST.get('titulo', '').strip()
+    anio              = request.POST.get('anio', '').strip() or None
+    mes               = request.POST.get('mes', '').strip() or None
+    descripcion_extra = request.POST.get('descripcion_extra', '').strip() or None
 
-    if not titulo or not anio:
-        messages.error(request, 'El título y el año son obligatorios.')
+    if not titulo:
+       messages.error(request, 'El título del evento es obligatorio.')
         return render(request, 'generar_evento_ia.html', {
             'epoca': epoca, **_ctx(request),
         })
 
     try:
-        datos = ia_generar_evento(titulo, anio, epoca.nombre, mes)
+        datos = ia_generar_evento(titulo, epoca.nombre, anio, mes, descripcion_extra)
 
         # Crear el evento
         from .forms import EventoForm

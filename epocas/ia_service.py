@@ -17,6 +17,8 @@ su año y la época a la que pertenece, generas un JSON completo con toda la inf
 
 REGLAS ESTRICTAS:
 - Responde SOLO con el JSON, sin texto extra, sin markdown, sin explicaciones.
+- Si no te dan el año, investígalo tú mismo con tu conocimiento histórico.
+- Si te dan especificaciones del profesor, tenlas en cuenta para la descripción y el mapa.
 - Las coordenadas deben ser precisas al nivel de ciudad o región, NUNCA calles.
 - Los puntos del mapa deben ser lugares reales con coordenadas reales.
 - El campo "descripcion" debe ser detallado (mínimo 300 palabras): contexto, causas, desarrollo, consecuencias.
@@ -68,20 +70,25 @@ ESTRUCTURA EXACTA:
 }"""
 
 
-def generar_evento(titulo, anio, epoca_nombre, mes=None):
+def generar_evento(titulo, epoca_nombre, anio=None, mes=None, descripcion_extra=None):
     """
     Llama a Groq y devuelve un dict con toda la información del evento.
-    Lanza una excepción si algo falla.
+    El año y la descripción extra son opcionales.
     """
     cliente = _cliente()
 
-    prompt_usuario = (
-        f"Evento: {titulo}\n"
-        f"Año: {anio}\n"
-        f"Mes: {mes if mes else 'desconocido'}\n"
-        f"Época: {epoca_nombre}\n"
-        f"Genera el JSON completo para este evento histórico."
-    )
+    partes = [f"Evento: {titulo}", f"Época: {epoca_nombre}"]
+    if anio:
+        partes.append(f"Año: {anio}")
+    else:
+        partes.append("Año: investígalo tú mismo según tu conocimiento histórico.")
+    if mes:
+        partes.append(f"Mes: {mes}")
+    if descripcion_extra:
+        partes.append(f"Especificaciones del profesor: {descripcion_extra}")
+    partes.append("Genera el JSON completo para este evento histórico.")
+
+    prompt_usuario = "\n".join(partes)
 
     respuesta = cliente.chat.completions.create(
         model="llama-3.3-70b-versatile",
@@ -105,12 +112,10 @@ def generar_evento(titulo, anio, epoca_nombre, mes=None):
 # ── Pega esto al final de epocas/ia_service.py ──────────────────────────────
 
 PROMPT_EPOCA = """Eres un historiador experto. Cuando te den el nombre de una época histórica
-generas un JSON completo con toda la información de la época y sus eventos principales.
+y sus años, generas un JSON completo con toda la información de la época y sus eventos principales.
 
 REGLAS ESTRICTAS:
 - Responde SOLO con el JSON, sin texto extra, sin markdown, sin explicaciones.
-- Si no te dan años, investígalos tú mismo con tu conocimiento histórico y colócalos en el JSON.
-- Si te dan especificaciones del profesor, tenlas en cuenta para los eventos y la descripción.
 - Genera entre 5 y 8 eventos históricos importantes de esa época.
 - Cada evento debe tener mapa con coordenadas reales a nivel de ciudad/región, NUNCA calles.
 - El campo "descripcion" de cada evento mínimo 300 palabras.
@@ -173,23 +178,17 @@ ESTRUCTURA EXACTA:
 }"""
 
 
-def generar_epoca_completa(nombre, anio_inicio=None, anio_fin=None, descripcion_extra=None):
+def generar_epoca_completa(nombre, anio_inicio, anio_fin):
     """
     Llama a Groq y devuelve un dict con la época completa + todos sus eventos.
-    Los años y la descripción extra son opcionales.
     """
     cliente = _cliente()
 
-    partes = [f"Época: {nombre}"]
-    if anio_inicio and anio_fin:
-        partes.append(f"Años: {anio_inicio} – {anio_fin}")
-    else:
-        partes.append("Años: investígalos tú mismo según tu conocimiento histórico.")
-    if descripcion_extra:
-        partes.append(f"Especificaciones del profesor: {descripcion_extra}")
-    partes.append("Genera el JSON completo con la época y todos sus eventos históricos principales.")
-
-    prompt_usuario = "\n".join(partes)
+    prompt_usuario = (
+        f"Época: {nombre}\n"
+        f"Años: {anio_inicio} – {anio_fin}\n"
+        f"Genera el JSON completo con la época y todos sus eventos históricos principales."
+    )
 
     respuesta = cliente.chat.completions.create(
         model="llama-3.3-70b-versatile",
