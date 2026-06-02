@@ -163,6 +163,16 @@ def logout_view(request):
     messages.info(request, 'Sesión cerrada correctamente.')
     return redirect('login')
 
+import threading
+
+def _enviar_correo(usuario, link):
+    send_mail(
+        subject='WorldLearn — Recuperación de contraseña',
+        message=f'Hola {usuario.nombre},\n\nHaz clic en el siguiente enlace para restablecer tu contraseña. El link es válido por 1 hora:\n\n{link}\n\nSi no solicitaste esto, ignora este correo.',
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        recipient_list=[usuario.correo],
+        fail_silently=True,
+    )
 
 def recuperar_password(request):
     if request.method == 'POST':
@@ -178,12 +188,7 @@ def recuperar_password(request):
             token = TokenRecuperacion.objects.create(usuario=usuario)
             dominio = request.build_absolute_uri('/').rstrip('/')
             link = f"{dominio}/reset/{token.token}/"
-            send_mail(
-                subject='WorldLearn — Recuperación de contraseña',
-                message=f'Hola {usuario.nombre},\n\nHaz clic en el siguiente enlace para restablecer tu contraseña. El link es válido por 1 hora:\n\n{link}\n\nSi no solicitaste esto, ignora este correo.',
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[usuario.correo],
-            )
+            threading.Thread(target=_enviar_correo, args=(usuario, link), daemon=True).start()
             return render(request, 'recuperar_password.html', {'enviado': True})
         except Exception as e:
             return render(request, 'recuperar_password.html', {'error': f'Error: {str(e)}'})
