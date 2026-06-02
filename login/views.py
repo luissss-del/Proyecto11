@@ -182,7 +182,7 @@ def recuperar_password(request):
                 subject='WorldLearn — Recuperación de contraseña',
                 message=f'Hola {usuario.nombre},\n\nHaz clic en el siguiente enlace para restablecer tu contraseña. El link es válido por 1 hora:\n\n{link}\n\nSi no solicitaste esto, ignora este correo.',
                 from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[correo],
+                recipient_list=[usuario.correo],
             )
             return render(request, 'recuperar_password.html', {'enviado': True})
         except Exception as e:
