@@ -485,10 +485,11 @@ def generar_evento_ia(request, slug):
 
         # Crear el evento
         from .forms import EventoForm
+        anio_final = datos.get('anio') or anio
         evento = Evento.objects.create(
             epoca       = epoca,
             titulo      = datos.get('titulo', titulo),
-            anio        = datos.get('anio', int(anio)),
+            anio = int(anio_final) if anio_final else 0,
             mes         = datos.get('mes') or None,
             icono       = datos.get('icono', '📖'),
             resumen     = datos.get('resumen', '')[:300],
