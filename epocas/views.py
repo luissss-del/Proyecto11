@@ -475,7 +475,7 @@ def generar_evento_ia(request, slug):
     descripcion_extra = request.POST.get('descripcion_extra', '').strip() or None
 
     if not titulo:
-       messages.error(request, 'El título del evento es obligatorio.')
+        messages.error(request, 'El título del evento es obligatorio.')
         return render(request, 'generar_evento_ia.html', {
             'epoca': epoca, **_ctx(request),
         })
