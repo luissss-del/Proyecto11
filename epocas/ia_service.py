@@ -178,7 +178,7 @@ ESTRUCTURA EXACTA:
 }"""
 
 
-def generar_epoca_completa(nombre, anio_inicio, anio_fin):
+def generar_epoca_completa(nombre, anio_inicio=None, anio_fin=None, descripcion_extra=None):
     """
     Llama a Groq y devuelve un dict con la época completa + todos sus eventos.
     """
@@ -187,6 +187,8 @@ def generar_epoca_completa(nombre, anio_inicio, anio_fin):
     prompt_usuario = (
         f"Época: {nombre}\n"
         f"Años: {anio_inicio} – {anio_fin}\n"
+        if descripcion_extra:
+           partes.append(f"Especificaciones del profesor: {descripcion_extra}")
         f"Genera el JSON completo con la época y todos sus eventos históricos principales."
     )
 
