@@ -184,13 +184,16 @@ def generar_epoca_completa(nombre, anio_inicio=None, anio_fin=None, descripcion_
     """
     cliente = _cliente()
 
-    prompt_usuario = (
-        f"Época: {nombre}\n"
-        f"Años: {anio_inicio} – {anio_fin}\n"
-        if descripcion_extra:
-           partes.append(f"Especificaciones del profesor: {descripcion_extra}")
-        f"Genera el JSON completo con la época y todos sus eventos históricos principales."
-    )
+    partes = [f"Época: {nombre}"]
+    if anio_inicio and anio_fin:
+        partes.append(f"Años: {anio_inicio} – {anio_fin}")
+    else:
+        partes.append("Años: investígalos tú mismo según tu conocimiento histórico.")
+    if descripcion_extra:
+        partes.append(f"Especificaciones del profesor: {descripcion_extra}")
+    partes.append("Genera el JSON completo con la época y todos sus eventos históricos principales.")
+
+    prompt_usuario = "\n".join(partes)
 
     respuesta = cliente.chat.completions.create(
         model="llama-3.3-70b-versatile",
